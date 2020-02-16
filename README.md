@@ -9,7 +9,7 @@ Pokreni (Ctrl+F5)
 Prvo pokretanje traje oko 2 minute, dok ne povuče sve s NPM-a.
 
 
-##Stuff
+## Stuff
 
 Fronta je pisana u Reactu, framework je React-Bootstrap https://react-bootstrap.github.io/
 
