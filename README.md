@@ -1,6 +1,6 @@
 # CateringApp
 
-Kliniraj repo u direktorij (možeš i kroz Visual Studio kroz GUI).
+Kloniraj repo u direktorij (možeš i kroz Visual Studio kroz GUI).
 
 Nakon kloniranja desni klik na **Solution**, odaberi **Restore Nuget Packages**
 
