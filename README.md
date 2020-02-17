@@ -11,7 +11,7 @@ Prvo pokretanje traje oko 2 minute, dok ne povuče sve s NPM-a.
 ## Podjela na projekte/module (buduće)
 
 * **CateringApp.Web** -> view-ovi, controlleri, jezgra aplikacije
-* **CatringApp.Data** -> DbContext definicija, bazni modeli, model extenzije/dodatne definicije pravila
+* **CateringApp.Data** -> DbContext definicija, bazni modeli, model extenzije/dodatne definicije pravila
 * **CateringApp.SQL** -> SQL datoteke s DDL-ovima (tablice, procedure, whatever)
  
 Koji god DDL se piše, obavezno staviti u file u **CateringApp.SQL** i napraviti schema compare, bolje ne okidati DDL direktno da se ne desi razlika u između baze i projekta. Ako ima vise schema na bazi, tako organizirajte i foldere.
