@@ -1,0 +1,5 @@
+﻿CREATE TABLE [dbo].[Test]
+(
+	[Id] INT NOT NULL PRIMARY KEY, 
+    [Lipsum] NVARCHAR(50) NOT NULL
+)

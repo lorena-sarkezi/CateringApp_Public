@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using CateringApp.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace CateringApp.Web
 {
     public class Startup
@@ -19,8 +22,11 @@ namespace CateringApp.Web
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+        { 
+            services.AddMvc().AddMvcOptions(options => options.EnableEndpointRouting = false);
+
+            services.AddDbContext<CateringDbContext>(
+                options => options.UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -30,6 +36,7 @@ namespace CateringApp.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        [System.Obsolete]
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())

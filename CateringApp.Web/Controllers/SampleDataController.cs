@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
+using CateringApp.Data;
+using CateringApp.Data.Models;
+
 namespace CateringApp.Web.Controllers
 {
     [Route("api/[controller]")]
@@ -13,10 +16,13 @@ namespace CateringApp.Web.Controllers
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
+        private readonly CateringDbContext cateringDbContext;
 
         [HttpGet("[action]")]
         public IEnumerable<WeatherForecast> WeatherForecasts()
         {
+            Test tst = cateringDbContext.Tests.FirstOrDefault();
+
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
@@ -24,6 +30,11 @@ namespace CateringApp.Web.Controllers
                 TemperatureC = rng.Next(-20, 55),
                 Summary = Summaries[rng.Next(Summaries.Length)]
             });
+        }
+
+        public SampleDataController(CateringDbContext cateringDbContext)
+        {
+            this.cateringDbContext = cateringDbContext;
         }
 
         public class WeatherForecast
