@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="61340a3b-f6a2-4e39-8042-4d8b1674c2b6" ChangeDateTime="02/21/2020 12:13:41">
+    <Property Name="ElementName" Value="[cat_app].[roles].[role_name]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[cat_app].[roles]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="role_title" />
+  </Operation>
+</Operations>

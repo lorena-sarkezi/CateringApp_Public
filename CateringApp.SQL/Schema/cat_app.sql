@@ -1,0 +1,2 @@
+﻿CREATE SCHEMA [cat_app]
+	AUTHORIZATION [dbo];

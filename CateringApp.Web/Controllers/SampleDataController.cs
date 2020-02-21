@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 using CateringApp.Data;
 using CateringApp.Data.Models;
@@ -19,17 +20,20 @@ namespace CateringApp.Web.Controllers
         private readonly CateringDbContext cateringDbContext;
 
         [HttpGet("[action]")]
-        public IEnumerable<WeatherForecast> WeatherForecasts()
+        //public IEnumerable<WeatherForecast> WeatherForecasts()
+        public dynamic WeatherForecasts()
         {
-            Test tst = cateringDbContext.Tests.FirstOrDefault();
+            //Test tst = cateringDbContext.Tests.FirstOrDefault();
 
             var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                DateFormatted = DateTime.Now.AddDays(index).ToString("d"),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            });
+            //return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            //{
+            //    DateFormatted = DateTime.Now.AddDays(index).ToString("d"),
+            //    TemperatureC = rng.Next(-20, 55),
+            //    Summary = Summaries[rng.Next(Summaries.Length)]
+            //});
+
+            return RedirectPermanent("/");
         }
 
         public SampleDataController(CateringDbContext cateringDbContext)
