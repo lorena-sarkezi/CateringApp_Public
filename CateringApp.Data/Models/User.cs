@@ -24,6 +24,9 @@ namespace CateringApp.Data.Models
         [Required, Column("email")]
         public string Email { get; set; }
 
+        [Required, Column("password_hash")]
+        public string PasswordHash { get; set; }
+
         [Required, Column("date_created"), DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime DateCreated { get; set; }
 

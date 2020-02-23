@@ -1,0 +1,50 @@
+﻿@page
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<style>
+    body{
+        background-color: #f0f0f0;
+    }
+
+    form{
+        background-color:white;
+    }
+
+    div.container-fluid > div.row > div.col-md-3 {
+        margin: 0 auto;
+    }
+
+    .h-100{
+        height: 100%;
+    }
+    
+</style>
+
+<div class="container-fluid h-100">
+    <div class="row">
+        <div class="col-md-3 col-lg-3 mx-auto" id="login-col">
+            <form class="text-center border border-light p-5" action="#!">
+
+                <p class="h4 mb-4">Sign in</p>
+
+                <input type="email" id="input-email" class="form-control mb-4" placeholder="E-Mail">
+
+                <input type="password" id="input-pwd" class="form-control mb-4" placeholder="Password">
+
+                <div class="d-flex justify-content">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="input-remember-login">
+                        <label class="custom-control-label" for="input-remember-login">Remember me</label>
+                    </div>
+                </div>
+
+                <button class="btn btn-info btn-block my-4" type="button" id="submit-btn">Sign in</button>
+
+            </form>
+        </div>
+    </div>
+   
+</div>

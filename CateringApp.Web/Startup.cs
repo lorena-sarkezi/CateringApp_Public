@@ -25,6 +25,8 @@ namespace CateringApp.Web
         { 
             services.AddMvc().AddMvcOptions(options => options.EnableEndpointRouting = false);
 
+            services.AddRazorPages().AddRazorRuntimeCompilation();
+
             services.AddDbContext<CateringDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
 
