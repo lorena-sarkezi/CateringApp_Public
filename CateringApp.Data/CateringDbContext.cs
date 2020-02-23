@@ -14,6 +14,7 @@ namespace CateringApp.Data
 
         }
 
-        public virtual DbSet<Test> Tests { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
     }
 }

@@ -7,4 +7,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="role_title" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="9c930bc4-3545-4802-8417-a7a641b8ef87" ChangeDateTime="02/21/2020 15:13:42">
+    <Property Name="ElementName" Value="[cat_app].[roles].[id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[cat_app].[roles]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="role_id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2deabe90-8e3f-4af2-8803-1798834a3d53" ChangeDateTime="02/21/2020 15:13:50">
+    <Property Name="ElementName" Value="[cat_app].[roles].[role_id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[cat_app].[roles]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="id" />
+  </Operation>
 </Operations>

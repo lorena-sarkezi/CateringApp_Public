@@ -7,7 +7,7 @@ using System.Text;
 namespace CateringApp.Data.Models
 {
     [Table("users", Schema = "cat_app")]
-    class User
+    public class User
     {
         [Required, Key, Column("id"), DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
