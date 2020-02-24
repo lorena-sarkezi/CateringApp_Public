@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 using CateringApp.Data;
 using Microsoft.EntityFrameworkCore;
+using CateringApp.Web.Services;
+using System.Text;
 
 namespace CateringApp.Web
 {
@@ -29,6 +31,14 @@ namespace CateringApp.Web
 
             services.AddDbContext<CateringDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
+
+            var authSettingsSection = Configuration.GetSection("AuthSettings");
+            services.Configure<AuthSettings>(authSettingsSection);
+
+            var authSettings = authSettingsSection.Get<AuthSettings>();
+            var key = Encoding.ASCII.GetBytes(authSettings.Secret);
+
+            
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

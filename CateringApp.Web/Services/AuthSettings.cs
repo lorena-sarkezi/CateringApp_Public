@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CateringApp.Web.Services
 {
-    public class AppSettings
+    public class AuthSettings
     {
         public string Secret { get; set; }
     }
