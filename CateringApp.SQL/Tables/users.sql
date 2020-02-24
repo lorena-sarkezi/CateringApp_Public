@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [cat_app].[users]
 (
-	[id] INT NOT NULL, 
+	[id] INT IDENTITY NOT NULL, 
     [name] NVARCHAR(50) NOT NULL, 
     [surname] NVARCHAR(50) NOT NULL, 
     [email] NVARCHAR(50) NOT NULL, 
