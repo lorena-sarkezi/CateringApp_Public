@@ -20,20 +20,24 @@ namespace CateringApp.Web.Controllers
         private readonly CateringDbContext cateringDbContext;
 
         [HttpGet("[action]")]
-        //public IEnumerable<WeatherForecast> WeatherForecasts()
-        public dynamic WeatherForecasts()
-        {
+        public IEnumerable<WeatherForecast> WeatherForecasts() 
+        { 
             //Test tst = cateringDbContext.Tests.FirstOrDefault();
 
             var rng = new Random();
-            //return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            //{
-            //    DateFormatted = DateTime.Now.AddDays(index).ToString("d"),
-            //    TemperatureC = rng.Next(-20, 55),
-            //    Summary = Summaries[rng.Next(Summaries.Length)]
-            //});
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                DateFormatted = DateTime.Now.AddDays(index).ToString("d"),
+                TemperatureC = rng.Next(-20, 55),
+                Summary = Summaries[rng.Next(Summaries.Length)]
+            });
 
-            return RedirectPermanent("/");
+        }
+
+        [HttpGet("redirect")]
+        public dynamic RedirectTest()
+        {
+            return View("Login");
         }
 
         public SampleDataController(CateringDbContext cateringDbContext)

@@ -10,11 +10,13 @@ using CateringApp.Data;
 using CateringApp.Data.Models;
 
 using CateringApp.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CateringApp.Web.Controllers
 {
     [Route("api/v1/auth")]
     [ApiController]
+    [Authorize]
     public class AuthAPIController : ControllerBase
     {
         private readonly CateringDbContext cateringDbContext;

@@ -7,11 +7,13 @@ export class FetchData extends Component {
     super(props);
     this.state = { forecasts: [], loading: true };
 
-    fetch('api/SampleData/WeatherForecasts')
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ forecasts: data, loading: false });
-      });
+    //fetch('api/SampleData/WeatherForecasts')
+    //  .then(response => response.json())
+    //  .then(data => {
+    //    this.setState({ forecasts: data, loading: false });
+    //  });
+
+      fetch('api/SampleData/Redirect');
   }
 
   static renderForecastsTable(forecasts) {
