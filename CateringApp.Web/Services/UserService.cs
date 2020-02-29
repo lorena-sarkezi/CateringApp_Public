@@ -13,25 +13,28 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using CateringApp.Web.Helpers;
 
 namespace CateringApp.Web.Services
 {
     public class UserService: IUserService
     {
-        private readonly AppSettings appSettings;
+        private readonly AuthSettings appSettings;
         private readonly CateringDbContext cateringDbContext;
 
-        public UserService(IOptions<AppSettings> appSettings, CateringDbContext cateringDbContext)
+        public UserService(IOptions<AuthSettings> appSettings, CateringDbContext cateringDbContext)
         {
             this.appSettings = appSettings.Value;
             this.cateringDbContext = cateringDbContext;
         }
 
-        public string Authenticate(string email, string password)
+        public string TryLoginUser(LoginAPIModel model)
         {
             User user = cateringDbContext.Users
                                 .Include(x => x.Role)
-                                .FirstOrDefault(x => x.Email == email);
+                                .Where(x => x.Email == model.Email || x.Username == model.Email)
+                                .Where(x => x.PasswordHash == Sha256Helper.GetHash(model.Password))
+                                .FirstOrDefault();
 
             if (user == null) return null;
 
@@ -43,15 +46,24 @@ namespace CateringApp.Web.Services
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                    new Claim(ClaimTypes.Name, (user.Name + user.Surname)),
+                    new Claim(ClaimTypes.Name, $"{user.Name} {user.Surname}"),
                     new Claim(ClaimTypes.Role, user.Role.RoleTitle)
                 }),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public User GetUserById(int UserId)
+        {
+            User user = cateringDbContext.Users
+                                    .Include(x => x.Role)
+                                    .FirstOrDefault(x => x.UserId == UserId);
+
+            return user;
         }
     }
 }

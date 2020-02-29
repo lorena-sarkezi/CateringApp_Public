@@ -24,6 +24,9 @@ namespace CateringApp.Data.Models
         [Required, Column("email")]
         public string Email { get; set; }
 
+        [Required, Column("username")]
+        public string Username { get; set; }
+
         [Required, Column("password_hash")]
         public string PasswordHash { get; set; }
 

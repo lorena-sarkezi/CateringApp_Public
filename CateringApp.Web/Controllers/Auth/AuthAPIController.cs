@@ -11,6 +11,7 @@ using CateringApp.Data.Models;
 
 using CateringApp.Web.Models;
 using Microsoft.AspNetCore.Authorization;
+using CateringApp.Web.Services;
 
 namespace CateringApp.Web.Controllers
 {
@@ -20,19 +21,30 @@ namespace CateringApp.Web.Controllers
     public class AuthAPIController : ControllerBase
     {
         private readonly CateringDbContext cateringDbContext;
+        private readonly IUserService userService;
 
-        public AuthAPIController(CateringDbContext cateringDbContext)
+        public AuthAPIController(CateringDbContext cateringDbContext, IUserService userService)
         {
             this.cateringDbContext = cateringDbContext;
+            this.userService = userService;
         }
 
         [HttpPost("login")]
-        public async Task<bool> Login([FromBody] LoginAPIModel model)
+        [AllowAnonymous]
+        public IActionResult Login([FromBody] LoginAPIModel model)
         {
-            User user = await cateringDbContext.Users.FirstOrDefaultAsync(x => x.Email == model.Email);
 
-            if (user != null) return true;
-            return false;
+            string tst = userService.TryLoginUser(model);  //Returns a valid JWT token if login successfuly, NULL if not
+
+            if (tst != null) return new RedirectToRouteResult("~/Error", new { }, true);
+
+            else return Ok();
+        }
+
+        [HttpGet("test")] 
+        public void Test()
+        {
+            throw new NotImplementedException();
         }
     }
 }

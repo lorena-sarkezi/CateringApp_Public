@@ -10,6 +10,10 @@ using CateringApp.Data;
 using Microsoft.EntityFrameworkCore;
 using CateringApp.Web.Services;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Primitives;
+using System.Threading.Tasks;
 
 namespace CateringApp.Web
 {
@@ -32,13 +36,46 @@ namespace CateringApp.Web
             services.AddDbContext<CateringDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
 
-            var authSettingsSection = Configuration.GetSection("AuthSettings");
+            IConfigurationSection authSettingsSection = Configuration.GetSection("AuthSettings");
             services.Configure<AuthSettings>(authSettingsSection);
 
-            var authSettings = authSettingsSection.Get<AuthSettings>();
-            var key = Encoding.ASCII.GetBytes(authSettings.Secret);
+            AuthSettings authSettings = authSettingsSection.Get<AuthSettings>();
+            byte[] key = Encoding.ASCII.GetBytes(authSettings.Secret);
 
-            
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+                x.Events = new JwtBearerEvents 
+                { 
+                    OnTokenValidated = context =>
+                    {
+                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+                        var userId = int.Parse(context.Principal.Identity.Name);
+                        var user = userService.GetUserById(userId);
+                        if (user == null)
+                        {
+                            // return unauthorized if user no longer exists
+                            context.Fail("Unauthorized");
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
+            services.AddScoped<IUserService, UserService>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -81,6 +118,21 @@ namespace CateringApp.Web
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
+            //app.Use(async (context, next) =>
+            //{
+            //    StringValues token;
+            //    bool TokenExists = context.Request.Headers.TryGetValue("Authorization", out token);
+
+            //    if (TokenExists)
+            //    {
+            //        await next();
+            //    }
+            //});
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
         }
     }
 }

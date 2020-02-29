@@ -8,8 +8,9 @@ using CateringApp.Web.Models;
 
 namespace CateringApp.Web.Services
 {
-    interface IUserService
+    public interface IUserService
     {
-        User Authenticate(string email, string password);
+        string TryLoginUser(LoginAPIModel model);
+        User GetUserById(int UserId);
     }
 }
