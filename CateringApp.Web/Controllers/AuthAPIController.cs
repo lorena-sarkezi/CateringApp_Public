@@ -15,7 +15,7 @@ using CateringApp.Web.Services;
 
 namespace CateringApp.Web.Controllers
 {
-    [Route("api/v1/auth")]
+    [Route("api/auth")]
     [ApiController]
     [Authorize]
     public class AuthAPIController : ControllerBase

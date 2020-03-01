@@ -64,6 +64,8 @@
     <Build Include="Tables\users.sql" />
     <Build Include="Tables\roles.sql" />
     <Build Include="Schema\cat_app.sql" />
+    <Build Include="Tables\caterings.sql" />
+    <Build Include="Tables\catering_employees.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="CateringApp.SQL.refactorlog" />

@@ -36,5 +36,7 @@ namespace CateringApp.Data.Models
 
 
         public virtual Role Role { get; set; }
+
+        public IEnumerable<CateringEmployees> CateringEmployees { get; set; }
     }
 }

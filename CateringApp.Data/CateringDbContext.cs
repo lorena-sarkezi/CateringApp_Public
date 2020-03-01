@@ -14,7 +14,26 @@ namespace CateringApp.Data
 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CateringEmployees>()
+                .HasKey(ce => new { ce.UserId, ce.CateringId });
+
+            modelBuilder.Entity<CateringEmployees>()
+                .HasOne(ce => ce.Catering)
+                .WithMany(c => c.CateringEmployees)
+                .HasForeignKey(ce => ce.CateringId);
+
+            modelBuilder.Entity<CateringEmployees>()
+                .HasOne(ce => ce.User)
+                .WithMany(u => u.CateringEmployees)
+                .HasForeignKey(ce => ce.UserId);
+
+        }
+
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<Catering> Caterings { get; set; }
+        public virtual DbSet<CateringEmployees> CateringEmployees { get; set; }
     }
 }

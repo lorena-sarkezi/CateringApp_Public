@@ -17,7 +17,7 @@ export class Counter extends Component {
 
   render() {
     return (
-      <div>
+      <main>
         <h1>Counter</h1>
 
         <p>This is a simple example of a React component.</p>
@@ -25,7 +25,7 @@ export class Counter extends Component {
         <p>Current count: <strong>{this.state.currentCount}</strong></p>
 
         <button onClick={this.incrementCounter}>Increment</button>
-      </div>
+      </main>
     );
   }
 }
