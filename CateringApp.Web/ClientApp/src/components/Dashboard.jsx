@@ -19,7 +19,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ListItems from './ListItems';
-import DashboardPaperExampleElems from './DashboardPaperExampleElems';
+import Caterings from './Caterings';
+import Home from './Home';
 import { Route } from 'react-router-dom';
 import { Switch } from 'react-router-dom';
 import { Counter } from './Counter';
@@ -137,11 +138,7 @@ export default function Dashboard() {
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         Catering App
                     </Typography>
-                    <IconButton color="inherit">
-                        <Badge badgeContent={4} color="secondary">
-                            <NotificationsIcon />
-                        </Badge>
-                    </IconButton>
+                    
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -164,14 +161,15 @@ export default function Dashboard() {
             { 
                 <Switch>
 
-                    <Route exact path="/">
-                        <DashboardPaperExampleElems />
-                    </Route>
+                    <Route exact path="/" component={Home}/>
 
-                    <Route path="/Orders">
-                        <Counter />
-                    </Route>
 
+                    <Route exact path="/caterings" component={Caterings} />
+
+                    <Route path="/orders" component={Home} />
+
+                    <Route path="/employees" component={Home} />
+                    <Route path="/vehicles" component={Home} />
 
                 </ Switch>
             }

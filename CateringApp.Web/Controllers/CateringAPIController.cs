@@ -4,9 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 using CateringApp.Data;
 using CateringApp.Data.Models;
+
+using CateringApp.Web.Models;
 
 namespace CateringApp.Web.Controllers
 {
@@ -21,7 +24,20 @@ namespace CateringApp.Web.Controllers
             this.cateringDbContext = cateringDbContext;
         }
 
+        [HttpGet]
 
+
+        [HttpGet("users")]
+        public async Task<IEnumerable<UserViewModel>> GetUsers()
+        {
+            IEnumerable<User> users = await cateringDbContext.Users
+                                                             .ToListAsync();
+
+            IEnumerable<UserViewModel> userViewModels = users.Select(x => x.GetViewModel())
+                                                             .ToList();
+
+            return userViewModels;
+        }
 
     }
 }

@@ -66,6 +66,10 @@
     <Build Include="Schema\cat_app.sql" />
     <Build Include="Tables\caterings.sql" />
     <Build Include="Tables\catering_employees.sql" />
+    <Build Include="Tables\dishes.sql" />
+    <Build Include="Tables\dish_types.sql" />
+    <Build Include="Tables\catering_dishes.sql" />
+    <Build Include="Tables\vehicles.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="CateringApp.SQL.refactorlog" />

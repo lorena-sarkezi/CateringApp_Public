@@ -4,10 +4,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PeopleIcon from '@material-ui/icons/People';
 import AirportShuttleIcon from '@material-ui/icons/AirportShuttle';
 import BusinessIcon from '@material-ui/icons/Business';
+import HomeIcon from '@material-ui/icons/Home';
 
 import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -51,13 +51,15 @@ export default function ListItems() {
     return (
         <div>
             <List >
-                <ListItemLink primary="Popis Cateringa" to="/" icon={<DashboardIcon />} />
+                <ListItemLink primary="Početna" to="/" icon={<HomeIcon />} />
+
+                <ListItemLink primary="Popis Cateringa" to="/caterings" icon={<DashboardIcon />} />
             
                 <ListItemLink primary="Administracija" to="/orders" icon={<BusinessIcon />} />
 
                 <ListItemLink primary="Zaposlenici" to="/employees" icon={<PeopleIcon />} />
 
-                <ListItemLink primary="Vozila" to="/orders" icon={<AirportShuttleIcon />} />
+                <ListItemLink primary="Vozila" to="/vehicles" icon={<AirportShuttleIcon />} />
 
 
             </List>

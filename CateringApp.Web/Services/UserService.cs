@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using CateringApp.Data;
-using CateringApp.Data.Models;
 using CateringApp.Web.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;

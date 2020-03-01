@@ -1,5 +1,6 @@
-﻿import React from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
+import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -19,6 +20,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ListItems from './ListItems';
+import AddIcon from '@material-ui/icons/Add';
+import AddCateringDialog from './AddCateringDialog';
 
 const drawerWidth = 240;
 
@@ -102,41 +105,69 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function DashboardPaperExampleElems() {
+export default function Caterings() {
     const classes = useStyles();
     const [open, setOpen] = React.useState(true);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [users, setUsers] = useState(null);
+    const [caterings, setCaterings] = useState(null);
     const handleDrawerOpen = () => {
         setOpen(true);
     };
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    const handleDialogClose = () =>{
+        setDialogOpen(false);
+    }
+
+    const handleDialogOpen = () => {
+        setDialogOpen(true);
+    }
+
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+    //useEffect(() => {
+         
+    //});
+
+    fetch("/api/catering/users")
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+        });
+
+    console.log(users);
+
     return (
-        <main className={classes.content}> { /* Umjesto ovoga ide switch */}
+        <main className={classes.content}> 
             <div className={classes.appBarSpacer} />
-            <Container maxWidth="lg" className={classes.container}>
+
+            <Container className={classes.container} maxWidth="xl">
                 <Grid container spacing={3}>
                     {/* Chart */}
-                    <Grid item xs={12} md={8} lg={9}>
+                    <Grid item xs={12} md={12} lg={12}>
+                        <div className={classes.appBarSpacer}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                startIcon={<AddIcon />}
+                                onClick={handleDialogOpen}
+                            >
+                                Dodaj
+                            </Button>
+                        </div>
                         <Paper className={fixedHeightPaper}>
                         </Paper>
                     </Grid>
-                    {/* Recent Deposits */}
-                    <Grid item xs={12} md={4} lg={3}>
-                        <Paper className={fixedHeightPaper}>
-                        </Paper>
-                    </Grid>
-                    {/* Recent Orders */}
-                    <Grid item xs={12}>
-                        <Paper className={classes.paper}>
-                        </Paper>
-                    </Grid>
+                    
                 </Grid>
                 <Box pt={4}>
                 </Box>
+                
             </Container>
+            <AddCateringDialog open={dialogOpen} handleClose={handleDialogClose} />
         </main>    
     )
 }
