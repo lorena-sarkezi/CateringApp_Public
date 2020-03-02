@@ -21,6 +21,8 @@ import { MenuItem} from '@material-ui/core';
 export default function AddCateringDialog(props) {
     let users = [];
 
+    console.log();
+
     const [usersState, setUsersState] = useState({});
 
     fetch("/api/catering/users")
