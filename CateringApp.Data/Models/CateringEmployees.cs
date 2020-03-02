@@ -16,6 +16,9 @@ namespace CateringApp.Data.Models
         [Required, Column("catering_id"), ForeignKey("Catering")]
         public int CateringId { get; set; }
 
+        [Required, Column("date_created")]
+        public DateTime DateCreated { get; set; }
+
         public virtual Catering Catering { get; set; }
         public virtual User User { get; set; }
     }

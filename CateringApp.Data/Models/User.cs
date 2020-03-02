@@ -15,13 +15,13 @@ namespace CateringApp.Data.Models
         [Required, ForeignKey("Role"), Column("role_id")]
         public int RoleId { get; set; }
 
-        [Required, Column("name")]
-        public string Name { get; set; }
+        [Column("first_name")]
+        public string FirstName { get; set; }
 
-        [Required, Column("surname")]
-        public string Surname { get; set; }
+        [Column("last_name")]
+        public string LastName { get; set; }
 
-        [Required, Column("email")]
+        [Column("email")]
         public string Email { get; set; }
 
         [Required, Column("username")]

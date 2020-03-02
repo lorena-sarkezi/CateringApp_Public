@@ -28,4 +28,32 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="id" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="a8c2754e-a916-4217-8105-b4007c33dc1c" ChangeDateTime="03/02/2020 16:49:12">
+    <Property Name="ElementName" Value="[cat_app].[dishes].[dish_type]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[cat_app].[dishes]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="dish_type_id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5fa43885-9747-49a4-9981-6766cf2798a0" ChangeDateTime="03/02/2020 17:00:14">
+    <Property Name="ElementName" Value="[cat_app].[users].[name]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[cat_app].[users]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="first_name" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ce91e543-dfcc-497d-96af-f2e904450062" ChangeDateTime="03/02/2020 17:00:19">
+    <Property Name="ElementName" Value="[cat_app].[users].[surname]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[cat_app].[users]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="last_name" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e3f58da7-703b-49f2-9400-e329eb23cd4a" ChangeDateTime="03/02/2020 17:06:32">
+    <Property Name="ElementName" Value="[cat_app].[catering_dishes].[date_create]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[cat_app].[catering_dishes]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="date_created" />
+  </Operation>
 </Operations>

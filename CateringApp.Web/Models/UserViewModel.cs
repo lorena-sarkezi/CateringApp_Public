@@ -20,7 +20,7 @@ namespace CateringApp.Web.Models
             UserViewModel viewModel = new UserViewModel
             {
                 UserId = user.UserId,
-                UserFullName = $"{user.Name} {user.Surname}"   
+                UserFullName = $"{user.FirstName} {user.LastName}"   
             };
 
             return viewModel;

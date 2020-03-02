@@ -24,7 +24,37 @@ namespace CateringApp.Web.Controllers
             this.cateringDbContext = cateringDbContext;
         }
 
-        [HttpGet]
+        [HttpPost("")] //  POST: /api/catering
+        public async Task<IActionResult> SubmitCatering([FromBody] CateringViewModel cateringViewModel)
+        {
+            Catering catering = new Catering
+            {
+                CateringName = cateringViewModel.CateringTitle,
+                ClientName = cateringViewModel.ClientName
+            };
+
+            cateringDbContext.Add(catering);
+            await cateringDbContext.SaveChangesAsync();
+
+            List<CateringEmployees> empsJunctionTemp = new List<CateringEmployees>();
+
+            foreach(UserViewModel User in cateringViewModel.AssignedUsers)
+            {
+                CateringEmployees temp = new CateringEmployees
+                {
+                    CateringId = catering.CateringId,
+                    UserId = User.UserId
+                };
+
+                empsJunctionTemp.Add(temp);
+            }
+
+            cateringDbContext.AddRange(empsJunctionTemp);
+            await cateringDbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
 
 
         [HttpGet("users")]

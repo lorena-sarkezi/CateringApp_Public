@@ -102,6 +102,9 @@ const useStyles = makeStyles(theme => ({
     fixedHeight: {
         height: 240,
     },
+    biggerText: {
+        fontSize:"1.5em",
+    }
 }));
 
 
@@ -128,17 +131,19 @@ export default function Caterings() {
 
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-    //useEffect(() => {
-         
-    //});
+    const fetchUsers = async () => {
+        const apiCall = await fetch("/api/catering/users");
+        const users = await apiCall.json();
+        setUsers(users);
+    }
 
-    fetch("/api/catering/users")
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-        });
+    useEffect(() => {
+        fetchUsers();
+        console.log(users);    
+    },[]);
 
-    console.log(users);
+
+    
 
     return (
         <main className={classes.content}> 
@@ -146,7 +151,6 @@ export default function Caterings() {
 
             <Container className={classes.container} maxWidth="xl">
                 <Grid container spacing={3}>
-                    {/* Chart */}
                     <Grid item xs={12} md={12} lg={12}>
                         <div className={classes.appBarSpacer}>
                             <Button
@@ -154,17 +158,19 @@ export default function Caterings() {
                                 color="primary"
                                 startIcon={<AddIcon />}
                                 onClick={handleDialogOpen}
+                                className={classes.biggerText}
                             >
                                 Dodaj
                             </Button>
                         </div>
                         <Paper className={fixedHeightPaper}>
+                            <Grid item lg={12}>
+                                <h4>Popis Cateringa</h4>
+                            </Grid>
                         </Paper>
                     </Grid>
                     
                 </Grid>
-                <Box pt={4}>
-                </Box>
                 
             </Container>
             <AddCateringDialog open={dialogOpen} handleClose={handleDialogClose} />
