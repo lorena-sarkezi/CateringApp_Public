@@ -21,9 +21,9 @@ I pogotovo ne okidati merge/join u prazno.
 
 ## Stuff
 
-~~Fronta je pisana u Reactu, framework je React-Bootstrap https://react-bootstrap.github.io/
+~~Fronta je pisana u Reactu, framework je React-Bootstrap https://react-bootstrap.github.io/~~
 
-~~Bilo bi dobro prebaciti na Material-UI, https://themes.material-ui.com/
+~~Bilo bi dobro prebaciti na Material-UI, https://themes.material-ui.com/~~
 
 Baza je gotova, napisabi svi eniteti/modeli, postavljene relacije
 
