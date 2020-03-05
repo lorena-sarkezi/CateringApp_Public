@@ -1,4 +1,4 @@
-﻿import React, {useState} from 'react';
+﻿import React, {useState, useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -12,26 +12,34 @@ import Select from '@material-ui/core/Select';
 import {FormControl} from '@material-ui/core';
 import {Divider} from '@material-ui/core';
 import { MenuItem} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import {Container} from "@material-ui/core";
 
 
-
-
+const useStyles = makeStyles(theme => ({
+    root: {
+      '& > *': {
+        margin: theme.spacing(1),
+        width: 200,
+      },
+    },
+  }));
 
 
 export default function AddCateringDialog(props) {
-    let users = [];
 
-    console.log();
+    const [users, setUsers] = useState(null);
 
-    const [usersState, setUsersState] = useState({});
+    const fetchUsers = async () => {
+        const apiCall = await fetch("/api/catering/users");
+        const usersRes = await apiCall.json();
+        console.log(usersRes)
+        setUsers(usersRes);
+    }
 
-    fetch("/api/catering/users")
-    .then(res => res.json())
-    .then(data => {
-        users = data;
-        //setUsersState(data);
-        console.log(data);
-    });
+    useEffect(() => {
+        fetchUsers();
+    }, []);
 
     //const userOptions = 
 
@@ -51,6 +59,9 @@ export default function AddCateringDialog(props) {
 
     
 
+    const classes = useStyles();
+    
+
     const handleCateringNameChange = (event) => {
         setCateringName(event.target.value);
         setIsValidCateringName(cateringName != ""  );
@@ -61,20 +72,27 @@ export default function AddCateringDialog(props) {
         setClientName(event.target.value);
     }
 
-    const onSaveHandler = () => {
+    const onSaveHandler = async () => {
         if(isValidCateringName && cateringName != ""){
             const data = {
-                cateringName:cateringName,
+                cateringTitle:cateringName,
                 clientName:clientName,
-                user: [selectedUser]
+                assignedUsersIds: [selectedUser]
             };
-
             console.log(data);
     
-            fetch("/api/catering", {
+            const postData = await fetch("/api/catering",{
                 method: "post",
-                body: JSON.stringify(data)
-            }).then(props.handleClose);
+                body: JSON.stringify(data),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                  }
+            }).catch((error) => {
+                console.log(error)
+            });
+                
+            
         }
         else if (cateringName == ""){
             setIsValidCateringName(false);
@@ -86,60 +104,59 @@ export default function AddCateringDialog(props) {
         <Dialog open={props.open} onClose={props.handleClose} fullWidth={true} maxWidth="md">
             <DialogTitle id="catering-dialog-title" style={labelFontSize} disableTypography>Unos novog Cateringa</DialogTitle>
             <DialogContent>
-                <FormControl 
-                    fullWidth={true}
-                >
-                    <TextField 
-                        autoFocus
-                        
-                        label="Naziv Cateringa"
-                        type="text"
-                        fullWidth={true}
-                        onChange={handleCateringNameChange}
-                        required
-                        error={isValidCateringName == false}
-                        helperText={isValidCateringName==false ? "Obavezno polje" : ""}
-                        style={labelFontSize}
-                        autoFocus={false}
-                        inputProps={{
-                            style: {labelFontSize}
-                        }}
-                    />
-                    <Divider />
-                    <TextField 
-                        autoFocus
-                        
-                        label="Naziv klijenta"
-                        type="text"
-                        fullWidth={true}
-                        onChange={handleClientNameChange}
-                        required
-                        error={isValidCateringName == false}
-                        helperText={isValidCateringName==false ? "Obavezno polje" : ""}
-                        style={labelFontSize}
-                        autoFocus={false}
-                        inputProps={{
-                            style: {labelFontSize}
-                        }}
-                    />
-                    
-                    {/* <Autocomplete 
-                        id="users-dropdown"
-                        options={users}
-                        getOptionLabel={option => option.userFullName}
-                        value={val => val.userId}
-                        renderInput={params => <TextField {...params} label="Odabir zaposlenika" variant="outlined" />}
-                    /> */}
-                    <Divider />
 
-                    <Select onChange={(event) => setSelectedUser(event.target.value)} >
-                        <MenuItem value="" disabled>Zaposlenik...</MenuItem>
-                        {users.map(item =>(
+                <Container fixed>
+                    <form noValidate classname={classes.root}>
+                        <FormControl 
+                            fullWidth={true}
+                        >
+                            <TextField 
+                                autoFocus
+                                
+                                label="Naziv Cateringa"
+                                type="text"
+                                fullWidth={true}
+                                onChange={handleCateringNameChange}
+                                required
+                                error={isValidCateringName == false}
+                                helperText={isValidCateringName==false ? "Obavezno polje" : ""}
+                                style={labelFontSize}
+                                autoFocus={false}
+                                inputProps={{
+                                    style: {labelFontSize}
+                                }}
+                            />
+                            <Divider />
+                            <TextField 
+                                autoFocus
+                                
+                                label="Naziv klijenta"
+                                type="text"
+                                fullWidth={true}
+                                onChange={handleClientNameChange}
+                                required
+                                error={isValidCateringName == false}
+                                helperText={isValidCateringName==false ? "Obavezno polje" : ""}
+                                style={labelFontSize}
+                                autoFocus={false}
+                                inputProps={{
+                                    style: {labelFontSize}
+                                }}
+                            />
                             
-                            <MenuItem value={item.userId} key={item.userId}>{item.userFullName}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                            
+                            <Divider />
+        
+                            <Select onChange={(event) => setSelectedUser(event.target.value)} >
+                                <MenuItem value="" disabled>Zaposlenik...</MenuItem>
+                                {users != null ? users.map(item =>{
+                                    
+                                    return <MenuItem value={item.userId} key={item.userId}>{item.userFullName}</MenuItem>;
+                                }) : null}
+                            </Select>
+                        </FormControl>
+                    </form>
+                </Container>
                 
             </DialogContent>
             <DialogActions>

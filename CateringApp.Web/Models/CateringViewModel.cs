@@ -11,7 +11,9 @@ namespace CateringApp.Web.Models
     {
         public string CateringTitle { get; set; }
         public string ClientName { get; set; }
-        public List<UserViewModel> AssignedUsers { get; set; }
+        public List<UserViewModel>? AssignedUsers { get; set; }
+        public List<int>? AssignedUsersIds { get; set; }
+
     }
 
     public static partial class ModelExtensions
@@ -23,15 +25,17 @@ namespace CateringApp.Web.Models
             viewModel.CateringTitle = catering.CateringName;
             viewModel.ClientName = catering.ClientName;
 
-            viewModel.AssignedUsers = new List<UserViewModel>();
-
-            foreach(CateringEmployees emp in catering.CateringEmployees)
+            if(catering.CateringEmployees != null)
             {
-                viewModel.AssignedUsers.Add(emp.User.GetViewModel());
+                viewModel.AssignedUsers = new List<UserViewModel>();
+
+                foreach (CateringEmployees emp in catering.CateringEmployees)
+                {
+                    viewModel.AssignedUsers.Add(emp.User.GetViewModel());
+                }
             }
 
             return viewModel;
-
         }
     }
 

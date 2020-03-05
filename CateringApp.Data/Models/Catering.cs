@@ -19,8 +19,13 @@ namespace CateringApp.Data.Models
         [Required, Column("client_name")]
         public string ClientName { get; set; }
 
-        [Required, DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [Required, Column("date_created"), DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime DateCreated { get; set; }
+
+        [Column("vehicle_id"), ForeignKey("Vehicle")]
+        public int VehicleId { get; set; }
+
+        public virtual Vehicle Vehicle { get; set; }
 
         public IEnumerable<CateringEmployees> CateringEmployees { get; set; }
         public IEnumerable<CateringDishes> CateringDishes { get; set; }

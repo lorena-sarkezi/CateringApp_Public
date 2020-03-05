@@ -27,34 +27,52 @@ namespace CateringApp.Web.Controllers
         [HttpPost("")] //  POST: /api/catering
         public async Task<IActionResult> SubmitCatering([FromBody] CateringViewModel cateringViewModel)
         {
-            Catering catering = new Catering
+            if(cateringViewModel.AssignedUsersIds != null && cateringViewModel.AssignedUsersIds.Count > 0)
             {
-                CateringName = cateringViewModel.CateringTitle,
-                ClientName = cateringViewModel.ClientName
-            };
-
-            cateringDbContext.Add(catering);
-            await cateringDbContext.SaveChangesAsync();
-
-            List<CateringEmployees> empsJunctionTemp = new List<CateringEmployees>();
-
-            foreach(UserViewModel User in cateringViewModel.AssignedUsers)
-            {
-                CateringEmployees temp = new CateringEmployees
+                Catering catering = new Catering
                 {
-                    CateringId = catering.CateringId,
-                    UserId = User.UserId
+                    CateringName = cateringViewModel.CateringTitle,
+                    ClientName = cateringViewModel.ClientName
                 };
 
-                empsJunctionTemp.Add(temp);
+                cateringDbContext.Add(catering);
+                await cateringDbContext.SaveChangesAsync();
+
+                List<CateringEmployees> empsJunctionTemp = new List<CateringEmployees>();
+
+                foreach (int userId in cateringViewModel.AssignedUsersIds)
+                {
+                    CateringEmployees temp = new CateringEmployees
+                    {
+                        CateringId = catering.CateringId,
+                        UserId = userId
+                    };
+
+                    empsJunctionTemp.Add(temp);
+                }
+
+                cateringDbContext.AddRange(empsJunctionTemp);
+                await cateringDbContext.SaveChangesAsync();
+
+                return Ok();
             }
-
-            cateringDbContext.AddRange(empsJunctionTemp);
-            await cateringDbContext.SaveChangesAsync();
-
-            return Ok();
+            else
+            {
+                return new StatusCodeResult(500);
+            }
+            
         }
 
+        [HttpGet("all")]
+        public async Task<List<CateringViewModel>> GetAllCaterings()
+        {
+            List<Catering> allCateringsList = await cateringDbContext.Caterings
+                                                                    .ToListAsync();
+
+            List<CateringViewModel> cateringViewModels = allCateringsList.Select(x => x.GetViewModel()).ToList();
+
+            return cateringViewModels;
+        }
 
 
         [HttpGet("users")]
