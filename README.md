@@ -31,10 +31,7 @@ Baza je gotova, napisabi svi eniteti/modeli, postavljene relacije
 
 Iako je React kod puno stvari fleksibilniji i snažniji, predugo traje razvj (nedostatak iskustva):
 
-Potencijalne teme:
+Korištena tema:
 
-* https://dashboardpack.com/theme-details/architectui-html-dashboard-free/  
 * https://adminlte.io/  
-* https://startbootstrap.com/themes/sb-admin-2/
-* https://colorlib.com/wp/free-bootstrap-admin-dashboard-templates/
 
