@@ -1,19 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using CateringApp.Data;
+using CateringApp.Web.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
-using CateringApp.Data;
-using Microsoft.EntityFrameworkCore;
-using CateringApp.Web.Services;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Primitives;
-using System.Threading.Tasks;
 
 namespace CateringApp.Web
 {
@@ -28,10 +29,15 @@ namespace CateringApp.Web
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        { 
-            services.AddMvc().AddMvcOptions(options => options.EnableEndpointRouting = false);
+        {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
 
-            services.AddRazorPages().AddRazorRuntimeCompilation();
+            services.Configure<MvcOptions>(x => x.EnableEndpointRouting = false);
 
             services.AddDbContext<CateringDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
@@ -58,8 +64,8 @@ namespace CateringApp.Web
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
-                x.Events = new JwtBearerEvents 
-                { 
+                x.Events = new JwtBearerEvents
+                {
                     OnTokenValidated = context =>
                     {
                         var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
@@ -77,15 +83,14 @@ namespace CateringApp.Web
 
             services.AddScoped<IUserService, UserService>();
 
-            // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/build";
-            });
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        [System.Obsolete]
+        [Obsolete]
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -94,45 +99,23 @@ namespace CateringApp.Web
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+            app.UseCookiePolicy();
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
-
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
-            });
-
-            //app.Use(async (context, next) =>
-            //{
-            //    StringValues token;
-            //    bool TokenExists = context.Request.Headers.TryGetValue("Authorization", out token);
-
-            //    if (TokenExists)
-            //    {
-            //        await next();
-            //    }
-            //});
 
             app.UseAuthentication();
             app.UseAuthorization();
-
         }
     }
 }

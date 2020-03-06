@@ -7,7 +7,7 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "CateringApp.SQL", "Catering
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CateringApp.Data", "CateringApp.Data\CateringApp.Data.csproj", "{F4185E13-330F-41FA-ADD6-742DC5F2CADB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CateringApp.Web", "CateringApp.RazorWeb\CateringApp.Web.csproj", "{6B23A58E-3EBD-431E-9FB6-C5B52057EA57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CateringApp.Web", "CateringApp.Web\CateringApp.Web.csproj", "{017D8C36-21BB-4D2E-900A-7D1CA89B4A97}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,10 @@ Global
 		{F4185E13-330F-41FA-ADD6-742DC5F2CADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4185E13-330F-41FA-ADD6-742DC5F2CADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4185E13-330F-41FA-ADD6-742DC5F2CADB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B23A58E-3EBD-431E-9FB6-C5B52057EA57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B23A58E-3EBD-431E-9FB6-C5B52057EA57}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B23A58E-3EBD-431E-9FB6-C5B52057EA57}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B23A58E-3EBD-431E-9FB6-C5B52057EA57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{017D8C36-21BB-4D2E-900A-7D1CA89B4A97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{017D8C36-21BB-4D2E-900A-7D1CA89B4A97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{017D8C36-21BB-4D2E-900A-7D1CA89B4A97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{017D8C36-21BB-4D2E-900A-7D1CA89B4A97}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
