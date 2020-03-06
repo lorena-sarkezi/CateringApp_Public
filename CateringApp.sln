@@ -7,7 +7,7 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "CateringApp.SQL", "Catering
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CateringApp.Data", "CateringApp.Data\CateringApp.Data.csproj", "{F4185E13-330F-41FA-ADD6-742DC5F2CADB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CateringApp.RazorWeb", "CateringApp.RazorWeb\CateringApp.RazorWeb.csproj", "{6B23A58E-3EBD-431E-9FB6-C5B52057EA57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CateringApp.Web", "CateringApp.RazorWeb\CateringApp.Web.csproj", "{6B23A58E-3EBD-431E-9FB6-C5B52057EA57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
