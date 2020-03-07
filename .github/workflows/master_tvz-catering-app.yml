@@ -37,7 +37,7 @@ jobs:
  
 
     - name: Build with dotnet
-      run: dotnet build
+      run: dotnet build /home/runner/work/CateringApp/CateringApp/CateringApp.Web/CateringApp.Web.csproj
 
     - name: dotnet publish
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
