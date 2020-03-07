@@ -37,5 +37,5 @@ jobs:
       with:
         app-name: 'tvz-catering-app'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_7880f06ce30143c7baa45e86cb15ae8c }}
+        publish-profile: ${{ secrets.AZURE_DEPLOY_PROFILE }}
         package: ${{env.DOTNET_ROOT}}/myapp 
