@@ -20,11 +20,17 @@ jobs:
       with:
         dotnet-version: '3.1.102'
 
+    - name: Remove SQL Project from solution
+      run: dotnet sln /home/runner/work/CateringApp/CateringApp/CateringApp.sln remove /home/runner/work/CateringApp/CateringApp/CateringApp/CaterginApp.SQL/CateringApp.SQL.sqlproj
+      
+    - name: Dotnet restore
+      run: dotnet restore /p:RestoreUseSkipNonexistentTargets="false"
+    
     - name: Build with dotnet
-      run: dotnet build --configuration Release
+      run: dotnet build /home/runner/work/CateringApp/CateringApp/CateringApp.Web/CateringApp.Web.csproj --configuration Release
 
     - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      run: dotnet publish /home/runner/work/CateringApp/CateringApp/CateringApp.Web/CateringApp.Web.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v1
