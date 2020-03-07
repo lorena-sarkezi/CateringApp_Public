@@ -19,6 +19,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.102'
+        
+    - name: Set up MsBuild
+      run: dotnet add package Microsoft.Data.Tools.Msbuild --version 10.0.61804.210
     
     - name: Remove SQL Project from solution
       run: dotnet sln /home/runner/work/CateringApp/CateringApp/CateringApp.sln remove /home/runner/work/CateringApp/CateringApp/CateringApp/CaterginApp.SQL/CateringApp.SQL.sqlproj
