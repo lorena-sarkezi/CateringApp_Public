@@ -19,33 +19,17 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.102'
-        
-  #  - name: Set up MsBuild
-  #    run: dotnet add package Microsoft.Data.Tools.Msbuild --version 10.0.61804.210
-    
-    - name: Remove SQL Project from solution
-      run: dotnet sln /home/runner/work/CateringApp/CateringApp/CateringApp.sln remove /home/runner/work/CateringApp/CateringApp/CateringApp/CaterginApp.SQL/CateringApp.SQL.sqlproj
-      
-    - name: Dotnet restore
-      run: dotnet restore /p:RestoreUseSkipNonexistentTargets="false"
-      
-  #  - name: MsBuild Restore
-  #    run: msbuild /t:restore /home/runner/work/CateringApp/CateringApp/CateringApp.sln /p:RestoreUseSkipNonexistentTargets="false" /bl
-      
-  #  - name: MsBuild Build
-  #    run: msbuild /t:build /home/runner/work/CateringApp/CateringApp/CateringApp.sln /p:RestoreUseSkipNonexistentTargets="false" /bl
- 
 
     - name: Build with dotnet
-      run: dotnet build /home/runner/work/CateringApp/CateringApp/CateringApp.Web/CateringApp.Web.csproj
+      run: dotnet build --configuration Release
 
     - name: dotnet publish
-      run: dotnet publish /home/runner/work/CateringApp/CateringApp/CateringApp.Web/CateringApp.Web.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v1
       with:
         app-name: 'tvz-catering-app'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_a9c5e6feb912428c844230d5b2ab3a63 }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_7880f06ce30143c7baa45e86cb15ae8c }}
         package: ${{env.DOTNET_ROOT}}/myapp 
