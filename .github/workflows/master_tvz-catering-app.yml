@@ -23,9 +23,6 @@ jobs:
       
     - name: Dotnet restore
       run: dotnet restore
-      
-    - name: Set up build error ignore
-      run: dotnet build --unsupportedProjectAction=<ignore>
 
     - name: Build with dotnet
       run: dotnet build --no-restore --configuration Release
