@@ -24,8 +24,12 @@ jobs:
     - name: Dotnet restore
       run: dotnet restore
       
-    - name: MsBuild
-      run: msbuild
+    - name: MsBuild Restore
+      run: msbuild /t:restore /home/runner/work/CateringApp/CateringApp/CateringApp.SQL/CateringApp.SQL.sqlproj
+
+    - name: MsBuild Build
+      run: msbuild /t:build /home/runner/work/CateringApp/CateringApp/CateringApp.SQL/CateringApp.SQL.sqlproj
+ 
 
     - name: Build with dotnet
       run: dotnet build
