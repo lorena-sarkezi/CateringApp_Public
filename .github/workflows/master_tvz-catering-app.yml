@@ -23,9 +23,12 @@ jobs:
       
     - name: Dotnet restore
       run: dotnet restore
+      
+    - name: MsBuild
+      run: msbuild
 
     - name: Build with dotnet
-      run: dotnet msbuild
+      run: dotnet build
 
     - name: dotnet publish
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
