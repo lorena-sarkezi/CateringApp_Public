@@ -21,18 +21,18 @@ jobs:
         dotnet-version: '3.1.102'
       
       
-    - name: Dotnet restore
-      run: dotnet restore /p:RestoreUseSkipNonexistentTargets="false"
+    #- name: Dotnet restore
+     # run: dotnet restore /p:RestoreUseSkipNonexistentTargets="false"
       
-   # - name: MsBuild Restore
-    #  run: msbuild /t:restore /home/runner/work/CateringApp/CateringApp/CateringApp.SQL/CateringApp.SQL.sqlproj
-
-   # - name: MsBuild Build
-    #  run: msbuild /t:build /home/runner/work/CateringApp/CateringApp/CateringApp.SQL/CateringApp.SQL.sqlproj
+    - name: MsBuild Restore
+      run: msbuild /t:restore /home/runner/work/CateringApp/CateringApp/CateringApp.sln
+      
+    - name: MsBuild Build
+      run: msbuild /t:build /home/runner/work/CateringApp/CateringApp/CateringApp.sln
  
 
-    - name: Build with dotnet
-      run: dotnet build
+    #- name: Build with dotnet
+     # run: dotnet build
 
     - name: dotnet publish
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
