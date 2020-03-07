@@ -25,10 +25,10 @@ jobs:
      # run: dotnet restore /p:RestoreUseSkipNonexistentTargets="false"
       
     - name: MsBuild Restore
-      run: msbuild /t:restore /home/runner/work/CateringApp/CateringApp/CateringApp.sln
+      run: msbuild /t:restore /home/runner/work/CateringApp/CateringApp/CateringApp.sln /p:RestoreUseSkipNonexistentTargets="true" /bl
       
     - name: MsBuild Build
-      run: msbuild /t:build /home/runner/work/CateringApp/CateringApp/CateringApp.sln
+      run: msbuild /t:build /home/runner/work/CateringApp/CateringApp/CateringApp.sln /p:RestoreUseSkipNonexistentTargets="true" /bl
  
 
     #- name: Build with dotnet
