@@ -47,8 +47,15 @@
 
                 var userSelect: HTMLSelectElement = <HTMLSelectElement>document.getElementById("dropdown-users");
                 var vehicleSelect: HTMLSelectElement = <HTMLSelectElement>document.getElementById("dropdown-vehicles");
+
+                //Praznjenje dropdowna
                 for (var i = userSelect.options.length - 1; i >= 0; i--) {
                     userSelect.options[i] = null;
+                }
+
+                //Praznjenje dropdowna
+                for (var i = vehicleSelect.options.length - 1; i >= 0; i--) {
+                    vehicleSelect.options[i] = null;
                 }
 
                 $cateringData.users.forEach((user: Models.IUserModel) => {

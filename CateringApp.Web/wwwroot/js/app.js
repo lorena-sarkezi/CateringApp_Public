@@ -42,8 +42,13 @@ var Caterings;
                 $cateringData = data;
                 var userSelect = document.getElementById("dropdown-users");
                 var vehicleSelect = document.getElementById("dropdown-vehicles");
+                //Praznjenje dropdowna
                 for (var i = userSelect.options.length - 1; i >= 0; i--) {
                     userSelect.options[i] = null;
+                }
+                //Praznjenje dropdowna
+                for (var i = vehicleSelect.options.length - 1; i >= 0; i--) {
+                    vehicleSelect.options[i] = null;
                 }
                 $cateringData.users.forEach(function (user) {
                     var option = document.createElement("option");
@@ -62,6 +67,9 @@ var Caterings;
         $("#add-catering-modal").modal("show");
     }
     Caterings.HandleModalOpen = HandleModalOpen;
+    function SubmitCatering() {
+    }
+    Caterings.SubmitCatering = SubmitCatering;
 })(Caterings || (Caterings = {}));
 //export function HandleAjaxError(jqXHR: JQueryXHR, status: string, errorThrown: string) {
 //}

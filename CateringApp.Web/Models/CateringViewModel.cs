@@ -11,8 +11,8 @@ namespace CateringApp.Web.Models
     {
         public string CateringTitle { get; set; }
         public string ClientName { get; set; }
-        public List<UserViewModel>? AssignedUsers { get; set; }
-        public List<int>? AssignedUsersIds { get; set; }
+        public List<UserViewModel> AssignedUsers { get; set; }
+        public List<int> AssignedUsersIds { get; set; }
 
     }
 
