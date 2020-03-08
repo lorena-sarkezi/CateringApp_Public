@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -85,6 +86,11 @@ namespace CateringApp.Web
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
+            services.Configure<RazorViewEngineOptions>(o =>
+            {
+                o.ViewLocationFormats.Add("/Views/Caterings" + RazorViewEngine.ViewExtension);
+                o.ViewLocationFormats.Add("/Views/Vehicles" + RazorViewEngine.ViewExtension);
+            });
 
             services.AddMvc();
         }

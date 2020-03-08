@@ -1,8 +1,14 @@
+//export function HandleAjaxError(jqXHR: JQueryXHR, status: string, errorThrown: string) {
+//}
 var Caterings;
 (function (Caterings) {
     var $table;
     var $cateringData;
     function Initialize() {
+        //var n = document.createElement('script');
+        //n.setAttribute('language', 'JavaScript');
+        //n.setAttribute('src', 'https://debug.datatables.net/debug.js');
+        //document.body.appendChild(n);
         $("#dropdown-users").select2();
         $("#dropdown-vehicles").select2({
             dropdownParent: $('#add-catering-modal')
@@ -11,24 +17,48 @@ var Caterings;
             columns: [
                 {
                     title: "R. br.",
-                    width: "10%"
+                    width: "10%",
+                    data: "clientName"
                 },
                 {
-                    title: "Naziv cateringa"
+                    title: "Naziv cateringa",
+                    data: "cateringName"
                 },
                 {
-                    title: "Klijent"
+                    title: "Klijent",
+                    data: "clientName"
                 },
                 {
-                    title: "Akcije"
+                    title: "Radnje",
+                    data: "clientName",
+                    className: "dt-center",
+                    render: function (colData, data, row) {
+                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" ><i class=\"fas fa-edit\"></i></button><button class=\"btn btn-danger\" alt=\"Uredi\"><i class=\"fas fa-trash-alt\"></i></button>";
+                    }
                 }
-            ],
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
+            ]
+        });
+        $table.on('order.dt search.dt', function () {
+            $table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        InitData();
+    }
+    Caterings.Initialize = Initialize;
+    function InitData() {
+        // let caterings: Models.ICateringViewModel[];
+        $.ajax({
+            url: "/api/catering/all_names_only",
+            contentType: "application/json",
+            method: "get",
+            success: function (data) {
+                console.log(data);
+                $table.clear().rows.add(data).draw();
             }
         });
     }
-    Caterings.Initialize = Initialize;
+    Caterings.InitData = InitData;
     function HandleModalOpen() {
         $(".spinner", "#add-catering-modal").show();
         $(".row", "#add-catering-modal").hide();
@@ -68,9 +98,129 @@ var Caterings;
     }
     Caterings.HandleModalOpen = HandleModalOpen;
     function SubmitCatering() {
+        var users = [];
+        var vehicles = [];
+        $("#dropdown-users").find(":selected").each(function (index, elem) {
+            var user = {
+                userId: parseInt(elem.value),
+                userFullName: elem.text
+            };
+            users.push(user);
+        });
+        $("#dropdown-vehicles").find(":selected").each(function (index, elem) {
+            var vehicle = {
+                vehicleId: parseInt(elem.value),
+                vehicleName: elem.text
+            };
+            vehicles.push(vehicle);
+        });
+        var catering = {
+            dishes: [],
+            users: users,
+            vehicles: vehicles,
+            cateringName: $("#catering-name").val().toString(),
+            clientName: $("#client-name").val().toString(),
+            cateringId: 0
+        };
+        $.ajax({
+            url: "/api/catering",
+            contentType: "application/json",
+            method: "post",
+            data: JSON.stringify(catering),
+            success: function () {
+                $("#add-catering-modal").modal("hide");
+                InitData();
+            }
+        });
+        console.log(catering);
     }
     Caterings.SubmitCatering = SubmitCatering;
 })(Caterings || (Caterings = {}));
-//export function HandleAjaxError(jqXHR: JQueryXHR, status: string, errorThrown: string) {
-//}
+var Vehicles;
+(function (Vehicles) {
+    var $table;
+    var vehicleId = 0;
+    function Initialize() {
+        $table = $("#vehicles-list-table").DataTable({
+            columns: [
+                {
+                    title: "R. br.",
+                    data: "vehicleId",
+                    width: "10%"
+                },
+                {
+                    title: "Naziv vozila",
+                    data: "vehicleName"
+                },
+                {
+                    title: "Radnje",
+                    data: "vehicleId",
+                    className: "dt-center",
+                    width: "20%",
+                    render: function (colData, data, row) {
+                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" ><i class=\"fas fa-edit\"></i></button><button class=\"btn btn-danger\" alt=\"Uredi\"><i class=\"fas fa-trash-alt\"></i></button>";
+                    }
+                }
+            ]
+        });
+        $table.on('order.dt search.dt', function () {
+            $table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        InitData();
+    }
+    Vehicles.Initialize = Initialize;
+    function InitData() {
+        $.ajax({
+            url: "/api/vehicles",
+            contentType: "application/json",
+            method: "get",
+            success: function (data) {
+                console.log(data);
+                $table.clear().rows.add(data).draw();
+            }
+        });
+    }
+    Vehicles.InitData = InitData;
+    function EditVehicle(vehicleId) {
+        $.ajax({
+            url: "/api/vehicles/" + vehicleId,
+            contentType: "application/json",
+            method: "get",
+            success: function (data) {
+                vehicleId = data.vehicleId;
+                $("#vehicle-name").val(data.vehicleName);
+            }
+        });
+    }
+    Vehicles.EditVehicle = EditVehicle;
+    function SubmitVehicle() {
+        var vehicle = {
+            vehicleId: vehicleId,
+            vehicleName: $("#vehicle-name").val().toString()
+        };
+        var submissionUrl;
+        var method;
+        if (vehicleId == 0) {
+            submissionUrl = "/api/vehicles";
+            method = "post";
+        }
+        else {
+            submissionUrl = "/api/vehicles/" + vehicleId;
+            method = "put";
+        }
+        $.ajax({
+            url: submissionUrl,
+            method: method,
+            contentType: "application/json",
+            data: JSON.stringify(vehicle),
+            success: function () {
+                $("#add-vehicle-modal").modal("hide");
+                InitData();
+            }
+        });
+    }
+    Vehicles.SubmitVehicle = SubmitVehicle;
+})(Vehicles || (Vehicles = {}));
 //# sourceMappingURL=app.js.map

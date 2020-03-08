@@ -1,13 +1,18 @@
 ﻿module Caterings.Models {
-    export interface ICateringModel {
-        
-    }
 
     export interface ICateringDetailModel {
-        id: number;
+        cateringId: number;
+        cateringName: string;
+        clientName: string;
         users: IUserModel[];
-        vehicles: IVehicle[];
+        vehicles: Vehicles.Models.IVehicle[];
         dishes: IDish[];
+    }
+
+    export interface ICateringViewModel {
+        cateringId: number;
+        cateringName: string;
+        clientName: string;
     }
 
     export interface IUserModel {
@@ -16,10 +21,7 @@
         //lastName: string;
     }
 
-    export interface IVehicle {
-        vehicleId: number;
-        vehicleName: string;
-    }
+    
 
     export interface IDish {
         dishId: number;

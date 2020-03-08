@@ -39,11 +39,11 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Ime Cateringa</label>
-                            <input type="text" class="form-control" />
+                            <input type="text" class="form-control" id="catering-name"/>
                         </div>
                         <div class="form-group">
                             <label>Ime klijenta</label>
-                            <input type="text" class="form-control" />
+                            <input type="text" class="form-control" id="client-name"/>
                         </div>
                         <div class="form-group">
                             <label for="dropdown-users">Zaduženi zaposlenici</label>
@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Spremi</button>
+                <button type="button" class="btn btn-primary" onclick="Caterings.SubmitCatering()">Spremi</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
             </div>
         </div>

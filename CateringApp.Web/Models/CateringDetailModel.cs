@@ -3,21 +3,57 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using CateringApp.Data.Models;
+using CateringApp.Web.Models;
+
 namespace CateringApp.Web.Models
 {
     public class CateringDetailModel
     {
         public int CateringId { get; set; }
 
+        public string CateringName { get; set; }
+        public string ClientName { get; set; }
+
         public List<UserViewModel> Users { get; set; }
-        public List<DishModel> Dishes { get; set; }
-        public List<VehicleModel> Vehicles { get; set; }
+        public List<DishViewModel> Dishes { get; set; }
+        public List<VehicleViewModel> Vehicles { get; set; }
 
         public CateringDetailModel()
         {
             Users = new List<UserViewModel>();
-            Dishes = new List<DishModel>();
-            Vehicles = new List<VehicleModel>();
+            Dishes = new List<DishViewModel>();
+            Vehicles = new List<VehicleViewModel>();
+        }
+    }
+
+    public static partial class ModelExtensions
+    {
+        public static CateringDetailModel GetCateringDetailModel(this Catering catering)
+        {
+            CateringDetailModel model = new CateringDetailModel
+            {
+                CateringId = catering.CateringId,
+                CateringName = catering.CateringName,
+                ClientName = catering.ClientName
+            };
+
+            if(catering.CateringEmployees != null)
+            {
+                model.Users = catering.CateringEmployees.Select(x => x.User.GetViewModel()).ToList();
+            }
+
+            if(catering.CateringDishes != null)
+            {
+                model.Dishes = catering.CateringDishes.Select(x => x.Dish.GetViewModel()).ToList();
+            }
+
+            if(catering.Vehicle != null)
+            {
+                model.Vehicles = new List<VehicleViewModel> { catering.Vehicle.GetViewModel() };
+            }
+
+            return model;
         }
     }
 }

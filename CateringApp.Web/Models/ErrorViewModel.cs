@@ -1,6 +1,6 @@
 using System;
 
-namespace CateringApp.RazorWeb.Models
+namespace CateringApp.Web.Models
 {
     public class ErrorViewModel
     {

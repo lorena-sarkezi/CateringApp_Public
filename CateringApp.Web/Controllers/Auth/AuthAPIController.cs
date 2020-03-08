@@ -13,7 +13,7 @@ using CateringApp.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using CateringApp.Web.Services;
 
-namespace CateringApp.Web.Controllers
+namespace CateringApp.Web.Controllers.Auth
 {
     [Route("api/auth")]
     [ApiController]

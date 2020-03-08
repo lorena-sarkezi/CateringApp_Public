@@ -7,6 +7,6 @@ namespace CateringApp.Web.Models
 {
     public class CateringSubmissionModel
     {
-        
+        public int CateringId { get; set; }
     }
 }

@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="TypeScript\Vehicles\Models.ts" />
+    <None Remove="TypeScript\Vehicles\VehiclesList.ts" />
     <None Remove="Views\Caterings\CateringsList.ts" />
     <None Remove="Views\Caterings\Models.ts" />
     <None Remove="Views\Shared\Globals.ts" />

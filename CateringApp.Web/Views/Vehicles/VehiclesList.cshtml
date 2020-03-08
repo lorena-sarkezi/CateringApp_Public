@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewData["Title"] = "Vozila";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-catering" onclick="Vehicles.HandleModalOpen()"><i class="fas fa-plus"></i> Dodaj vozilo</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="card-text">
+                    <table id="vehicles-list-table" class="table table-hover text-nowrap" style="width:100%"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade add-catering" role="dialog" id="add-vehicle-modal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Unos vozila</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Naziv vozila</label>
+                            <input type="text" class="form-control" id="vehicle-name" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="Vehicles.SubmitVehicle()">Spremi</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    Vehicles.Initialize();
+</script>
+

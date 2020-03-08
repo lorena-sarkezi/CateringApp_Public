@@ -15,65 +15,56 @@ namespace CateringApp.Web.Controllers
 {
     [Route("api/catering")]
     [ApiController]
-    public class CateringAPIController : ControllerBase
+    public class CateringsAPIController : ControllerBase
     {
         private readonly CateringDbContext cateringDbContext;
 
-        public CateringAPIController(CateringDbContext cateringDbContext)
+        public CateringsAPIController(CateringDbContext cateringDbContext)
         {
             this.cateringDbContext = cateringDbContext;
         }
 
-        [HttpPost("")] //  POST: /api/catering
-        public async Task<IActionResult> SubmitCatering([FromBody] CateringViewModel cateringViewModel)
-        {
-            if(cateringViewModel.AssignedUsersIds != null && cateringViewModel.AssignedUsersIds.Count > 0)
-            {
-                Catering catering = new Catering
-                {
-                    CateringName = cateringViewModel.CateringTitle,
-                    ClientName = cateringViewModel.ClientName
-                };
 
-                cateringDbContext.Add(catering);
-                await cateringDbContext.SaveChangesAsync();
-
-                List<CateringEmployees> empsJunctionTemp = new List<CateringEmployees>();
-
-                foreach (int userId in cateringViewModel.AssignedUsersIds)
-                {
-                    CateringEmployees temp = new CateringEmployees
-                    {
-                        CateringId = catering.CateringId,
-                        UserId = userId
-                    };
-
-                    empsJunctionTemp.Add(temp);
-                }
-
-                cateringDbContext.AddRange(empsJunctionTemp);
-                await cateringDbContext.SaveChangesAsync();
-
-                return Ok();
-            }
-            else
-            {
-                return new StatusCodeResult(500);
-            }
-            
-        }
-
-        [HttpGet("all")]
+        [HttpGet("all_names_only")]
         public async Task<List<CateringViewModel>> GetAllCaterings()
         {
             List<Catering> allCateringsList = await cateringDbContext.Caterings
-                                                                    .ToListAsync();
+                                                                     .ToListAsync();
 
             List<CateringViewModel> cateringViewModels = allCateringsList.Select(x => x.GetViewModel()).ToList();
 
             return cateringViewModels;
         }
 
+        [HttpPost("")]
+        public async Task<IActionResult> SubmitCatering([FromBody] CateringDetailModel model)
+        {
+            Catering catering = new Catering
+            {
+                CateringName = model.CateringName,
+                ClientName = model.ClientName,
+                VehicleId = (int)model.Vehicles[0].VehicleId
+            };
+
+            cateringDbContext.Caterings.Add(catering);
+            await cateringDbContext.SaveChangesAsync();
+
+            List<CateringEmployees> cateringEmployees = new List<CateringEmployees>();
+
+            foreach (UserViewModel user in model.Users)
+            {
+                cateringEmployees.Add(new CateringEmployees
+                {
+                    CateringId = catering.CateringId,
+                    UserId = user.UserId
+                });
+            }
+
+            cateringDbContext.AddRange(cateringEmployees);
+            await cateringDbContext.SaveChangesAsync();
+
+            return Ok();
+        }
 
 
         [HttpGet("details")]
@@ -83,6 +74,7 @@ namespace CateringApp.Web.Controllers
             
             List<User> users = await cateringDbContext.Users.ToListAsync();
             List<Vehicle> vehicles = await cateringDbContext.Vehicles.ToListAsync();
+
 
             foreach(User user in users)
             {
@@ -97,6 +89,8 @@ namespace CateringApp.Web.Controllers
 
             return retModel;
         }
+
+        
 
 
         [HttpGet("users")]
