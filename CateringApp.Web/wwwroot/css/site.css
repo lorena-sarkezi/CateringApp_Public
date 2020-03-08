@@ -1,37 +1,44 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
-for details on configuring this project to bundle and minify static web assets. */
-body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿.spinner {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
 }
 
-/* Wrapping element */
-/* Set some basic padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
-}
-
-/* Carousel */
-.carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
-}
-
-/* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
-    width: 100%;
-}
-
-/* QR code generator */
-#qrCode {
-    margin: 15px;
-}
-
-/* Hide/rearrange for smaller screens */
-@media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
-        display: none;
+    .spinner:after {
+        content: " ";
+        display: block;
+        width: 64px;
+        height: 64px;
+        margin: 8px;
+        border-radius: 50%;
+        border: 6px solid #cef;
+        border-color: #cef transparent #cef transparent;
+        animation: spinner 1.2s linear infinite;
     }
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+div.modal-body > div.spinner {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
+div.modal-body > div.spinner:after {
+    border: 6px solid #6c757d !important;
+    border-color: #6c757d transparent #6c757d transparent !important;
+}
+
+div.dataTable{
+    width: 100% !important; /* Jer DataTables jede govna i stavlja vlastiti inline css -.- */
 }

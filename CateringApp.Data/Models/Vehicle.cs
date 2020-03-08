@@ -16,7 +16,7 @@ namespace CateringApp.Data.Models
         [Required, Column("vehicle_name")]
         public string VehicleName { get; set; }
 
-        [Required, Column("date_creted"), DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [Required, Column("date_created"), DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime DateCreated { get; set; }
 
 

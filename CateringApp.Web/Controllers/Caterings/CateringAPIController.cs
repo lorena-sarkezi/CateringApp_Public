@@ -75,6 +75,30 @@ namespace CateringApp.Web.Controllers
         }
 
 
+
+        [HttpGet("details")]
+        public async Task<CateringDetailModel> GetCateringCreationData()
+        {
+            CateringDetailModel retModel = new CateringDetailModel();
+            
+            List<User> users = await cateringDbContext.Users.ToListAsync();
+            List<Vehicle> vehicles = await cateringDbContext.Vehicles.ToListAsync();
+
+            foreach(User user in users)
+            {
+                retModel.Users.Add(user.GetViewModel());
+            }
+
+            foreach (Vehicle vehicle in vehicles)
+            {
+                retModel.Vehicles.Add(vehicle.GetViewModel());
+            }
+
+
+            return retModel;
+        }
+
+
         [HttpGet("users")]
         public async Task<IEnumerable<UserViewModel>> GetUsers()
         {

@@ -7,5 +7,6 @@ namespace CateringApp.Web.Models
 {
     public class CateringSubmissionModel
     {
+        
     }
 }

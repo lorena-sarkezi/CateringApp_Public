@@ -1,8 +1,71 @@
 ﻿
 @{
-    ViewData["Title"] = "CateringsList";
+    ViewData["Title"] = "Popis Cateringa";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>CateringsList</h2>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-catering" onclick="Caterings.HandleModalOpen()"><i class="fas fa-plus"></i> Novi catering</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="card-text">
+                    <table id="caterings-list-table" class="table table-hover text-nowrap" style="width:100%"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade add-catering" role="dialog" id="add-catering-modal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Unos Cateringa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="spinner"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Ime Cateringa</label>
+                            <input type="text" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Ime klijenta</label>
+                            <input type="text" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="dropdown-users">Zaduženi zaposlenici</label>
+                            <select id="dropdown-users" multiple="multiple" placeholder="Odaberi..." style="width:100%">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dropdown-vehicles">Vozilo</label>
+                            <select class="form-control" id="dropdown-vehicles" placeholder="Odaberi..." style="width:100%">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    Caterings.Initialize();
+</script>
