@@ -20,16 +20,22 @@ jobs:
       with:
         dotnet-version: '3.1.102'
 
+    - name: Remove SQL Project from solution
+      run: dotnet sln /home/runner/work/CateringApp/CateringApp/CateringApp.sln remove /home/runner/work/CateringApp/CateringApp/CateringApp/CaterginApp.SQL/CateringApp.SQL.sqlproj
+      
+    - name: Dotnet restore
+      run: dotnet restore /p:RestoreUseSkipNonexistentTargets="false"
+    
     - name: Build with dotnet
-      run: dotnet build --configuration Release
+      run: dotnet build /home/runner/work/CateringApp/CateringApp/CateringApp.Web/CateringApp.Web.csproj --configuration Release
 
     - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      run: dotnet publish /home/runner/work/CateringApp/CateringApp/CateringApp.Web/CateringApp.Web.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v1
       with:
         app-name: 'tvz-catering-app'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_a9c5e6feb912428c844230d5b2ab3a63 }}
+        publish-profile: ${{ secrets.AZURE_DEPLOY_PROFILE }}
         package: ${{env.DOTNET_ROOT}}/myapp 

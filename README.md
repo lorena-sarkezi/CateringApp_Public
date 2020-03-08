@@ -21,20 +21,10 @@ I pogotovo ne okidati merge/join u prazno.
 
 ## Stuff
 
-~~Fronta je pisana u Reactu, framework je React-Bootstrap https://react-bootstrap.github.io/~~
 
-~~Bilo bi dobro prebaciti na Material-UI, https://themes.material-ui.com/~~
+Korištena tema:
 
-Baza je gotova, napisabi svi eniteti/modeli, postavljene relacije
-
-## Prebacit ćemo se na Bootstrap i goli HTML/Razor + TypeScript
-
-Iako je React kod puno stvari fleksibilniji i snažniji, predugo traje razvj (nedostatak iskustva):
-
-Potencijalne teme:
-
-* https://dashboardpack.com/theme-details/architectui-html-dashboard-free/  
 * https://adminlte.io/  
-* https://startbootstrap.com/themes/sb-admin-2/
-* https://colorlib.com/wp/free-bootstrap-admin-dashboard-templates/
+
+
 
