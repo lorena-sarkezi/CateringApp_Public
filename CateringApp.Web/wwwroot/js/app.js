@@ -200,27 +200,82 @@ var Vehicles;
             vehicleId: vehicleId,
             vehicleName: $("#vehicle-name").val().toString()
         };
-        var submissionUrl;
-        var method;
-        if (vehicleId == 0) {
-            submissionUrl = "/api/vehicles";
-            method = "post";
-        }
-        else {
-            submissionUrl = "/api/vehicles/" + vehicleId;
-            method = "put";
-        }
-        $.ajax({
-            url: submissionUrl,
-            method: method,
-            contentType: "application/json",
-            data: JSON.stringify(vehicle),
-            success: function () {
-                $("#add-vehicle-modal").modal("hide");
-                InitData();
+        if (vehicle.vehicleName != "") {
+            var submissionUrl = void 0;
+            var method = void 0;
+            if (vehicleId == 0) {
+                submissionUrl = "/api/vehicles";
+                method = "post";
             }
-        });
+            else {
+                submissionUrl = "/api/vehicles/" + vehicleId;
+                method = "put";
+            }
+            $.ajax({
+                url: submissionUrl,
+                method: method,
+                contentType: "application/json",
+                data: JSON.stringify(vehicle),
+                success: function () {
+                    $("#add-vehicle-modal").modal("hide");
+                    InitData();
+                }
+            });
+        }
     }
     Vehicles.SubmitVehicle = SubmitVehicle;
 })(Vehicles || (Vehicles = {}));
+var Users;
+(function (Users) {
+    var $table;
+    var vehicleId = 0;
+    function Initialize() {
+        $table = $("#users-list-table").DataTable({
+            columns: [
+                {
+                    title: "R. br.",
+                    data: "idUser",
+                    width: "10%"
+                },
+                {
+                    title: "Korisnik",
+                    data: "fullName"
+                },
+                {
+                    title: "Uloga",
+                    data: "uloga"
+                } /*,
+                {
+                    //Ovo ni ne znam šta je
+                    title: "Radnje",
+                    data: "vehicleId",
+                    className: "dt-center",
+                    width: "20%",
+                    render: (colData, data, row: Models.IUser) => {
+                        return `<button type="button" class="btn btn-primary" alt="Uredi" ><i class="fas fa-edit"></i></button><button class="btn btn-danger" alt="Uredi"><i class="fas fa-trash-alt"></i></button>`;
+                    }
+                }*/
+            ]
+        });
+        $table.on('order.dt search.dt', function () {
+            $table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        InitData();
+    }
+    Users.Initialize = Initialize;
+    function InitData() {
+        $.ajax({
+            url: "/api/users",
+            contentType: "application/json",
+            method: "get",
+            success: function (data) {
+                //console.log(data);
+                $table.clear().rows.add(data).draw();
+            }
+        });
+    }
+    Users.InitData = InitData;
+})(Users || (Users = {}));
 //# sourceMappingURL=app.js.map
