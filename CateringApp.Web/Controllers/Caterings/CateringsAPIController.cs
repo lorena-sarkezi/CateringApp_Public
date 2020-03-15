@@ -10,11 +10,13 @@ using CateringApp.Data;
 using CateringApp.Data.Models;
 
 using CateringApp.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CateringApp.Web.Controllers
 {
     [Route("api/catering")]
     [ApiController]
+    [Authorize]
     public class CateringsAPIController : ControllerBase
     {
         private readonly CateringDbContext cateringDbContext;

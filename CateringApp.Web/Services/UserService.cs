@@ -29,6 +29,8 @@ namespace CateringApp.Web.Services
 
         public string TryLoginUser(LoginAPIModel model)
         {
+            model.Password = Base64.Base64Decode(model.Password);
+
             User user = cateringDbContext.Users
                                 .Include(x => x.Role)
                                 .Where(x => x.Email == model.Email || x.Username == model.Email)
@@ -40,17 +42,20 @@ namespace CateringApp.Web.Services
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             byte[] key = Encoding.ASCII.GetBytes(appSettings.Secret);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
+            var claims = new[]
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                    new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
-                    new Claim(ClaimTypes.Role, user.Role.RoleTitle)
-                }),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, $"{user.FirstName} {user.LastName}"),
+                new Claim(ClaimTypes.Role, user.Role.RoleTitle)
             };
 
+            SigningCredentials signingCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                SigningCredentials = signingCredentials
+            };
 
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);

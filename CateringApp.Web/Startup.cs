@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using CateringApp.Data;
@@ -56,8 +58,6 @@ namespace CateringApp.Web
             })
             .AddJwtBearer(x =>
             {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
@@ -69,18 +69,18 @@ namespace CateringApp.Web
                 {
                     OnTokenValidated = context =>
                     {
-                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        var userId = int.Parse(context.Principal.Identity.Name);
-                        var user = userService.GetUserById(userId);
-                        if (user == null)
-                        {
-                            // return unauthorized if user no longer exists
-                            context.Fail("Unauthorized");
-                        }
+                        context.HttpContext.User = context.Principal;
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
+                        context.Response.Redirect("/Login");
                         return Task.CompletedTask;
                     }
                 };
             });
+
+          
 
             services.AddScoped<IUserService, UserService>();
 
@@ -109,9 +109,39 @@ namespace CateringApp.Web
                 app.UseHsts();
             }
 
+            app.Use(async (context, next) =>
+            {
+
+                if(context.Request.Cookies["token"] != null)
+                {
+                    string token = context.Request.Cookies["token"];
+                    if (context.Request.Headers.ContainsKey("Authorization") == false)
+                    {
+                        context.Request.Headers.Add("Authorization", "Bearer " + token);
+                    }
+                }
+                await next();
+            });
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
+            app.UseStatusCodePages(async context =>
+            {
+                var res = context.HttpContext.Response;
+
+                if (res.StatusCode == (int)HttpStatusCode.Unauthorized)
+                {
+                    res.Redirect("/login");
+                }
+            });
+
 
             app.UseMvc(routes =>
             {
@@ -120,8 +150,7 @@ namespace CateringApp.Web
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            
         }
     }
 }

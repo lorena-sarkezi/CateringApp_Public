@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+
+@{ 
+    string user_role = User.Claims.Where(x => x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").FirstOrDefault().Value;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -45,6 +51,7 @@
 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+    <div class="loading" id="loading" style="display:none"><div class="spinner"> <div></div><div></div> <div></div><div></div> </div></div>
     <div class="wrapper">
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -72,7 +79,7 @@
                         <img src="~/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Ime Korisnika</a>
+                        <a href="#" class="d-block" onclick="Global.logout()">@User.Identity.Name</a>
                     </div>
                 </div>
 
@@ -80,7 +87,7 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
-    with font-awesome or any other icon font library -->
+                        with font-awesome or any other icon font library -->
                         <li class="nav-item has-treeview">
                             <a href="/" class="nav-link">
                                 <i class="nav-icon fas fa-home"></i>
@@ -108,24 +115,27 @@
                             </a>
                         </li>
 
-
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-tools"></i>
-                                <p>
-                                    Administracija
-                                </p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item has-treeview">
-                            <a href="/users" class="nav-link">
-                                <i class="nav-icon fas fa-user-friends"></i>
-                                <p>
-                                    Zaposlenici
-                                </p>
-                            </a>
-                        </li>
+                        @{
+                            if (user_role == "ADMIN")
+                            {
+                                <li class="nav-item has-treeview">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-tools"></i>
+                                        <p>
+                                            Administracija
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="nav-item has-treeview">
+                                    <a href="/users" class="nav-link">
+                                        <i class="nav-icon fas fa-user-friends"></i>
+                                        <p>
+                                            Zaposlenici
+                                        </p>
+                                    </a>
+                                </li>
+                            }
+                        }
 
                         <li class="nav-item has-treeview">
                             <a href="/vehicles" class="nav-link">
@@ -181,7 +191,10 @@
             IgnoreBody();
         }
     </div>
-    
+
+    <script>
+        Global.initialize();
+    </script>
 
 </body>
 </html>

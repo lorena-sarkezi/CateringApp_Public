@@ -8,6 +8,8 @@
   <ItemGroup>
     <None Remove="TypeScript\Users\Models.ts" />
     <None Remove="TypeScript\Users\UsersList.ts" />
+    <None Remove="TypeScript\Auth\Login.ts" />
+    <None Remove="TypeScript\Auth\Models.ts" />
     <None Remove="TypeScript\Vehicles\Models.ts" />
     <None Remove="TypeScript\Vehicles\VehiclesList.ts" />
     <None Remove="Views\Caterings\CateringsList.ts" />
