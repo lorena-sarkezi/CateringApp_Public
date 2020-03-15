@@ -1,14 +1,33 @@
-//export function HandleAjaxError(jqXHR: JQueryXHR, status: string, errorThrown: string) {
-//}
+var Global;
+(function (Global) {
+    function initialize() {
+        loader(false);
+    }
+    Global.initialize = initialize;
+    function logout() {
+        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+        window.location.reload();
+    }
+    Global.logout = logout;
+    //export function loader(value: boolean) {
+    //    let element: HTMLElement = document.getElementById("loading")
+    //    if (value === true) element.style.display = "none";
+    //    else element.style.display = "block";
+    //}
+})(Global || (Global = {}));
+function loader(value) {
+    var element = document.getElementById("loading");
+    if (value === true)
+        element.style.display = "block";
+    else
+        element.style.display = "none";
+}
 var Caterings;
 (function (Caterings) {
     var $table;
     var $cateringData;
-    function Initialize() {
-        //var n = document.createElement('script');
-        //n.setAttribute('language', 'JavaScript');
-        //n.setAttribute('src', 'https://debug.datatables.net/debug.js');
-        //document.body.appendChild(n);
+    function initialize() {
+        loader(true);
         $("#dropdown-users").select2();
         $("#dropdown-vehicles").select2({
             dropdownParent: $('#add-catering-modal')
@@ -43,10 +62,10 @@ var Caterings;
                 cell.innerHTML = i + 1;
             });
         }).draw();
-        InitData();
+        initData();
     }
-    Caterings.Initialize = Initialize;
-    function InitData() {
+    Caterings.initialize = initialize;
+    function initData() {
         // let caterings: Models.ICateringViewModel[];
         $.ajax({
             url: "/api/catering/all_names_only",
@@ -55,11 +74,12 @@ var Caterings;
             success: function (data) {
                 console.log(data);
                 $table.clear().rows.add(data).draw();
+                loader(false);
             }
         });
     }
-    Caterings.InitData = InitData;
-    function HandleModalOpen() {
+    Caterings.initData = initData;
+    function handleModalOpen() {
         $(".spinner", "#add-catering-modal").show();
         $(".row", "#add-catering-modal").hide();
         $.ajax({
@@ -96,8 +116,8 @@ var Caterings;
         });
         $("#add-catering-modal").modal("show");
     }
-    Caterings.HandleModalOpen = HandleModalOpen;
-    function SubmitCatering() {
+    Caterings.handleModalOpen = handleModalOpen;
+    function submitCatering() {
         var users = [];
         var vehicles = [];
         $("#dropdown-users").find(":selected").each(function (index, elem) {
@@ -129,18 +149,19 @@ var Caterings;
             data: JSON.stringify(catering),
             success: function () {
                 $("#add-catering-modal").modal("hide");
-                InitData();
+                initData();
             }
         });
         console.log(catering);
     }
-    Caterings.SubmitCatering = SubmitCatering;
+    Caterings.submitCatering = submitCatering;
 })(Caterings || (Caterings = {}));
 var Vehicles;
 (function (Vehicles) {
     var $table;
     var vehicleId = 0;
-    function Initialize() {
+    function initialize() {
+        loader(true);
         $table = $("#vehicles-list-table").DataTable({
             columns: [
                 {
@@ -158,7 +179,7 @@ var Vehicles;
                     className: "dt-center",
                     width: "20%",
                     render: function (colData, data, row) {
-                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" ><i class=\"fas fa-edit\"></i></button><button class=\"btn btn-danger\" alt=\"Uredi\"><i class=\"fas fa-trash-alt\"></i></button>";
+                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" ><i class=\"fas fa-edit\" onclick=Vehicles.editVehicle(" + row.vehicleId + ")></i></button><button class=\"btn btn-danger\" alt=\"Obri\u0161i\" onclick=\"Vehicles.deleteVehicle(" + row.vehicleId + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
                     }
                 }
             ]
@@ -168,10 +189,10 @@ var Vehicles;
                 cell.innerHTML = i + 1;
             });
         }).draw();
-        InitData();
+        initData();
     }
-    Vehicles.Initialize = Initialize;
-    function InitData() {
+    Vehicles.initialize = initialize;
+    function initData() {
         $.ajax({
             url: "/api/vehicles",
             contentType: "application/json",
@@ -179,48 +200,122 @@ var Vehicles;
             success: function (data) {
                 console.log(data);
                 $table.clear().rows.add(data).draw();
+                loader(false);
             }
         });
     }
-    Vehicles.InitData = InitData;
-    function EditVehicle(vehicleId) {
+    Vehicles.initData = initData;
+    function editVehicle(vehicleId) {
         $.ajax({
             url: "/api/vehicles/" + vehicleId,
             contentType: "application/json",
             method: "get",
             success: function (data) {
+                $("#add-vehicle-modal").modal("show");
                 vehicleId = data.vehicleId;
                 $("#vehicle-name").val(data.vehicleName);
             }
         });
     }
-    Vehicles.EditVehicle = EditVehicle;
-    function SubmitVehicle() {
+    Vehicles.editVehicle = editVehicle;
+    function deleteVehicle(vehicleId) {
+    }
+    Vehicles.deleteVehicle = deleteVehicle;
+    function submitVehicle() {
         var vehicle = {
             vehicleId: vehicleId,
             vehicleName: $("#vehicle-name").val().toString()
         };
-        var submissionUrl;
-        var method;
-        if (vehicleId == 0) {
-            submissionUrl = "/api/vehicles";
-            method = "post";
+        if (vehicle.vehicleName != "") {
+            var submissionUrl = void 0;
+            var method = void 0;
+            if (vehicleId == 0) {
+                submissionUrl = "/api/vehicles";
+                method = "post";
+            }
+            else {
+                submissionUrl = "/api/vehicles/" + vehicleId;
+                method = "put";
+            }
+            $.ajax({
+                url: submissionUrl,
+                method: method,
+                contentType: "application/json",
+                data: JSON.stringify(vehicle),
+                success: function () {
+                    $("#add-vehicle-modal").modal("hide");
+                    initData();
+                }
+            });
         }
-        else {
-            submissionUrl = "/api/vehicles/" + vehicleId;
-            method = "put";
+    }
+    Vehicles.submitVehicle = submitVehicle;
+})(Vehicles || (Vehicles = {}));
+var Auth;
+(function (Auth) {
+    var email;
+    var password;
+    function initialize() {
+        email = document.getElementById("email");
+        password = document.getElementById("password");
+        var form = document.getElementById("form");
+        hideError();
+        loader(false);
+        var elements = document.getElementsByTagName("input");
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].oninvalid = function (e) {
+                e.target.setCustomValidity("");
+                if (!e.target.validity.valid) {
+                    e.target.setCustomValidity("Obavezno polje!");
+                }
+            };
+            elements[i].oninput = function (e) {
+                e.target.setCustomValidity("");
+            };
         }
+        //email.setCustomValidity("Obavezno polje!");
+        //password.setCustomValidity("Obavezno polje!");
+        form.addEventListener("submit", submitCallback);
+    }
+    Auth.initialize = initialize;
+    function submitCallback(event) {
+        event.preventDefault();
+        hideError();
+        loader(true);
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+        var remember = document.getElementById("remember").checked;
+        var data = {
+            email: email,
+            password: btoa(password),
+            rememberMe: remember
+        };
+        console.log(data);
         $.ajax({
-            url: submissionUrl,
-            method: method,
+            url: "/api/auth/login",
+            method: "post",
             contentType: "application/json",
-            data: JSON.stringify(vehicle),
+            data: JSON.stringify(data),
             success: function () {
-                $("#add-vehicle-modal").modal("hide");
-                InitData();
+                window.location.replace("/");
+            },
+            error: function () {
+                //alert("Error");
+                showError();
+                loader(false);
             }
         });
     }
-    Vehicles.SubmitVehicle = SubmitVehicle;
-})(Vehicles || (Vehicles = {}));
+    function showError() {
+        email.className += " is-invalid";
+        password.className += " is-invalid";
+        document.getElementById("error").style.display = "block";
+    }
+    function hideError() {
+        email.className = "form-control";
+        password.className = "form-control";
+        document.getElementById("error").style.display = "none";
+    }
+    Auth.hideError = hideError;
+})(Auth || (Auth = {}));
 //# sourceMappingURL=app.js.map

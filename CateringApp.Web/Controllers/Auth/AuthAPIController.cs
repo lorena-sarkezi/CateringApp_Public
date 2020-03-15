@@ -17,34 +17,32 @@ namespace CateringApp.Web.Controllers.Auth
 {
     [Route("api/auth")]
     [ApiController]
-    [Authorize]
     public class AuthAPIController : ControllerBase
     {
-        private readonly CateringDbContext cateringDbContext;
         private readonly IUserService userService;
 
         public AuthAPIController(CateringDbContext cateringDbContext, IUserService userService)
         {
-            this.cateringDbContext = cateringDbContext;
             this.userService = userService;
         }
 
         [HttpPost("login")]
-        [AllowAnonymous]
         public IActionResult Login([FromBody] LoginAPIModel model)
         {
+            string token = userService.TryLoginUser(model);  //Returns a valid JWT token if logged in successfuly, NULL if not
 
-            string tst = userService.TryLoginUser(model);  //Returns a valid JWT token if login successfuly, NULL if not
+            if (token == null) return Unauthorized();
 
-            if (tst != null) return new RedirectToRouteResult("~/Error", new { }, true);
+            CookieOptions cookieOptions = new CookieOptions
+            {
+                IsEssential = true
+            };
 
-            else return Ok();
-        }
+            if (model.RememberMe == true) cookieOptions.Expires = DateTime.Now.AddYears(10);
 
-        [HttpGet("test")] 
-        public void Test()
-        {
-            throw new NotImplementedException();
+            Response.Cookies.Append("token", token, cookieOptions);
+
+            return Ok();
         }
     }
 }

@@ -9,11 +9,13 @@ using Microsoft.EntityFrameworkCore;
 using CateringApp.Data;
 using CateringApp.Data.Models;
 using CateringApp.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CateringApp.Web.Controllers.Vehicles
 {
     [Route("api/vehicles")]
     [ApiController]
+    [Authorize]
     public class VehiclesAPIController : ControllerBase
     {
         private readonly CateringDbContext cateringDbContext;
@@ -29,6 +31,14 @@ namespace CateringApp.Web.Controllers.Vehicles
             List<VehicleViewModel> vehicles = (await cateringDbContext.Vehicles.ToListAsync()).Select(x => x.GetViewModel()).ToList();
 
             return vehicles;
+        }
+
+        [HttpGet("{vehicleId}")]
+        public async Task<VehicleViewModel> GetVehicle([FromRoute] int vehicleId)
+        {
+            Vehicle vehicle = await cateringDbContext.Vehicles.FirstOrDefaultAsync(x => x.VehicleId == vehicleId);
+
+            return vehicle.GetViewModel();
         }
 
         [HttpPost("")]

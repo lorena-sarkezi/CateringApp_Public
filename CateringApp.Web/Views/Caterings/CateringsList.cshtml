@@ -12,7 +12,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-catering" onclick="Caterings.HandleModalOpen()"><i class="fas fa-plus"></i> Novi catering</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-catering" onclick="Caterings.handleModalOpen()"><i class="fas fa-plus"></i> Novi catering</button>
                 </div>
             </div>
             <div class="card-body">
@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="Caterings.SubmitCatering()">Spremi</button>
+                <button type="button" class="btn btn-primary" onclick="Caterings.submitCatering()">Spremi</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
             </div>
         </div>
@@ -67,5 +67,5 @@
 </div>
 
 <script>
-    Caterings.Initialize();
+    Caterings.initialize();
 </script>

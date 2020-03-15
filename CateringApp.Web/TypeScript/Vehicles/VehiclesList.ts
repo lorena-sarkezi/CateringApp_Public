@@ -3,7 +3,8 @@
     let $table: DataTables.Api;
     let vehicleId: number = 0;
 
-    export function Initialize() {
+    export function initialize() {
+        loader(true);
         $table = $("#vehicles-list-table").DataTable({
             columns: [
                 {
@@ -21,7 +22,7 @@
                     className: "dt-center",
                     width:"20%",
                     render: (colData, data, row: Models.IVehicle) => {
-                        return `<button type="button" class="btn btn-primary" alt="Uredi" ><i class="fas fa-edit"></i></button><button class="btn btn-danger" alt="Uredi"><i class="fas fa-trash-alt"></i></button>`;
+                        return `<button type="button" class="btn btn-primary" alt="Uredi" ><i class="fas fa-edit" onclick=Vehicles.editVehicle(${row.vehicleId})></i></button><button class="btn btn-danger" alt="Obriši" onclick="Vehicles.deleteVehicle(${row.vehicleId})"><i class="fas fa-trash-alt"></i></button>`;
                     }
                 }
             ]
@@ -33,10 +34,10 @@
             });
         }).draw();
 
-        InitData();
+        initData();
     }
 
-    export function InitData() {
+    export function initData() {
         $.ajax({
             url: "/api/vehicles",
             contentType: "application/json",
@@ -44,23 +45,29 @@
             success: (data: Models.IVehicle[]) => {
                 console.log(data);
                 $table.clear().rows.add(data).draw();
+                loader(false);
             }
         })
     }
 
-    export function EditVehicle(vehicleId: number){
+    export function editVehicle(vehicleId: number) {
         $.ajax({
             url: `/api/vehicles/${vehicleId}`,
             contentType: "application/json",
             method: "get",
             success: (data: Models.IVehicle) => {
+                $("#add-vehicle-modal").modal("show");
                 vehicleId = data.vehicleId;
                 $("#vehicle-name").val(data.vehicleName);
             }
         })
     }
 
-    export function SubmitVehicle() {
+    export function deleteVehicle(vehicleId: number) {
+
+    }
+
+    export function submitVehicle() {
         let vehicle: Models.IVehicle = {
             vehicleId: vehicleId,
             vehicleName: $("#vehicle-name").val().toString()
@@ -87,7 +94,7 @@
                 data: JSON.stringify(vehicle),
                 success: () => {
                     $("#add-vehicle-modal").modal("hide");
-                    InitData();
+                    initData();
                 }
             });
         }

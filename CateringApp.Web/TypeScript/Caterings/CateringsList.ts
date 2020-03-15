@@ -4,12 +4,8 @@
     let $cateringData: Caterings.Models.ICateringDetailModel;
     
 
-    export function Initialize() {
-        //var n = document.createElement('script');
-        //n.setAttribute('language', 'JavaScript');
-        //n.setAttribute('src', 'https://debug.datatables.net/debug.js');
-        //document.body.appendChild(n);
-
+    export function initialize() {
+        loader(true);
         $("#dropdown-users").select2();
         $("#dropdown-vehicles").select2({
             dropdownParent: $('#add-catering-modal')
@@ -47,10 +43,10 @@
             });
         }).draw();
 
-        InitData();
+        initData();
     }
 
-    export function InitData() {
+    export function initData() {
         // let caterings: Models.ICateringViewModel[];
 
         $.ajax({
@@ -60,12 +56,13 @@
             success: (data: Models.ICateringViewModel[]) => {
                 console.log(data);
                 $table.clear().rows.add(data).draw();
+                loader(false);
             }
         });
     }
 
 
-    export function HandleModalOpen() {
+    export function handleModalOpen() {
         $(".spinner", "#add-catering-modal").show();
         $(".row", "#add-catering-modal").hide();
 
@@ -112,7 +109,7 @@
         
     }
 
-    export function SubmitCatering() {
+    export function submitCatering() {
 
         let users: Models.IUserModel[] = <Models.IUserModel[]>[];
         let vehicles: Vehicles.Models.IVehicle[] = <Vehicles.Models.IVehicle[]>[];
@@ -151,7 +148,7 @@
             data: JSON.stringify(catering),
             success: () => {
                 $("#add-catering-modal").modal("hide");
-                InitData();
+                initData();
             }
         });
 
