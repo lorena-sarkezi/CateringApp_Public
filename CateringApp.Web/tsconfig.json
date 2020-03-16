@@ -7,7 +7,8 @@
     "target": "es5",
     "outFile": "wwwroot/js/app.js",
     "lib": [ "es2015", "dom" ],
-    "module": "AMD"
+    "module": "AMD",
+    "moduleResolution": "Node"
   },
   "compileOnSave": true,
 
