@@ -56,4 +56,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="date_created" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="2bbce6b1-3965-4fb5-b551-7506bc661872" ChangeDateTime="03/16/2020 19:54:27">
+    <Property Name="ElementName" Value="[cat_app].[dish_types].[date_creared]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[cat_app].[dish_types]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="date_created" />
+  </Operation>
 </Operations>

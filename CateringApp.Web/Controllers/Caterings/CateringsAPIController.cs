@@ -38,6 +38,23 @@ namespace CateringApp.Web.Controllers
             return cateringViewModels;
         }
 
+       [HttpGet("{cateringId}")]
+       public async Task<CateringDetailModel> GetSingleCateringDetails([FromRoute] int cateringId)
+        {
+            Catering catering = await cateringDbContext.Caterings
+                                                       .Include(x => x.CateringEmployees)
+                                                       .ThenInclude(x => x.User)
+                                                       .Include(x => x.CateringDishes)
+                                                       .ThenInclude(x => x.Dish)
+                                                       .ThenInclude(x => x.DishType)
+                                                       .Include(x => x.Vehicle)
+                                                       .FirstOrDefaultAsync(x => x.CateringId == cateringId);
+
+            CateringDetailModel model = catering.GetCateringDetailModel();
+
+            return model;
+        }
+
         [HttpPost("")]
         public async Task<IActionResult> SubmitCatering([FromBody] CateringDetailModel model)
         {
@@ -66,6 +83,44 @@ namespace CateringApp.Web.Controllers
             await cateringDbContext.SaveChangesAsync();
 
             return Ok();
+        }
+        [HttpPut("{cateringId}")]
+        public async Task<IActionResult> UpdateCatering([FromRoute] int cateringId,  [FromBody] CateringDetailModel model)
+        {
+            Catering catering = await cateringDbContext.Caterings
+                                                       .Include(x => x.CateringEmployees)
+                                                       .Include(x => x.CateringDishes)
+                                                       .FirstOrDefaultAsync(x => x.CateringId == cateringId);
+
+            catering.CateringName = model.CateringName;
+            catering.ClientName = model.ClientName;
+            catering.VehicleId = (int)model.Vehicles[0].VehicleId;
+
+            catering.CateringEmployees = model.Users.Select(x => new CateringEmployees
+            {
+                CateringId = cateringId,
+                UserId = x.UserId
+            }).ToList();
+
+            cateringDbContext.Update<Catering>(catering);
+            await cateringDbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("{cateringId}")]
+        public async Task<IActionResult> DeleteCatering([FromRoute] int cateringId)
+        {
+            Catering catering = await cateringDbContext.Caterings
+                                                       .Include(x => x.CateringEmployees)
+                                                       .Include(x => x.CateringDishes)
+                                                       .FirstOrDefaultAsync(x => x.CateringId == cateringId);
+
+            cateringDbContext.Remove<Catering>(catering);
+            await cateringDbContext.SaveChangesAsync();
+
+            return Ok();
+            
         }
 
 

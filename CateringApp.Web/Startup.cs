@@ -71,11 +71,6 @@ namespace CateringApp.Web
                     {
                         context.HttpContext.User = context.Principal;
                         return Task.CompletedTask;
-                    },
-                    OnAuthenticationFailed = context =>
-                    {
-                        context.Response.Redirect("/Login");
-                        return Task.CompletedTask;
                     }
                 };
             });

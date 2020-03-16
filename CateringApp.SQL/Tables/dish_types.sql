@@ -2,5 +2,5 @@
 (
 	[id] INT NOT NULL PRIMARY KEY, 
     [dish_type_name] NVARCHAR(50) NOT NULL, 
-    [date_creared] DATETIME2(3) NOT NULL DEFAULT GETDATE()
+    [date_created] DATETIME2(3) NOT NULL DEFAULT GETDATE()
 )

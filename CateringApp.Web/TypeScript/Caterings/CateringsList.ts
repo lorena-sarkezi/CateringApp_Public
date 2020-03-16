@@ -2,6 +2,7 @@
 
     let $table: DataTables.Api;
     let $cateringData: Caterings.Models.ICateringDetailModel;
+    let $cateringId = 0;
     
 
     export function initialize() {
@@ -31,7 +32,7 @@
                     data: "clientName",
                     className: "dt-center",
                     render: (colData, data, row: Models.ICateringDetailModel) => {
-                        return `<button type="button" class="btn btn-primary" alt="Uredi" ><i class="fas fa-edit"></i></button><button class="btn btn-danger" alt="Uredi"><i class="fas fa-trash-alt"></i></button>`;
+                        return `<button type="button" class="btn btn-primary" alt="Uredi" onclick="Caterings.editCatering(${row.cateringId})"><i class="fas fa-edit"></i></button><button class="btn btn-danger" alt="Uredi" onclick="Caterings.deleteCateringPrompt(${row.cateringId})"><i class="fas fa-trash-alt"></i></button>`;
                     }
                 }
             ]
@@ -46,9 +47,9 @@
         initData();
     }
 
-    export function initData() {
+    export async function initData() {
         // let caterings: Models.ICateringViewModel[];
-
+        $cateringId = 0;
         $.ajax({
             url: "/api/catering/all_names_only",
             contentType: "application/json",
@@ -61,12 +62,42 @@
         });
     }
 
+    export function editCatering(cateringId: number) {
+        $.ajax({
+            url: `/api/catering/${cateringId}`,
+            method: "get",
+            data: null,
+            success: async (data: Models.ICateringDetailModel) => {
+                console.log(data);
+                $cateringId = cateringId;
+                
 
-    export function handleModalOpen() {
+                $("#catering-name").val(data.cateringName);
+                $("#client-name").val(data.clientName);
+
+                let users: string[] = [];
+
+                data.users.forEach(item => {
+                    users.push(item.userId.toString());
+                });
+                await handleModalOpen();
+                console.log($("#dropdown-users"));
+                console.log(users);
+                $("#dropdown-users").val(users).trigger("change");
+                $("#dropdown-vehicles").val(data.vehicles[0].vehicleId.toString()).trigger("change");
+
+            },
+            error: Global.ajaxErrorHandler
+
+        });
+    }
+
+
+    export async function handleModalOpen() {
         $(".spinner", "#add-catering-modal").show();
         $(".row", "#add-catering-modal").hide();
 
-        $.ajax({
+        await $.ajax({
             url: "/api/catering/details",
             method: "get",
             contentType: "application/json",
@@ -101,7 +132,7 @@
                     option.value = vehicle.vehicleId.toString();
                     option.text = vehicle.vehicleName;
                     vehicleSelect.add(option);
-                })
+                });
             }
         });
 
@@ -138,13 +169,21 @@
             vehicles: vehicles,
             cateringName: $("#catering-name").val().toString(),
             clientName: $("#client-name").val().toString(),
-            cateringId: 0
+            cateringId: $cateringId
         };
 
+        let submitUrl: string = "/api/catering";
+        let submitMethod: string = "post";
+
+        if (catering.cateringId !== 0) {
+            submitUrl += `/${catering.cateringId}`;
+            submitMethod = "put";
+        }
+
         $.ajax({
-            url: "/api/catering",
+            url: submitUrl,
             contentType: "application/json",
-            method: "post",
+            method: submitMethod,
             data: JSON.stringify(catering),
             success: () => {
                 $("#add-catering-modal").modal("hide");
@@ -153,6 +192,24 @@
         });
 
         console.log(catering);
+    }
+
+    export function deleteCateringPrompt(cateringId: number) {
+        $cateringId = cateringId;
+        $("#delete-catering-prompt").modal("show");
+    }
+
+    export function deleteCateringConfirm() {
+        loader(true)
+        $.ajax({
+            url: `/api/catering/${$cateringId}`,
+            method:"delete",
+            success: () => {
+                $("#delete-catering-prompt").modal("hide");
+                initData();
+            },
+            error: Global.ajaxErrorHandler
+        })
     }
     
 }
