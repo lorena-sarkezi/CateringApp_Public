@@ -51,5 +51,28 @@ namespace CateringApp.Web.Controllers.Vehicles
 
             return Ok();
         }
+
+        [HttpPut("{vehicleId}")]
+        public async Task<IActionResult> PutVehicle([FromRoute] int vehicleId, [FromBody] VehicleViewModel model)
+        {
+            Vehicle vehicle = await cateringDbContext.Vehicles.FirstOrDefaultAsync(x => x.VehicleId == vehicleId);
+            vehicle.VehicleName = model.VehicleName;
+
+            cateringDbContext.Update<Vehicle>(vehicle);
+            await cateringDbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("{vehicleId}")]
+        public async Task<IActionResult> DeleteVehicle([FromRoute] int vehicleId)
+        {
+            Vehicle vehicle = await cateringDbContext.Vehicles.FirstOrDefaultAsync(x => x.VehicleId == vehicleId);
+
+            cateringDbContext.Remove<Vehicle>(vehicle);
+            await cateringDbContext.SaveChangesAsync();
+
+            return Ok();
+        }
     }
 }

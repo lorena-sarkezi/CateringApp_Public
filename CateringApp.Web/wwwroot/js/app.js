@@ -357,7 +357,7 @@ var Caterings;
 var Vehicles;
 (function (Vehicles) {
     var $table;
-    var vehicleId = 0;
+    var $vehicleId = 0;
     function initialize() {
         loader(true);
         $table = $("#vehicles-list-table").DataTable({
@@ -404,13 +404,13 @@ var Vehicles;
     }
     Vehicles.initData = initData;
     function editVehicle(vehicleId) {
+        $vehicleId = vehicleId;
         $.ajax({
             url: "/api/vehicles/" + vehicleId,
             contentType: "application/json",
             method: "get",
             success: function (data) {
                 $("#add-vehicle-modal").modal("show");
-                vehicleId = data.vehicleId;
                 $("#vehicle-name").val(data.vehicleName);
             }
         });
@@ -421,18 +421,18 @@ var Vehicles;
     Vehicles.deleteVehicle = deleteVehicle;
     function submitVehicle() {
         var vehicle = {
-            vehicleId: vehicleId,
+            vehicleId: $vehicleId,
             vehicleName: $("#vehicle-name").val().toString()
         };
         if (vehicle.vehicleName != "") {
             var submissionUrl = void 0;
             var method = void 0;
-            if (vehicleId == 0) {
+            if ($vehicleId == 0) {
                 submissionUrl = "/api/vehicles";
                 method = "post";
             }
             else {
-                submissionUrl = "/api/vehicles/" + vehicleId;
+                submissionUrl = "/api/vehicles/" + $vehicleId;
                 method = "put";
             }
             $.ajax({

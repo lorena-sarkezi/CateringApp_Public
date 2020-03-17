@@ -1,7 +1,7 @@
 ﻿module Vehicles {
 
     let $table: DataTables.Api;
-    let vehicleId: number = 0;
+    let $vehicleId: number = 0;
 
     export function initialize() {
         loader(true);
@@ -51,13 +51,13 @@
     }
 
     export function editVehicle(vehicleId: number) {
+        $vehicleId = vehicleId;
         $.ajax({
             url: `/api/vehicles/${vehicleId}`,
             contentType: "application/json",
             method: "get",
             success: (data: Models.IVehicle) => {
                 $("#add-vehicle-modal").modal("show");
-                vehicleId = data.vehicleId;
                 $("#vehicle-name").val(data.vehicleName);
             }
         })
@@ -69,7 +69,7 @@
 
     export function submitVehicle() {
         let vehicle: Models.IVehicle = {
-            vehicleId: vehicleId,
+            vehicleId: $vehicleId,
             vehicleName: $("#vehicle-name").val().toString()
         };
 
@@ -78,12 +78,12 @@
             let method: string;
 
 
-            if (vehicleId == 0) {
+            if ($vehicleId == 0) {
                 submissionUrl = `/api/vehicles`;
                 method = "post";
             }
             else {
-                submissionUrl = `/api/vehicles/${vehicleId}`;
+                submissionUrl = `/api/vehicles/${$vehicleId}`;
                 method = "put";
             }
 
