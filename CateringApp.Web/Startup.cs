@@ -112,7 +112,7 @@ namespace CateringApp.Web
                     string token = context.Request.Cookies["token"];
                     if (context.Request.Headers.ContainsKey("Authorization") == false)
                     {
-                        context.Request.Headers.Add("", "Bearer " + token);
+                        context.Request.Headers.Add("Authorization", "Bearer " + token);
                     }
                 }
                 await next();
