@@ -35,9 +35,13 @@
                         return `<button type="button" class="btn btn-primary" alt="Uredi" onclick="Caterings.editCatering(${row.cateringId})"><i class="fas fa-edit"></i></button><button class="btn btn-danger" alt="Uredi" onclick="Caterings.deleteCateringPrompt(${row.cateringId})"><i class="fas fa-trash-alt"></i></button>`;
                     }
                 }
-            ]
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
+            },
         });
 
+        //Row numbers
         $table.on('order.dt search.dt', function () {
             $table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
                 cell.innerHTML = i + 1;
@@ -48,7 +52,6 @@
     }
 
     export async function initData() {
-        // let caterings: Models.ICateringViewModel[];
         $cateringId = 0;
         $.ajax({
             url: "/api/catering/all_names_only",
@@ -71,16 +74,16 @@
                 console.log(data);
                 $cateringId = cateringId;
                 
-
-                $("#catering-name").val(data.cateringName);
-                $("#client-name").val(data.clientName);
+                await handleModalOpen();
 
                 let users: string[] = [];
 
                 data.users.forEach(item => {
                     users.push(item.userId.toString());
                 });
-                await handleModalOpen();
+                
+                $("#catering-name").val(data.cateringName);
+                $("#client-name").val(data.clientName);
                 console.log($("#dropdown-users"));
                 console.log(users);
                 $("#dropdown-users").val(users).trigger("change");
@@ -108,6 +111,9 @@
 
                 let userSelect: HTMLSelectElement = <HTMLSelectElement>document.getElementById("dropdown-users");
                 let vehicleSelect: HTMLSelectElement = <HTMLSelectElement>document.getElementById("dropdown-vehicles");
+
+                $("#catering-name").val("");
+                $("#client-name").val("");
 
                 //Praznjenje dropdowna
                 for (let i = userSelect.options.length - 1; i >= 0; i--) {
@@ -141,7 +147,7 @@
     }
 
     export function submitCatering() {
-
+        
         let users: Models.IUserModel[] = <Models.IUserModel[]>[];
         let vehicles: Vehicles.Models.IVehicle[] = <Vehicles.Models.IVehicle[]>[];
 
@@ -180,6 +186,8 @@
             submitMethod = "put";
         }
 
+        loader(true);
+
         $.ajax({
             url: submitUrl,
             contentType: "application/json",
@@ -188,7 +196,8 @@
             success: () => {
                 $("#add-catering-modal").modal("hide");
                 initData();
-            }
+            },
+            error: Global.ajaxErrorHandler
         });
 
         console.log(catering);

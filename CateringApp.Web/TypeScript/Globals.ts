@@ -3,12 +3,8 @@
         loader(false);
 
         $.extend(true, $.fn.dataTable.defaults, {
-            language: {
-                url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Croatian.json"
-            },
-            "attr": {
-                "autocomplete": 'off',
-                "autofill": "off"
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
             },
             responsive: true
         });

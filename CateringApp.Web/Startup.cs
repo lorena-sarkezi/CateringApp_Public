@@ -107,12 +107,12 @@ namespace CateringApp.Web
             app.Use(async (context, next) =>
             {
 
-                if(context.Request.Cookies["token"] != null)
+                if(context.Request.Cookies["token"] != null && context.Request.Headers.ContainsKey("Authorization") == false)
                 {
                     string token = context.Request.Cookies["token"];
                     if (context.Request.Headers.ContainsKey("Authorization") == false)
                     {
-                        context.Request.Headers.Add("Authorization", "Bearer " + token);
+                        context.Request.Headers.Add("", "Bearer " + token);
                     }
                 }
                 await next();

@@ -49,6 +49,30 @@
     </div>
 </div>
 
+<div class="modal fade add-catering" role="dialog" id="delete-vehicle-modal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upozorenje</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        Jeste li sigurni da želite obrisati vozilo?
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="Vehicles.deleteVehicleConfirm()">Potvrdi</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     Vehicles.initialize();
 </script>

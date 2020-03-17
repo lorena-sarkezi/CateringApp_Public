@@ -22,12 +22,16 @@
                     className: "dt-center",
                     width:"20%",
                     render: (colData, data, row: Models.IVehicle) => {
-                        return `<button type="button" class="btn btn-primary" alt="Uredi" ><i class="fas fa-edit" onclick=Vehicles.editVehicle(${row.vehicleId})></i></button><button class="btn btn-danger" alt="Obriši" onclick="Vehicles.deleteVehicle(${row.vehicleId})"><i class="fas fa-trash-alt"></i></button>`;
+                        return `<button type="button" class="btn btn-primary" alt="Uredi" ><i class="fas fa-edit" onclick=Vehicles.editVehicle(${row.vehicleId})></i></button><button class="btn btn-danger" alt="Obriši" onclick="Vehicles.deleteVehiclePrompt(${row.vehicleId})"><i class="fas fa-trash-alt"></i></button>`;
                     }
                 }
-            ]
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
+            },
         });
 
+        //Row numbers
         $table.on('order.dt search.dt', function () {
             $table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
                 cell.innerHTML = i + 1;
@@ -38,6 +42,7 @@
     }
 
     export function initData() {
+        $("#vehicle-name").val("");
         $.ajax({
             url: "/api/vehicles",
             contentType: "application/json",
@@ -97,6 +102,26 @@
                     initData();
                 }
             });
+        }
+    }
+
+    export function deleteVehiclePrompt(vehicleId: number) {
+        $vehicleId = vehicleId;
+        $("#delete-vehicle-modal").modal("show");
+    }
+
+    export function deleteVehicleConfirm() {
+        if ($vehicleId !== 0) {
+            loader(true);
+            $.ajax({
+                url: `/api/vehicles/${$vehicleId}`,
+                method: "delete",
+                success: () => {
+                    $("#delete-vehicle-modal").modal("hide");
+                    initData();
+                },
+                error: Global.ajaxErrorHandler
+            })
         }
     }
 }

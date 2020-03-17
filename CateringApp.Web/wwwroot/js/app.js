@@ -39,12 +39,8 @@ var Global;
     function initialize() {
         loader(false);
         $.extend(true, $.fn.dataTable.defaults, {
-            language: {
-                url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Croatian.json"
-            },
-            "attr": {
-                "autocomplete": 'off',
-                "autofill": "off"
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
             },
             responsive: true
         });
@@ -179,8 +175,12 @@ var Caterings;
                         return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" onclick=\"Caterings.editCatering(" + row.cateringId + ")\"><i class=\"fas fa-edit\"></i></button><button class=\"btn btn-danger\" alt=\"Uredi\" onclick=\"Caterings.deleteCateringPrompt(" + row.cateringId + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
                     }
                 }
-            ]
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
+            },
         });
+        //Row numbers
         $table.on('order.dt search.dt', function () {
             $table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
                 cell.innerHTML = i + 1;
@@ -192,7 +192,6 @@ var Caterings;
     function initData() {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                // let caterings: Models.ICateringViewModel[];
                 $cateringId = 0;
                 $.ajax({
                     url: "/api/catering/all_names_only",
@@ -222,15 +221,15 @@ var Caterings;
                         case 0:
                             console.log(data);
                             $cateringId = cateringId;
-                            $("#catering-name").val(data.cateringName);
-                            $("#client-name").val(data.clientName);
+                            return [4 /*yield*/, handleModalOpen()];
+                        case 1:
+                            _a.sent();
                             users = [];
                             data.users.forEach(function (item) {
                                 users.push(item.userId.toString());
                             });
-                            return [4 /*yield*/, handleModalOpen()];
-                        case 1:
-                            _a.sent();
+                            $("#catering-name").val(data.cateringName);
+                            $("#client-name").val(data.clientName);
                             console.log($("#dropdown-users"));
                             console.log(users);
                             $("#dropdown-users").val(users).trigger("change");
@@ -260,6 +259,8 @@ var Caterings;
                                     $cateringData = data;
                                     var userSelect = document.getElementById("dropdown-users");
                                     var vehicleSelect = document.getElementById("dropdown-vehicles");
+                                    $("#catering-name").val("");
+                                    $("#client-name").val("");
                                     //Praznjenje dropdowna
                                     for (var i = userSelect.options.length - 1; i >= 0; i--) {
                                         userSelect.options[i] = null;
@@ -322,6 +323,7 @@ var Caterings;
             submitUrl += "/" + catering.cateringId;
             submitMethod = "put";
         }
+        loader(true);
         $.ajax({
             url: submitUrl,
             contentType: "application/json",
@@ -330,7 +332,8 @@ var Caterings;
             success: function () {
                 $("#add-catering-modal").modal("hide");
                 initData();
-            }
+            },
+            error: Global.ajaxErrorHandler
         });
         console.log(catering);
     }
@@ -354,6 +357,59 @@ var Caterings;
     }
     Caterings.deleteCateringConfirm = deleteCateringConfirm;
 })(Caterings || (Caterings = {}));
+var Users;
+(function (Users) {
+    var $table;
+    var vehicleId = 0;
+    function Initialize() {
+        $table = $("#users-list-table").DataTable({
+            columns: [
+                {
+                    title: "R. br.",
+                    data: "idUser",
+                    width: "10%"
+                },
+                {
+                    title: "Korisnik",
+                    data: "fullName"
+                },
+                {
+                    title: "Uloga",
+                    data: "uloga"
+                } /*,
+                {
+                    //Ovo ni ne znam šta je
+                    title: "Radnje",
+                    data: "vehicleId",
+                    className: "dt-center",
+                    width: "20%",
+                    render: (colData, data, row: Models.IUser) => {
+                        return `<button type="button" class="btn btn-primary" alt="Uredi" ><i class="fas fa-edit"></i></button><button class="btn btn-danger" alt="Uredi"><i class="fas fa-trash-alt"></i></button>`;
+                    }
+                }*/
+            ]
+        });
+        $table.on('order.dt search.dt', function () {
+            $table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        InitData();
+    }
+    Users.Initialize = Initialize;
+    function InitData() {
+        $.ajax({
+            url: "/api/users",
+            contentType: "application/json",
+            method: "get",
+            success: function (data) {
+                //console.log(data);
+                $table.clear().rows.add(data).draw();
+            }
+        });
+    }
+    Users.InitData = InitData;
+})(Users || (Users = {}));
 var Vehicles;
 (function (Vehicles) {
     var $table;
@@ -377,11 +433,15 @@ var Vehicles;
                     className: "dt-center",
                     width: "20%",
                     render: function (colData, data, row) {
-                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" ><i class=\"fas fa-edit\" onclick=Vehicles.editVehicle(" + row.vehicleId + ")></i></button><button class=\"btn btn-danger\" alt=\"Obri\u0161i\" onclick=\"Vehicles.deleteVehicle(" + row.vehicleId + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
+                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" ><i class=\"fas fa-edit\" onclick=Vehicles.editVehicle(" + row.vehicleId + ")></i></button><button class=\"btn btn-danger\" alt=\"Obri\u0161i\" onclick=\"Vehicles.deleteVehiclePrompt(" + row.vehicleId + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
                     }
                 }
-            ]
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
+            },
         });
+        //Row numbers
         $table.on('order.dt search.dt', function () {
             $table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
                 cell.innerHTML = i + 1;
@@ -391,6 +451,7 @@ var Vehicles;
     }
     Vehicles.initialize = initialize;
     function initData() {
+        $("#vehicle-name").val("");
         $.ajax({
             url: "/api/vehicles",
             contentType: "application/json",
@@ -448,5 +509,25 @@ var Vehicles;
         }
     }
     Vehicles.submitVehicle = submitVehicle;
+    function deleteVehiclePrompt(vehicleId) {
+        $vehicleId = vehicleId;
+        $("#delete-vehicle-modal").modal("show");
+    }
+    Vehicles.deleteVehiclePrompt = deleteVehiclePrompt;
+    function deleteVehicleConfirm() {
+        if ($vehicleId !== 0) {
+            loader(true);
+            $.ajax({
+                url: "/api/vehicles/" + $vehicleId,
+                method: "delete",
+                success: function () {
+                    $("#delete-vehicle-modal").modal("hide");
+                    initData();
+                },
+                error: Global.ajaxErrorHandler
+            });
+        }
+    }
+    Vehicles.deleteVehicleConfirm = deleteVehicleConfirm;
 })(Vehicles || (Vehicles = {}));
 //# sourceMappingURL=app.js.map
