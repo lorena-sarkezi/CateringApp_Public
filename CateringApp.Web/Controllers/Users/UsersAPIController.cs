@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CateringApp.Data;
+using CateringApp.Data.Models;
+using CateringApp.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CateringApp.Web.Controllers.Users
 {
-    public class placeholderUsers
-    {
-        public int idUser { get; set; }
-        public string fullName { get; set; }//naming convetion slightly tilted, just like Borna
-        public string uloga { get; set; }
-    }
-
     [Route("api/users")]
     [ApiController]
     public class UsersAPIController : Controller
@@ -26,36 +22,37 @@ namespace CateringApp.Web.Controllers.Users
         }
 
         [HttpGet("")]
-        public async Task<List<placeholderUsers>> GetUsers()
+        public async Task<List<UserViewModel>> GetUsers()
         {
-            //List<VehicleViewModel> vehicles = (await cateringDbContext.Vehicles.ToListAsync()).Select(x => x.GetViewModel()).ToList();
-            //provjeriti kako radi poziv u prvoj liniji komentara
-            //vidit da je to mvc smeće
-            //poslati "$$" separated string
-            //?????
-            //profitirati
 
-            List<placeholderUsers> users = new List<placeholderUsers>();
-
-            users.Add(new placeholderUsers { idUser = 0, fullName = "admin", uloga = "Administrator" });
-            users.Add(new placeholderUsers { idUser = -1, fullName = "user", uloga = "Zaposlenik" });
-
-            users.Add(new placeholderUsers { idUser = 1, fullName = "Marko Benjak", uloga = "Zaposlenik" });
-            users.Add(new placeholderUsers { idUser = 2, fullName = "Borna Šarkezi", uloga = "Zaposlenik" });
-            users.Add(new placeholderUsers { idUser = 3, fullName = "Ivan Zeko", uloga = "Zaposlenik" });
+            List<UserViewModel> users = (await cateringDbContext.Users.ToListAsync()).Select(x => x.GetViewModel()).ToList();
 
             return users;
         }
 
-        //[HttpPost("")]
-        //public async Task<IActionResult> SubmitVehicle([FromBody] VehicleViewModel viewModel)
-        //{
-        //    Vehicle vehicle = viewModel.GetDbModel();
+        [HttpPost("")]
+        public async Task<IActionResult> SubmitUser([FromBody] UserViewModel viewModel)
+        {
+            User user = viewModel.GetDbModel();
 
-        //    cateringDbContext.Add(vehicle);
-        //    await cateringDbContext.SaveChangesAsync();
+            user.PasswordHash = "CantHashToHCString";
 
-        //    return Ok();
-        //}
+            cateringDbContext.Add(user);
+            await cateringDbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("")]
+        public async Task<IActionResult> DeleteUser([FromBody] int userId)
+        {
+            User deleteUser = new User();
+            deleteUser.UserId = userId;
+
+            cateringDbContext.Users.Remove(deleteUser);
+            await cateringDbContext.SaveChangesAsync();
+
+            return Ok();
+        }
     }
 }

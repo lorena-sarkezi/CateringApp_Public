@@ -75,7 +75,7 @@ namespace CateringApp.Web.Controllers
                 cateringEmployees.Add(new CateringEmployees
                 {
                     CateringId = catering.CateringId,
-                    UserId = user.UserId
+                    UserId = user.UserId ?? -1
                 });
             }
 

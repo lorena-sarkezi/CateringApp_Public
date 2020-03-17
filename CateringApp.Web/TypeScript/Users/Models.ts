@@ -1,8 +1,12 @@
 ﻿module Users.Models {
     export interface IUser {
-        idUser: number;
-        fullName: string;
-        uloga: string;
-        //lastName: string;
+        userId: number;
+        roleId: number;
+        firstName: string;
+        lastName: string;
+        userFullName?: string;
+        email: string;
+        username: string;
+        roleTitle: string;
     }
 }
