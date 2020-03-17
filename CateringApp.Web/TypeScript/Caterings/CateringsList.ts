@@ -162,7 +162,9 @@
         $("#dropdown-vehicles").find(":selected").each((index, elem: any) => {
             let vehicle: Vehicles.Models.IVehicle = {
                 vehicleId: parseInt(elem.value),
-                vehicleName: elem.text
+                vehicleName: elem.text,
+                vehicleRegistration: "",
+                vehicleKilometers:0
             };
 
             vehicles.push(vehicle);
@@ -210,15 +212,17 @@
 
     export function deleteCateringConfirm() {
         loader(true)
-        $.ajax({
-            url: `/api/catering/${$cateringId}`,
-            method:"delete",
-            success: () => {
-                $("#delete-catering-prompt").modal("hide");
-                initData();
-            },
-            error: Global.ajaxErrorHandler
-        })
+        if ($cateringId !== 0) {
+            $.ajax({
+                url: `/api/catering/${$cateringId}`,
+                method: "delete",
+                success: () => {
+                    $("#delete-catering-prompt").modal("hide");
+                    initData();
+                },
+                error: Global.ajaxErrorHandler
+            })
+        }
     }
     
 }

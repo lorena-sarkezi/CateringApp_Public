@@ -99,7 +99,7 @@ namespace CateringApp.Web.Controllers
             catering.CateringEmployees = model.Users.Select(x => new CateringEmployees
             {
                 CateringId = cateringId,
-                UserId = x.UserId
+                UserId = (int)x.UserId
             }).ToList();
 
             cateringDbContext.Update<Catering>(catering);

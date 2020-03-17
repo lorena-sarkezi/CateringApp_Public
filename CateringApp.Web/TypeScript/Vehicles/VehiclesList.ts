@@ -43,6 +43,8 @@
 
     export function initData() {
         $("#vehicle-name").val("");
+        $("#vehicle-registration").val("");
+        $("#vehicle-kilometers").val("");
         $.ajax({
             url: "/api/vehicles",
             contentType: "application/json",
@@ -75,6 +77,8 @@
     export function submitVehicle() {
         let vehicle: Models.IVehicle = {
             vehicleId: $vehicleId,
+            vehicleRegistration: $("#vehicle-registration").val().toString(),
+            vehicleKilometers: parseFloat($("#vehicle-kilometers").val().toString()),
             vehicleName: $("#vehicle-name").val().toString()
         };
 

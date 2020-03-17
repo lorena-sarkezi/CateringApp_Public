@@ -28,7 +28,10 @@
                         return `<button type="button" class="btn btn-primary" alt="Uredi" ><i class="fas fa-edit"></i></button><button class="btn btn-danger" onclick="Users.RemoveUser(` + colData + `)" alt="Obriši"><i class="fas fa-trash-alt"></i></button>`;
                     }
                 }
-            ]
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
+            }
         });
 
         $table.on('order.dt search.dt', function () {

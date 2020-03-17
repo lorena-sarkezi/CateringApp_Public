@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CateringApp.Data;
 using CateringApp.Data.Models;
+using CateringApp.Web.Helpers;
 using CateringApp.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +36,7 @@ namespace CateringApp.Web.Controllers.Users
         {
             User user = viewModel.GetDbModel();
 
-            user.PasswordHash = "CantHashToHCString";
+            user.PasswordHash = Sha256Helper.GetHash("CantHashToHCString");
 
             cateringDbContext.Add(user);
             await cateringDbContext.SaveChangesAsync();

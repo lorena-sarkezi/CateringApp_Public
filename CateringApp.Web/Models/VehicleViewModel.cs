@@ -10,6 +10,8 @@ namespace CateringApp.Web.Models
     public class VehicleViewModel
     {
         public int? VehicleId { get; set; }
+        public string VehicleRegistration { get; set; }
+        public double VehicleKilometers { get; set; }
         public string VehicleName { get; set; }
     }
 
@@ -21,7 +23,9 @@ namespace CateringApp.Web.Models
             return new VehicleViewModel
             {
                 VehicleId = vehicle.VehicleId,
-                VehicleName = vehicle.VehicleName
+                VehicleName = vehicle.VehicleName,
+                VehicleRegistration = vehicle.Registration,
+                VehicleKilometers = vehicle.Kilometers
             };
         }
 
@@ -30,7 +34,9 @@ namespace CateringApp.Web.Models
             return new Vehicle
             {
                 VehicleId = viewModel.VehicleId ?? 0,
-                VehicleName = viewModel.VehicleName
+                VehicleName = viewModel.VehicleName,
+                Registration = viewModel.VehicleRegistration,
+                Kilometers = viewModel.VehicleKilometers
             };
         }
     }

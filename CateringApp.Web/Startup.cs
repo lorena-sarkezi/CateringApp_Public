@@ -107,7 +107,7 @@ namespace CateringApp.Web
             app.Use(async (context, next) =>
             {
 
-                if(context.Request.Cookies["token"] != null && context.Request.Headers.ContainsKey("Authorization") == false)
+                if(context.Request.Cookies["token"] != null)
                 {
                     string token = context.Request.Cookies["token"];
                     if (context.Request.Headers.ContainsKey("Authorization") == false)
