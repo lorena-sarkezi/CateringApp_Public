@@ -136,6 +136,119 @@ var Caterings;
     }
     Caterings.SubmitCatering = SubmitCatering;
 })(Caterings || (Caterings = {}));
+var Users;
+(function (Users) {
+    var $table;
+    var curUserId = 0;
+    var curRoleId = 2;
+    function Initialize() {
+        $table = $("#users-list-table").DataTable({
+            columns: [
+                {
+                    title: "R. br.",
+                    data: "userId",
+                    width: "10%"
+                },
+                {
+                    title: "Korisnik",
+                    data: "userFullName"
+                },
+                {
+                    title: "Email",
+                    data: "email"
+                },
+                {
+                    title: "Radnje",
+                    data: "userId",
+                    className: "dt-center",
+                    width: "20%",
+                    render: function (colData, data, row) {
+                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" ><i class=\"fas fa-edit\"></i></button><button class=\"btn btn-danger\" onclick=\"Users.RemoveUser(" + colData + ")\" alt=\"Obri\u0161i\"><i class=\"fas fa-trash-alt\"></i></button>";
+                    }
+                }
+            ]
+        });
+        $table.on('order.dt search.dt', function () {
+            $table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        InitData();
+    }
+    Users.Initialize = Initialize;
+    function InitData() {
+        $.ajax({
+            url: "/api/users",
+            contentType: "application/json",
+            method: "get",
+            success: function (data) {
+                console.log(data);
+                $table.clear().rows.add(data).draw();
+            }
+        });
+    }
+    Users.InitData = InitData;
+    //export function EditUser(vehicleId: number) {
+    //    $.ajax({
+    //        url: `/api/vehicles/${vehicleId}`,
+    //        contentType: "application/json",
+    //        method: "get",
+    //        success: (data: Models.IUser) => {
+    //            vehicleId = data.vehicleId;
+    //            $("#vehicle-name").val(data.vehicleName);
+    //        }
+    //    })
+    //}
+    function SubmitUser() {
+        var user = {
+            userId: curUserId,
+            roleId: curRoleId,
+            firstName: $("#user-name").val().toString(),
+            lastName: $("#user-name").val().toString(),
+            email: $("#user-name").val().toString(),
+            username: $("#user-name").val().toString(),
+            roleTitle: ""
+        };
+        if (user.firstName != ""
+            && user.lastName != ""
+            && user.email != ""
+            && user.username != "") {
+            var submissionUrl = void 0;
+            var method = void 0;
+            if (curUserId == 0) {
+                submissionUrl = "/api/users";
+                method = "post";
+            }
+            else {
+                submissionUrl = "/api/users/" + curUserId;
+                method = "put";
+            }
+            $.ajax({
+                url: submissionUrl,
+                method: method,
+                contentType: "application/json",
+                data: JSON.stringify(user),
+                success: function () {
+                    $("#add-user-modal").modal("hide");
+                    InitData();
+                }
+            });
+        }
+    }
+    Users.SubmitUser = SubmitUser;
+    function RemoveUser(userId) {
+        $.ajax({
+            url: "/api/users",
+            method: "delete",
+            contentType: "application/json",
+            data: JSON.stringify(userId),
+            success: function () {
+                InitData();
+            }
+        });
+    }
+    Users.RemoveUser = RemoveUser;
+})(Users || (Users = {}));
 var Vehicles;
 (function (Vehicles) {
     var $table;
@@ -225,57 +338,4 @@ var Vehicles;
     }
     Vehicles.SubmitVehicle = SubmitVehicle;
 })(Vehicles || (Vehicles = {}));
-var Users;
-(function (Users) {
-    var $table;
-    var vehicleId = 0;
-    function Initialize() {
-        $table = $("#users-list-table").DataTable({
-            columns: [
-                {
-                    title: "R. br.",
-                    data: "idUser",
-                    width: "10%"
-                },
-                {
-                    title: "Korisnik",
-                    data: "fullName"
-                },
-                {
-                    title: "Uloga",
-                    data: "uloga"
-                } /*,
-                {
-                    //Ovo ni ne znam šta je
-                    title: "Radnje",
-                    data: "vehicleId",
-                    className: "dt-center",
-                    width: "20%",
-                    render: (colData, data, row: Models.IUser) => {
-                        return `<button type="button" class="btn btn-primary" alt="Uredi" ><i class="fas fa-edit"></i></button><button class="btn btn-danger" alt="Uredi"><i class="fas fa-trash-alt"></i></button>`;
-                    }
-                }*/
-            ]
-        });
-        $table.on('order.dt search.dt', function () {
-            $table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-                cell.innerHTML = i + 1;
-            });
-        }).draw();
-        InitData();
-    }
-    Users.Initialize = Initialize;
-    function InitData() {
-        $.ajax({
-            url: "/api/users",
-            contentType: "application/json",
-            method: "get",
-            success: function (data) {
-                //console.log(data);
-                $table.clear().rows.add(data).draw();
-            }
-        });
-    }
-    Users.InitData = InitData;
-})(Users || (Users = {}));
 //# sourceMappingURL=app.js.map
