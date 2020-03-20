@@ -6,6 +6,7 @@ using CateringApp.Data;
 using CateringApp.Data.Models;
 using CateringApp.Web.Helpers;
 using CateringApp.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,7 @@ namespace CateringApp.Web.Controllers.Users
 {
     [Route("api/users")]
     [ApiController]
+    [Authorize(Roles = "ADMIN")]
     public class UsersAPIController : Controller
     {
         private readonly CateringDbContext cateringDbContext;

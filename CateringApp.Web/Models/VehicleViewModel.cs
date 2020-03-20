@@ -25,7 +25,7 @@ namespace CateringApp.Web.Models
                 VehicleId = vehicle.VehicleId,
                 VehicleName = vehicle.VehicleName,
                 VehicleRegistration = vehicle.Registration,
-                VehicleKilometers = vehicle.Kilometers
+                VehicleKilometers = (double)vehicle.Kilometers
             };
         }
 
@@ -36,7 +36,7 @@ namespace CateringApp.Web.Models
                 VehicleId = viewModel.VehicleId ?? 0,
                 VehicleName = viewModel.VehicleName,
                 Registration = viewModel.VehicleRegistration,
-                Kilometers = viewModel.VehicleKilometers
+                Kilometers = (decimal)viewModel.VehicleKilometers
             };
         }
     }

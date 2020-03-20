@@ -17,6 +17,14 @@
                     data: "vehicleName"
                 },
                 {
+                    title: "Registracija",
+                    data: "vehicleRegistration"
+                },
+                {
+                    title: "Broj kilometara",
+                    data:"vehicleKilometers"
+                },
+                {
                     title: "Radnje",
                     data: "vehicleId",
                     className: "dt-center",
@@ -42,6 +50,8 @@
     }
 
     export function initData() {
+        console.log("Init data");
+        loader(true);
         $("#vehicle-name").val("");
         $("#vehicle-registration").val("");
         $("#vehicle-kilometers").val("");
@@ -52,6 +62,11 @@
             success: (data: Models.IVehicle[]) => {
                 console.log(data);
                 $table.clear().rows.add(data).draw();
+
+                $("#vehicle-name").val("");
+                $("#vehicle-registration").val("");
+                $("#vehicle-kilometers").val("");
+
                 loader(false);
             }
         })
@@ -66,14 +81,13 @@
             success: (data: Models.IVehicle) => {
                 $("#add-vehicle-modal").modal("show");
                 $("#vehicle-name").val(data.vehicleName);
+                $("#vehicle-registration").val(data.vehicleRegistration);
+                $("#vehicle-kilometers").val(data.vehicleKilometers);
             }
         })
     }
 
-    export function deleteVehicle(vehicleId: number) {
-
-    }
-
+  
     export function submitVehicle() {
         let vehicle: Models.IVehicle = {
             vehicleId: $vehicleId,
@@ -95,7 +109,7 @@
                 submissionUrl = `/api/vehicles/${$vehicleId}`;
                 method = "put";
             }
-
+            loader(true);
             $.ajax({
                 url: submissionUrl,
                 method: method,

@@ -20,7 +20,7 @@ namespace CateringApp.Data.Models
         public string Registration { get; set; }
 
         [Required, Column("kilometers")]
-        public double Kilometers { get; set; }
+        public decimal Kilometers { get; set; }
 
         [Required, Column("date_created"), DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime DateCreated { get; set; }

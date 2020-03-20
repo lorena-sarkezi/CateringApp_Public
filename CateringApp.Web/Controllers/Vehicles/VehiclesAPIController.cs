@@ -57,6 +57,9 @@ namespace CateringApp.Web.Controllers.Vehicles
         {
             Vehicle vehicle = await cateringDbContext.Vehicles.FirstOrDefaultAsync(x => x.VehicleId == vehicleId);
             vehicle.VehicleName = model.VehicleName;
+            vehicle.Registration = model.VehicleRegistration;
+            decimal km = (decimal)model.VehicleKilometers;
+            vehicle.Kilometers =  Math.Truncate(100 * km) / 100; //Truncate to 2 decimal places
 
             cateringDbContext.Update<Vehicle>(vehicle);
             await cateringDbContext.SaveChangesAsync();

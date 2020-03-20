@@ -4,24 +4,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using CateringApp.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CateringApp.Web.Controllers.Users
+
+namespace CateringApp.Web.Controllers.Food
 {
-    [Route("users")]
-    [Authorize(Roles = "ADMIN")]
-    public class UsersViewController : Controller
+    [Route("api/food")]
+    [ApiController]
+    [Authorize]
+    public class FoodAPIController : ControllerBase
     {
         private readonly CateringDbContext cateringDbContext;
 
-        public UsersViewController(CateringDbContext cateringDbContext)
+        public FoodAPIController(CateringDbContext cateringDbContext)
         {
             this.cateringDbContext = cateringDbContext;
         }
 
-        public IActionResult Index()
-        {
-            return View(@"\Views\Users\UsersList.cshtml");
-        }
+        //[HttpGet("categories")]
+        //public async Task<IActionResult>
     }
 }

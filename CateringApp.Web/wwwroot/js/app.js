@@ -74,6 +74,73 @@ function loader(value) {
     else
         element.style.display = "none";
 }
+var Auth;
+(function (Auth) {
+    var email;
+    var password;
+    function initialize() {
+        email = document.getElementById("email");
+        password = document.getElementById("password");
+        var form = document.getElementById("form");
+        hideError();
+        loader(false);
+        var elements = document.getElementsByTagName("input");
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].oninvalid = function (e) {
+                e.target.setCustomValidity("");
+                if (!e.target.validity.valid) {
+                    e.target.setCustomValidity("Obavezno polje!");
+                }
+            };
+            elements[i].oninput = function (e) {
+                e.target.setCustomValidity("");
+            };
+        }
+        //email.setCustomValidity("Obavezno polje!");
+        //password.setCustomValidity("Obavezno polje!");
+        form.addEventListener("submit", submitCallback);
+    }
+    Auth.initialize = initialize;
+    function submitCallback(event) {
+        event.preventDefault();
+        hideError();
+        loader(true);
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+        var remember = document.getElementById("remember").checked;
+        var data = {
+            email: email,
+            password: btoa(password),
+            rememberMe: remember
+        };
+        console.log(data);
+        $.ajax({
+            url: "/api/auth/login",
+            method: "post",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function () {
+                window.location.replace("/");
+            },
+            error: function () {
+                //alert("Error");
+                showError();
+                loader(false);
+            }
+        });
+    }
+    function showError() {
+        email.className += " is-invalid";
+        password.className += " is-invalid";
+        document.getElementById("error").style.display = "block";
+    }
+    function hideError() {
+        email.className = "form-control";
+        password.className = "form-control";
+        document.getElementById("error").style.display = "none";
+    }
+    Auth.hideError = hideError;
+})(Auth || (Auth = {}));
 var Caterings;
 (function (Caterings) {
     var $table;
@@ -428,6 +495,14 @@ var Vehicles;
                     data: "vehicleName"
                 },
                 {
+                    title: "Registracija",
+                    data: "vehicleRegistration"
+                },
+                {
+                    title: "Broj kilometara",
+                    data: "vehicleKilometers"
+                },
+                {
                     title: "Radnje",
                     data: "vehicleId",
                     className: "dt-center",
@@ -451,6 +526,8 @@ var Vehicles;
     }
     Vehicles.initialize = initialize;
     function initData() {
+        console.log("Init data");
+        loader(true);
         $("#vehicle-name").val("");
         $("#vehicle-registration").val("");
         $("#vehicle-kilometers").val("");
@@ -461,6 +538,9 @@ var Vehicles;
             success: function (data) {
                 console.log(data);
                 $table.clear().rows.add(data).draw();
+                $("#vehicle-name").val("");
+                $("#vehicle-registration").val("");
+                $("#vehicle-kilometers").val("");
                 loader(false);
             }
         });
@@ -475,13 +555,12 @@ var Vehicles;
             success: function (data) {
                 $("#add-vehicle-modal").modal("show");
                 $("#vehicle-name").val(data.vehicleName);
+                $("#vehicle-registration").val(data.vehicleRegistration);
+                $("#vehicle-kilometers").val(data.vehicleKilometers);
             }
         });
     }
     Vehicles.editVehicle = editVehicle;
-    function deleteVehicle(vehicleId) {
-    }
-    Vehicles.deleteVehicle = deleteVehicle;
     function submitVehicle() {
         var vehicle = {
             vehicleId: $vehicleId,
@@ -500,6 +579,7 @@ var Vehicles;
                 submissionUrl = "/api/vehicles/" + $vehicleId;
                 method = "put";
             }
+            loader(true);
             $.ajax({
                 url: submissionUrl,
                 method: method,
@@ -534,71 +614,4 @@ var Vehicles;
     }
     Vehicles.deleteVehicleConfirm = deleteVehicleConfirm;
 })(Vehicles || (Vehicles = {}));
-var Auth;
-(function (Auth) {
-    var email;
-    var password;
-    function initialize() {
-        email = document.getElementById("email");
-        password = document.getElementById("password");
-        var form = document.getElementById("form");
-        hideError();
-        loader(false);
-        var elements = document.getElementsByTagName("input");
-        for (var i = 0; i < elements.length; i++) {
-            elements[i].oninvalid = function (e) {
-                e.target.setCustomValidity("");
-                if (!e.target.validity.valid) {
-                    e.target.setCustomValidity("Obavezno polje!");
-                }
-            };
-            elements[i].oninput = function (e) {
-                e.target.setCustomValidity("");
-            };
-        }
-        //email.setCustomValidity("Obavezno polje!");
-        //password.setCustomValidity("Obavezno polje!");
-        form.addEventListener("submit", submitCallback);
-    }
-    Auth.initialize = initialize;
-    function submitCallback(event) {
-        event.preventDefault();
-        hideError();
-        loader(true);
-        var email = document.getElementById("email").value;
-        var password = document.getElementById("password").value;
-        var remember = document.getElementById("remember").checked;
-        var data = {
-            email: email,
-            password: btoa(password),
-            rememberMe: remember
-        };
-        console.log(data);
-        $.ajax({
-            url: "/api/auth/login",
-            method: "post",
-            contentType: "application/json",
-            data: JSON.stringify(data),
-            success: function () {
-                window.location.replace("/");
-            },
-            error: function () {
-                //alert("Error");
-                showError();
-                loader(false);
-            }
-        });
-    }
-    function showError() {
-        email.className += " is-invalid";
-        password.className += " is-invalid";
-        document.getElementById("error").style.display = "block";
-    }
-    function hideError() {
-        email.className = "form-control";
-        password.className = "form-control";
-        document.getElementById("error").style.display = "none";
-    }
-    Auth.hideError = hideError;
-})(Auth || (Auth = {}));
 //# sourceMappingURL=app.js.map
