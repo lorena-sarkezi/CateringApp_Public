@@ -8,5 +8,16 @@
         email: string;
         username: string;
         roleTitle: string;
+        password: string;
+    }
+
+    export interface IUserRole {
+        roleId: number,
+        roleTitle: string
+    }
+
+    export interface IUserPassword {
+        userId: number;
+        password: string
     }
 }

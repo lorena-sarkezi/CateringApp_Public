@@ -12,7 +12,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-user" @*onclick="Users.HandleModalOpen()"*@><i class="fas fa-plus"></i>Novi zaposlenik</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-user" onclick="Users.clearForm()"><i class="fas fa-plus"></i> Novi zaposlenik</button>
                 </div>
             </div>
             <div class="card-body">
@@ -33,36 +33,104 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <form id="form">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Ime</label>
+                                <input type="text" name="user-name" class="form-control" id="user-name" required/>
+                            </div> 
+                            <div class="form-group">
+                                <label>Prezime</label>
+                                <input type="text" name="user-surname" class="form-control" id="user-surname" required/>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="text" name="user-email" class="form-control" id="user-email" required/>
+                            </div>
+                            <div class="form-group">
+                                <label>Korisničko ime</label>
+                                <input type="text" name="user-username" class="form-control" id="user-username" required/>
+                            </div>
+                            <div class="form-group" id="form-group-password">
+                                <label>Lozinka</label>
+                                <input type="password" name="user-password" class="form-control" id="user-password"/>
+                            </div>
+                            <div class="form-group" >
+                                <label for="dropdown-roles">Uloga Korisnika</label>
+                                <select id="dropdown-roles" name="user-role" class="form-control" placeholder="Odaberi..." style="width:100%" required>
+                                    <option selected disabled></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn-pass-reset" class="btn btn-primary mr-auto" onclick="Users.passwordChangePrompt()">Promijeni lozinku</button>
+                    <button type="submit" class="btn btn-primary">Spremi</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="password-reset-modal" role="dialog">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <form id="pass-reset-form">
+                <div class="modal-header">
+                    <h5 class="modal-title">Promjena lozinke</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label">Nova lozinka</label>
+                                <input type="password" class="form-control" name="new-password" id="new-password" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label">Ponovljena nova lozinka</label>
+                                <input type="password" class="form-control" id="new-password-repeat" name="new-password-repeat" required data-rule-equalTo="#new-password" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Potvrdi</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" role="dialog" id="delete-user-modal">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upozorenje</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             <div class="modal-body">
-                @*<div class="spinner"></div>*@
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Ime</label>
-                            <input type="text" class="form-control" id="user-name" />
-                        </div>
-                        <div class="form-group">
-                            <label>Prezime</label>
-                            <input type="text" class="form-control" id="user-surname" />
-                        </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="text" class="form-control" id="user-email" />
-                        </div>
-                        <div class="form-group">
-                            <label>Korisnićko ime</label>
-                            <input type="text" class="form-control" id="user-username" />
-                        </div>
-                        @*<div class="form-group">
-            <label for="dropdown-users">Uloga Korisnika</label>
-            <select id="dropdown-users" multiple="multiple" placeholder="Odaberi..." style="width:100%">
-            </select>
-        </div>*@
+                        Jeste li sigurni da želite obrisati korisnika?
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="Users.SubmitUser()">Spremi</button>
+                <button type="button" class="btn btn-primary" onclick="Users.removeUser()">Potvrdi</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
             </div>
         </div>
@@ -70,5 +138,5 @@
 </div>
 
 <script>
-    Users.Initialize();
+    Users.initialize();
 </script>

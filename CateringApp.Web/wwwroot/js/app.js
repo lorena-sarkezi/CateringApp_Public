@@ -44,6 +44,24 @@ var Global;
             },
             responsive: true
         });
+        $.extend($.validator.messages, {
+            required: "Obavezno polje",
+            number: "Unesite ispravan broj",
+            digits: "Molimo unesite samo znamenke",
+            maxLength: $.validator.format("Molimo unesite maksimalno {0} znakova"),
+            minLength: $.validator.format("Molimo unesite minimalno {0} znakova"),
+            equalTo: $.validator.format("Lozinke se moraju podudarati")
+        });
+        jQuery.validator.setDefaults({
+            errorElement: "div",
+            errorClass: "invalid-feedback",
+            highlight: function (element) {
+                $(element).parent().addClass("is-invalid");
+            },
+            unhighlight: function (element) {
+                $(element).parent().removeClass("is-invalid");
+            }
+        });
     }
     Global.initialize = initialize;
     function getCookie(name) {
@@ -57,8 +75,8 @@ var Global;
         loader(false);
         console.error(error);
         console.log(jxHR);
-        //$("#errorModalMain").modal("show");
-        alert("Došlo je do greške!");
+        $('.modal').modal('hide');
+        $("#errorModalMain").modal("show");
     }
     Global.ajaxErrorHandler = ajaxErrorHandler;
     function logout() {
@@ -82,7 +100,17 @@ var Auth;
         email = document.getElementById("email");
         password = document.getElementById("password");
         var form = document.getElementById("form");
-        hideError();
+        $("#form").validate({
+            errorPlacement: function (label, element) {
+                label.addClass("invalid-feedback");
+                label.insertAfter($(element).next());
+                element.addClass("is-invalid");
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                element.classList.remove("is-invalid");
+            }
+        });
+        //hideError();
         loader(false);
         var elements = document.getElementsByTagName("input");
         for (var i = 0; i < elements.length; i++) {
@@ -96,62 +124,89 @@ var Auth;
                 e.target.setCustomValidity("");
             };
         }
-        //email.setCustomValidity("Obavezno polje!");
-        //password.setCustomValidity("Obavezno polje!");
         form.addEventListener("submit", submitCallback);
     }
     Auth.initialize = initialize;
     function submitCallback(event) {
         event.preventDefault();
-        hideError();
-        loader(true);
-        var email = document.getElementById("email").value;
-        var password = document.getElementById("password").value;
-        var remember = document.getElementById("remember").checked;
-        var data = {
-            email: email,
-            password: btoa(password),
-            rememberMe: remember
-        };
-        console.log(data);
-        $.ajax({
-            url: "/api/auth/login",
-            method: "post",
-            contentType: "application/json",
-            data: JSON.stringify(data),
-            success: function () {
-                window.location.replace("/");
-            },
-            error: function () {
-                //alert("Error");
-                showError();
-                loader(false);
-            }
-        });
+        if ($("#form").valid()) {
+            loader(true);
+            var email_1 = document.getElementById("email").value;
+            var password_1 = document.getElementById("password").value;
+            var remember = document.getElementById("remember").checked;
+            var data = {
+                email: email_1,
+                password: btoa(password_1),
+                rememberMe: remember
+            };
+            console.log(data);
+            $.ajax({
+                url: "/api/auth/login",
+                method: "post",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function () {
+                    window.location.replace("/");
+                },
+                error: function () {
+                    loader(false);
+                }
+            });
+        }
     }
-    function showError() {
-        email.className += " is-invalid";
-        password.className += " is-invalid";
-        document.getElementById("error").style.display = "block";
-    }
-    function hideError() {
-        email.className = "form-control";
-        password.className = "form-control";
-        document.getElementById("error").style.display = "none";
-    }
-    Auth.hideError = hideError;
+    //function showError() {
+    //    email.className +=" is-invalid"
+    //    password.className += " is-invalid";
+    //    document.getElementById("error").style.display = "block";
+    //}
+    //export function hideError() {
+    //    email.className = "form-control";
+    //    password.className = "form-control";
+    //    document.getElementById("error").style.display = "none";
+    //}
 })(Auth || (Auth = {}));
 var Caterings;
 (function (Caterings) {
     var $table;
     var $cateringData;
+    var $form;
     var $cateringId = 0;
     function initialize() {
         loader(true);
         $("#dropdown-users").select2();
-        $("#dropdown-vehicles").select2({
-            dropdownParent: $('#add-catering-modal')
+        //$("#dropdown-vehicles").select2({
+        //    dropdownParent: $('#add-catering-modal')
+        //});
+        $form = document.getElementById("form");
+        $("#form").validate({
+            errorPlacement: function (label, element) {
+                label.addClass("invalid-feedback");
+                label.insertAfter(element);
+                element.addClass("is-invalid");
+                if (element.hasClass('select2-hidden-accessible') && element.next('.select2-container').length) {
+                    label.insertAfter(element.next('.select2-container'));
+                }
+            },
+            wrapper: "div"
+            //highlight: function (element, errorClass, validClass) {
+            //    var elem = $(element);
+            //    if (elem.hasClass("select2-offscreen")) {
+            //        $("#s2id_" + elem.attr("id") + " ul").addClass("invalid-feedback");
+            //    } else {
+            //        elem.addClass("invalid-feedback");
+            //    }
+            //},
+            ////When removing make the same adjustments as when adding
+            //unhighlight: function (element, errorClass, validClass) {
+            //    var elem = $(element);
+            //    if (elem.hasClass("select2-offscreen")) {
+            //        $("#s2id_" + elem.attr("id") + " ul").removeClass("invalid-feedback");
+            //    } else {
+            //        elem.removeClass("invalid-feedback");
+            //    }
+            //}
         });
+        $form.addEventListener("submit", handleFormSubmit);
         $table = $("#caterings-list-table").DataTable({
             columns: [
                 {
@@ -208,8 +263,15 @@ var Caterings;
         });
     }
     Caterings.initData = initData;
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        if ($("#form").valid()) {
+            submitCatering();
+        }
+    }
     function editCatering(cateringId) {
         var _this = this;
+        loader(true);
         $.ajax({
             url: "/api/catering/" + cateringId,
             method: "get",
@@ -220,10 +282,10 @@ var Caterings;
                     switch (_a.label) {
                         case 0:
                             console.log(data);
-                            $cateringId = cateringId;
                             return [4 /*yield*/, handleModalOpen()];
                         case 1:
                             _a.sent();
+                            $cateringId = cateringId;
                             users = [];
                             data.users.forEach(function (item) {
                                 users.push(item.userId.toString());
@@ -233,7 +295,10 @@ var Caterings;
                             console.log($("#dropdown-users"));
                             console.log(users);
                             $("#dropdown-users").val(users).trigger("change");
-                            $("#dropdown-vehicles").val(data.vehicles[0].vehicleId.toString()).trigger("change");
+                            if (data.vehicles.length > 0) {
+                                $("#dropdown-vehicles").val(data.vehicles[0].vehicleId.toString()).trigger("change");
+                            }
+                            loader(false);
                             return [2 /*return*/];
                     }
                 });
@@ -257,10 +322,12 @@ var Caterings;
                                     $(".spinner", "#add-catering-modal").hide();
                                     $(".row", "#add-catering-modal").show();
                                     $cateringData = data;
+                                    $cateringId = 0;
                                     var userSelect = document.getElementById("dropdown-users");
                                     var vehicleSelect = document.getElementById("dropdown-vehicles");
                                     $("#catering-name").val("");
                                     $("#client-name").val("");
+                                    vehicleSelect.innerHTML = '<option disabled selected></option>';
                                     //Praznjenje dropdowna
                                     for (var i = userSelect.options.length - 1; i >= 0; i--) {
                                         userSelect.options[i] = null;
@@ -275,6 +342,11 @@ var Caterings;
                                         option.text = user.userFullName;
                                         userSelect.add(option);
                                     });
+                                    var empty = document.createElement("option");
+                                    empty.value = "0";
+                                    empty.text = "Bez vozila";
+                                    empty.selected = true;
+                                    vehicleSelect.add(empty);
                                     $cateringData.vehicles.forEach(function (vehicle) {
                                         var option = document.createElement("option");
                                         option.value = vehicle.vehicleId.toString();
@@ -339,7 +411,6 @@ var Caterings;
         });
         console.log(catering);
     }
-    Caterings.submitCatering = submitCatering;
     function deleteCateringPrompt(cateringId) {
         $cateringId = cateringId;
         $("#delete-catering-prompt").modal("show");
@@ -360,13 +431,372 @@ var Caterings;
         }
     }
     Caterings.deleteCateringConfirm = deleteCateringConfirm;
+    function clearForm() {
+        var form = document.getElementById("form");
+        form.reset();
+        $cateringId = 0;
+    }
 })(Caterings || (Caterings = {}));
+var FoodCat;
+(function (FoodCat) {
+    var $table;
+    var $categoryId = 0;
+    function initialize() {
+        loader(true);
+        $("#form").validate({
+            errorPlacement: function (label, element) {
+                label.addClass("invalid-feedback");
+                label.insertAfter(element);
+                element.addClass("is-invalid");
+            },
+            unhighlight: function (element) {
+                element.classList.remove("is-invalid");
+            },
+            wrapper: "div"
+        });
+        document.getElementById("form").addEventListener("submit", handleSubmitForm);
+        $table = $("#categories-list-table").DataTable({
+            columns: [
+                {
+                    title: "R. br.",
+                    data: "id",
+                    width: "10%"
+                },
+                {
+                    title: "Naziv kategorije",
+                    data: "name"
+                },
+                {
+                    title: "Radnje",
+                    data: "vehicleId",
+                    className: "dt-center",
+                    width: "20%",
+                    render: function (colData, data, row) {
+                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" ><i class=\"fas fa-edit\" onclick=FoodCat.editCategory(" + row.id + ")></i></button><button class=\"btn btn-danger\" alt=\"Obri\u0161i\" onclick=\"FoodCat.deleteCategoryPrompt(" + row.id + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
+                    }
+                }
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
+            },
+        });
+        //Row numbers
+        $table.on('order.dt search.dt', function () {
+            $table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        initData();
+    }
+    FoodCat.initialize = initialize;
+    function initData() {
+        console.log("Init data");
+        loader(true);
+        clearForm();
+        $.ajax({
+            url: "/api/food/category/all",
+            contentType: "application/json",
+            method: "get",
+            success: function (data) {
+                console.log(data);
+                $table.clear().rows.add(data).draw();
+                clearForm();
+                $categoryId = 0;
+                loader(false);
+            }
+        });
+    }
+    FoodCat.initData = initData;
+    function editCategory(categoryId) {
+        $categoryId = categoryId;
+        loader(true);
+        $.ajax({
+            url: "/api/food/category/" + categoryId,
+            contentType: "application/json",
+            method: "get",
+            success: function (data) {
+                loader(false);
+                $("#add-category-modal").modal("show");
+                $("#category-name").val(data.name);
+                $("#category-description").val(data.description);
+            }
+        });
+    }
+    FoodCat.editCategory = editCategory;
+    function handleSubmitForm(event) {
+        event.preventDefault();
+        if ($("#form").valid()) {
+            submitCategory();
+        }
+    }
+    function submitCategory() {
+        var category = {
+            id: $categoryId,
+            name: $("#category-name").val().toString(),
+            description: $("#category-description").val().toString()
+        };
+        var submissionUrl;
+        var method;
+        if ($categoryId == 0) {
+            submissionUrl = "/api/food/category";
+            method = "post";
+        }
+        else {
+            submissionUrl = "/api/food/category/" + $categoryId;
+            method = "put";
+        }
+        loader(true);
+        $.ajax({
+            url: submissionUrl,
+            method: method,
+            contentType: "application/json",
+            data: JSON.stringify(category),
+            success: function () {
+                $("#add-category-modal").modal("hide");
+                initData();
+            },
+            error: Global.ajaxErrorHandler
+        });
+    }
+    FoodCat.submitCategory = submitCategory;
+    function deleteCategoryPrompt(categoryId) {
+        $categoryId = categoryId;
+        $("#delete-category-modal").modal("show");
+    }
+    FoodCat.deleteCategoryPrompt = deleteCategoryPrompt;
+    function deleteCategoryConfirm() {
+        if ($categoryId !== 0) {
+            loader(true);
+            $.ajax({
+                url: "/api/food/category/" + $categoryId,
+                method: "delete",
+                success: function () {
+                    $("#delete-category-modal").modal("hide");
+                    initData();
+                },
+                error: Global.ajaxErrorHandler
+            });
+        }
+    }
+    FoodCat.deleteCategoryConfirm = deleteCategoryConfirm;
+    function clearForm() {
+        var form = document.getElementById("form");
+        form.reset();
+        $categoryId = 0;
+    }
+    FoodCat.clearForm = clearForm;
+})(FoodCat || (FoodCat = {}));
+var FoodItem;
+(function (FoodItem) {
+    var $table;
+    var $itemId = 0;
+    var $foodCategories;
+    function initialize() {
+        loader(true);
+        console.log("Food items init data");
+        $("#form").validate({
+            errorPlacement: function (label, element) {
+                label.addClass("invalid-feedback");
+                label.insertAfter(element);
+                element.addClass("is-invalid");
+            },
+            unhighlight: function (element) {
+                element.classList.remove("is-invalid");
+            },
+            wrapper: "div"
+        });
+        document.getElementById("form").addEventListener("submit", handleSubmitForm);
+        $table = $("#items-list-table").DataTable({
+            columns: [
+                {
+                    title: "R. br.",
+                    data: "id",
+                    width: "10%"
+                },
+                {
+                    title: "Naziv stavke hrane",
+                    data: "name"
+                },
+                {
+                    title: "Kategorija",
+                    data: "foodCategoryName",
+                },
+                {
+                    title: "Radnje",
+                    data: "foodCategoryName",
+                    className: "dt-center",
+                    width: "20%",
+                    render: function (colData, data, row) {
+                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" ><i class=\"fas fa-edit\" onclick=FoodItem.editItem(" + row.id + ")></i></button><button class=\"btn btn-danger\" alt=\"Obri\u0161i\" onclick=\"FoodItem.deleteItemPrompt(" + row.id + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
+                    }
+                }
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
+            },
+        });
+        //Row numbers
+        $table.on('order.dt search.dt', function () {
+            $table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        loader(true);
+        initCategories();
+        initData();
+    }
+    FoodItem.initialize = initialize;
+    function initCategories() {
+        $.ajax({
+            url: "/api/food/category/all",
+            contentType: "application/json",
+            method: "get",
+            success: function (data) {
+                $foodCategories = data;
+                var categoriesSelect = document.getElementById("category-dropdown");
+                $foodCategories.forEach(function (item) {
+                    var option = document.createElement("option");
+                    option.value = item.id.toString();
+                    option.text = item.name;
+                    categoriesSelect.add(option);
+                });
+            },
+            error: Global.ajaxErrorHandler
+        });
+    }
+    FoodItem.initCategories = initCategories;
+    function initData() {
+        console.log("Init data");
+        loader(true);
+        clearForm();
+        $.ajax({
+            url: "/api/food/item/all",
+            contentType: "application/json",
+            method: "get",
+            success: function (data) {
+                console.log(data);
+                $table.clear().rows.add(data).draw();
+                clearForm();
+                $itemId = 0;
+                loader(false);
+            },
+            error: Global.ajaxErrorHandler
+        });
+    }
+    FoodItem.initData = initData;
+    function editItem(itemId) {
+        loader(true);
+        $itemId = itemId;
+        $.ajax({
+            url: "/api/food/item/" + $itemId,
+            contentType: "application/json",
+            method: "get",
+            success: function (data) {
+                loader(false);
+                $("#add-item-modal").modal("show");
+                $("#item-name").val(data.name);
+                $("#item-description").val(data.description);
+                $("#category-dropdown").val(data.foodCategoryId);
+            },
+            error: Global.ajaxErrorHandler
+        });
+    }
+    FoodItem.editItem = editItem;
+    function handleSubmitForm(event) {
+        event.preventDefault();
+        if ($("#form").valid()) {
+            submitItem();
+        }
+    }
+    function submitItem() {
+        var category = {
+            id: $itemId,
+            name: $("#item-name").val().toString(),
+            description: $("#item-description").val().toString(),
+            foodCategoryId: parseInt($("#category-dropdown").val().toString()),
+            foodCategoryName: ""
+        };
+        var submissionUrl;
+        var method;
+        if ($itemId == 0) {
+            submissionUrl = "/api/food/item";
+            method = "post";
+        }
+        else {
+            submissionUrl = "/api/food/item/" + $itemId;
+            method = "put";
+        }
+        loader(true);
+        $.ajax({
+            url: submissionUrl,
+            method: method,
+            contentType: "application/json",
+            data: JSON.stringify(category),
+            success: function () {
+                $("#add-item-modal").modal("hide");
+                initData();
+            },
+            error: Global.ajaxErrorHandler
+        });
+    }
+    FoodItem.submitItem = submitItem;
+    function deleteItemPrompt(itemId) {
+        $itemId = itemId;
+        $("#delete-item-modal").modal("show");
+    }
+    FoodItem.deleteItemPrompt = deleteItemPrompt;
+    function deleteItemConfirm() {
+        if ($itemId !== 0) {
+            loader(true);
+            $.ajax({
+                url: "/api/food/item/" + $itemId,
+                method: "delete",
+                success: function () {
+                    $("#delete-item-modal").modal("hide");
+                    initData();
+                },
+                error: Global.ajaxErrorHandler
+            });
+        }
+    }
+    FoodItem.deleteItemConfirm = deleteItemConfirm;
+    function clearForm() {
+        var form = document.getElementById("form");
+        form.reset();
+        $itemId = 0;
+    }
+    FoodItem.clearForm = clearForm;
+})(FoodItem || (FoodItem = {}));
 var Users;
 (function (Users) {
     var $table;
+    var roles;
     var curUserId = 0;
-    var curRoleId = 2;
-    function Initialize() {
+    function initialize() {
+        $("#pass-reset-form").validate({
+            errorPlacement: function (label, element) {
+                label.addClass("invalid-feedback");
+                label.insertAfter(element);
+                element.addClass("is-invalid");
+            },
+            unhighlight: function (element) {
+                element.classList.remove("is-invalid");
+            },
+            wrapper: "div"
+        });
+        $("#form").validate({
+            errorPlacement: function (label, element) {
+                label.addClass("invalid-feedback");
+                label.insertAfter(element);
+                element.addClass("is-invalid");
+            },
+            unhighlight: function (element) {
+                element.classList.remove("is-invalid");
+            },
+            wrapper: "div"
+        });
+        document.getElementById("form").addEventListener("submit", handleUserFormSubmit);
+        document.getElementById("password-reset-modal").addEventListener("submit", handlePasswordFormSubmit);
         $table = $("#users-list-table").DataTable({
             columns: [
                 {
@@ -383,12 +813,16 @@ var Users;
                     data: "email"
                 },
                 {
+                    title: "Uloga",
+                    data: "roleTitle"
+                },
+                {
                     title: "Radnje",
                     data: "userId",
                     className: "dt-center",
                     width: "20%",
                     render: function (colData, data, row) {
-                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" ><i class=\"fas fa-edit\"></i></button><button class=\"btn btn-danger\" onclick=\"Users.RemoveUser(" + colData + ")\" alt=\"Obri\u0161i\"><i class=\"fas fa-trash-alt\"></i></button>";
+                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" onclick=\"Users.editUser(" + row.userId + ")\"><i class=\"fas fa-edit\"></i></button><button class=\"btn btn-danger\" onclick=\"Users.removeUserPrompt(" + row.userId + ")\" alt=\"Obri\u0161i\"><i class=\"fas fa-trash-alt\"></i></button>";
                     }
                 }
             ],
@@ -396,86 +830,176 @@ var Users;
                 "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
             }
         });
+        //Row numbers
         $table.on('order.dt search.dt', function () {
             $table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
                 cell.innerHTML = i + 1;
             });
         }).draw();
-        InitData();
+        loader(true);
+        initRoles();
+        initData();
     }
-    Users.Initialize = Initialize;
-    function InitData() {
+    Users.initialize = initialize;
+    function initRoles() {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, $.ajax({
+                            url: "/api/users/roles",
+                            contentType: "application/json",
+                            method: "get",
+                            success: function (data) {
+                                console.log(data);
+                                roles = data;
+                                var rolesDropdown = document.getElementById("dropdown-roles");
+                                roles.forEach(function (item) {
+                                    var option = document.createElement("option");
+                                    option.value = item.roleId.toString();
+                                    option.text = item.roleTitle;
+                                    rolesDropdown.add(option);
+                                });
+                            },
+                            error: Global.ajaxErrorHandler
+                        })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+    Users.initRoles = initRoles;
+    function initData() {
+        curUserId = 0;
         $.ajax({
             url: "/api/users",
             contentType: "application/json",
             method: "get",
             success: function (data) {
                 console.log(data);
+                loader(false);
                 $table.clear().rows.add(data).draw();
-            }
+            },
+            error: Global.ajaxErrorHandler
         });
     }
-    Users.InitData = InitData;
-    //export function EditUser(vehicleId: number) {
-    //    $.ajax({
-    //        url: `/api/vehicles/${vehicleId}`,
-    //        contentType: "application/json",
-    //        method: "get",
-    //        success: (data: Models.IUser) => {
-    //            vehicleId = data.vehicleId;
-    //            $("#vehicle-name").val(data.vehicleName);
-    //        }
-    //    })
-    //}
-    function SubmitUser() {
-        var user = {
-            userId: curUserId,
-            roleId: curRoleId,
-            firstName: $("#user-name").val().toString(),
-            lastName: $("#user-name").val().toString(),
-            email: $("#user-name").val().toString(),
-            username: $("#user-name").val().toString(),
-            roleTitle: ""
-        };
-        if (user.firstName != ""
-            && user.lastName != ""
-            && user.email != ""
-            && user.username != "") {
-            var submissionUrl = void 0;
-            var method = void 0;
-            if (curUserId == 0) {
-                submissionUrl = "/api/users";
-                method = "post";
-            }
-            else {
-                submissionUrl = "/api/users/" + curUserId;
-                method = "put";
-            }
+    Users.initData = initData;
+    function editUser(userId) {
+        curUserId = userId;
+        $("#btn-pass-reset").show();
+        $("#form-group-password").hide();
+        loader(true);
+        $.ajax({
+            url: "/api/users/" + userId,
+            contentType: "application/json",
+            method: "get",
+            success: function (data) {
+                loader(false);
+                $("#add-user-modal").modal("show");
+                $("#user-name").val(data.firstName);
+                $("#user-surname").val(data.lastName);
+                $("#user-email").val(data.email);
+                $("#user-username").val(data.username);
+                $("#dropdown-roles").val(data.roleId);
+            },
+            error: Global.ajaxErrorHandler
+        });
+    }
+    Users.editUser = editUser;
+    function handleUserFormSubmit(event) {
+        event.preventDefault();
+        if ($("#form").valid()) {
+            submitUser();
+        }
+    }
+    function handlePasswordFormSubmit(event) {
+        event.preventDefault();
+        if ($("#pass-reset-form").valid()) {
+            loader(true);
+            var data = {
+                userId: curUserId,
+                password: btoa($("#new-password").val().toString()) //Base64
+            };
             $.ajax({
-                url: submissionUrl,
-                method: method,
+                url: "/api/users/password/" + curUserId,
+                method: "put",
                 contentType: "application/json",
-                data: JSON.stringify(user),
+                data: JSON.stringify(data),
                 success: function () {
-                    $("#add-user-modal").modal("hide");
-                    InitData();
-                }
+                    $("#password-reset-modal").modal("hide");
+                    loader(false);
+                },
+                error: Global.ajaxErrorHandler
             });
         }
     }
-    Users.SubmitUser = SubmitUser;
-    function RemoveUser(userId) {
+    function submitUser() {
+        var user = {
+            userId: curUserId,
+            roleId: parseInt($("#dropdown-roles").val().toString()),
+            firstName: $("#user-name").val().toString(),
+            lastName: $("#user-surname").val().toString(),
+            email: $("#user-email").val().toString(),
+            username: $("#user-username").val().toString(),
+            roleTitle: "",
+            password: ""
+        };
+        var submissionUrl;
+        var method;
+        if (curUserId == 0) {
+            submissionUrl = "/api/users";
+            method = "post";
+            user.password = $("#user-password").val().toString();
+        }
+        else {
+            submissionUrl = "/api/users/" + curUserId;
+            method = "put";
+        }
         $.ajax({
-            url: "/api/users",
-            method: "delete",
+            url: submissionUrl,
+            method: method,
             contentType: "application/json",
-            data: JSON.stringify(userId),
+            data: JSON.stringify(user),
             success: function () {
-                InitData();
+                $("#add-user-modal").modal("hide");
+                initData();
             }
         });
     }
-    Users.RemoveUser = RemoveUser;
+    function removeUserPrompt(userId) {
+        curUserId = userId;
+        $("#delete-user-modal").modal("show");
+    }
+    Users.removeUserPrompt = removeUserPrompt;
+    function removeUser() {
+        $.ajax({
+            url: "/api/users/" + curUserId,
+            method: "delete",
+            contentType: "application/json",
+            //data: JSON.stringify(userId),
+            success: function () {
+                initData();
+                $("#delete-user-modal").modal("hide");
+            },
+            error: Global.ajaxErrorHandler
+        });
+    }
+    Users.removeUser = removeUser;
+    function clearForm() {
+        var form = document.getElementById("form");
+        form.reset();
+        curUserId = 0;
+        $("#btn-pass-reset").hide();
+        $("#form-group-password").show();
+    }
+    Users.clearForm = clearForm;
+    function passwordChangePrompt() {
+        $("#password-reset-modal").modal("show");
+        var form = document.getElementById("pass-reset-form");
+        form.reset();
+    }
+    Users.passwordChangePrompt = passwordChangePrompt;
 })(Users || (Users = {}));
 var Vehicles;
 (function (Vehicles) {
@@ -483,6 +1007,15 @@ var Vehicles;
     var $vehicleId = 0;
     function initialize() {
         loader(true);
+        $("#form").validate({
+            errorPlacement: function (label, element) {
+                label.addClass("invalid-feedback");
+                label.insertAfter(element);
+                element.addClass("is-invalid");
+            },
+            wrapper: "div"
+        });
+        document.getElementById("form").addEventListener("submit", handleSubmitForm);
         $table = $("#vehicles-list-table").DataTable({
             columns: [
                 {
@@ -542,6 +1075,7 @@ var Vehicles;
                 $("#vehicle-registration").val("");
                 $("#vehicle-kilometers").val("");
                 loader(false);
+                $vehicleId = 0;
             }
         });
     }
@@ -561,6 +1095,12 @@ var Vehicles;
         });
     }
     Vehicles.editVehicle = editVehicle;
+    function handleSubmitForm(event) {
+        event.preventDefault();
+        if ($("#form").valid()) {
+            submitVehicle();
+        }
+    }
     function submitVehicle() {
         var vehicle = {
             vehicleId: $vehicleId,
@@ -613,5 +1153,11 @@ var Vehicles;
         }
     }
     Vehicles.deleteVehicleConfirm = deleteVehicleConfirm;
+    function clearForm() {
+        var form = document.getElementById("form");
+        form.reset();
+        $vehicleId = 0;
+    }
+    Vehicles.clearForm = clearForm;
 })(Vehicles || (Vehicles = {}));
 //# sourceMappingURL=app.js.map

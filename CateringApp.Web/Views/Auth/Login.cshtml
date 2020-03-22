@@ -31,6 +31,8 @@
     <script src="~/dist/js/jquery.min.js"></script>
     <script src="~/dist/js/adminlte.js"></script>
     <script src="~/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <!-- Bootstrap -->
     <!-- Bootstrap -->
     <!-- overlayScrollbars -->
@@ -100,6 +102,7 @@
 
     <script>
         window.onload = () => {
+            Global.initialize();
             Auth.initialize();
         }
     </script>

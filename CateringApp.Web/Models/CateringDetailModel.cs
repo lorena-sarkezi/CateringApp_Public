@@ -16,13 +16,13 @@ namespace CateringApp.Web.Models
         public string ClientName { get; set; }
 
         public List<UserViewModel> Users { get; set; }
-        public List<DishViewModel> Dishes { get; set; }
+        public List<FoodItemViewModel> Dishes { get; set; }
         public List<VehicleViewModel> Vehicles { get; set; }
 
         public CateringDetailModel()
         {
             Users = new List<UserViewModel>();
-            Dishes = new List<DishViewModel>();
+            Dishes = new List<FoodItemViewModel>();
             Vehicles = new List<VehicleViewModel>();
         }
     }

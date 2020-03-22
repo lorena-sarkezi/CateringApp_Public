@@ -34,7 +34,7 @@ namespace CateringApp.Web.Controllers
                                                                      .ToListAsync();
 
             List<CateringViewModel> cateringViewModels = allCateringsList.Select(x => x.GetViewModel()).ToList();
-
+           
             return cateringViewModels;
         }
 

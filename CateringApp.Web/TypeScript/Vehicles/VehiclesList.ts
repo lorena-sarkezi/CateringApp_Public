@@ -5,6 +5,18 @@
 
     export function initialize() {
         loader(true);
+
+        $("#form").validate({
+            errorPlacement: (label, element) => {
+                label.addClass("invalid-feedback");
+                label.insertAfter(element);
+                element.addClass("is-invalid")
+            },
+            wrapper:"div"
+        });
+
+        document.getElementById("form").addEventListener("submit", handleSubmitForm);
+
         $table = $("#vehicles-list-table").DataTable({
             columns: [
                 {
@@ -68,6 +80,7 @@
                 $("#vehicle-kilometers").val("");
 
                 loader(false);
+                $vehicleId = 0;
             }
         })
     }
@@ -87,6 +100,12 @@
         })
     }
 
+    function handleSubmitForm(event: Event){
+        event.preventDefault();
+        if ($("#form").valid()) {
+            submitVehicle();
+        }
+    }
   
     export function submitVehicle() {
         let vehicle: Models.IVehicle = {
@@ -141,5 +160,11 @@
                 error: Global.ajaxErrorHandler
             })
         }
+    }
+
+    export function clearForm() {
+        let form = <HTMLFormElement>document.getElementById("form");
+        form.reset();
+        $vehicleId = 0;
     }
 }

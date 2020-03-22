@@ -17,6 +17,7 @@ namespace CateringApp.Web.Models
         public string Email { get; set; }
         public string Username { get; set; }
         public string RoleTitle { get; set; }
+        public string Password { get; set; } = "";
     }
 
     public static partial class ModelExtensions
@@ -31,8 +32,8 @@ namespace CateringApp.Web.Models
                 LastName = user.LastName,
                 UserFullName = $"{user.FirstName} {user.LastName}",
                 Email = user.Email,
-                Username = user.Username//,
-                //RoleTitle = user.Role.RoleTitle
+                Username = user.Username,
+                RoleTitle = user.Role != null ? user.Role.RoleTitle : null
             };
 
             return viewModel;
@@ -47,7 +48,8 @@ namespace CateringApp.Web.Models
                 FirstName = viewModel.FirstName,
                 LastName = viewModel.LastName,
                 Email = viewModel.Email,
-                Username = viewModel.Username
+                Username = viewModel.Username,
+                PasswordHash = viewModel.Password
             };
         }
     }

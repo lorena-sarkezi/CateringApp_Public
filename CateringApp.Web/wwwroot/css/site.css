@@ -68,3 +68,17 @@ div.dataTable{
     margin-left: 5px;
     margin-right: 5px;
 }
+
+div.invalid-feedback{
+    font-size:1em;
+}
+
+.error{
+    font-weight: normal !important;
+}
+
+.nav-sidebar .nav-item > .nav-link .right {
+    transition: -webkit-transform ease-in-out .3s;
+    transition: transform ease-in-out .3s;
+    transition: transform ease-in-out .3s,-webkit-transform ease-in-out .3s;
+}

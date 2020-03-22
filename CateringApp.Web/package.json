@@ -7,6 +7,7 @@
     "@types/bootstrap": "4.3.1",
     "@types/select2": "4.0.48",
     "@types/datatables.net": "1.10.18",
+    "@types/jquery.validation": "1.16.6",
     "@fortawesome/fontawesome-free": "5.12.1",
     "bootstrap": "4.4.1",
     "datatables.net-bs4": "3.2.2"

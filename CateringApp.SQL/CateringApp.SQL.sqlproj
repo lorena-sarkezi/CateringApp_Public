@@ -59,6 +59,7 @@
     <Folder Include="Properties" />
     <Folder Include="Tables" />
     <Folder Include="Schema" />
+    <Folder Include="Stored Procedures" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\users.sql" />
@@ -70,6 +71,7 @@
     <Build Include="Tables\dish_types.sql" />
     <Build Include="Tables\catering_dishes.sql" />
     <Build Include="Tables\vehicles.sql" />
+    <Build Include="Stored Procedures\delete_dish_type.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="CateringApp.SQL.refactorlog" />

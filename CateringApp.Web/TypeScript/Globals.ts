@@ -9,7 +9,25 @@
             responsive: true
         });
 
-        
+        $.extend($.validator.messages, {
+            required: "Obavezno polje",
+            number: "Unesite ispravan broj",
+            digits: "Molimo unesite samo znamenke",
+            maxLength: $.validator.format("Molimo unesite maksimalno {0} znakova"),
+            minLength: $.validator.format("Molimo unesite minimalno {0} znakova"),
+            equalTo: $.validator.format("Lozinke se moraju podudarati")
+        });  
+
+        jQuery.validator.setDefaults({
+            errorElement: "div",
+            errorClass: "invalid-feedback",
+            highlight: function (element) {
+                $(element).parent().addClass("is-invalid");
+            },
+            unhighlight: function (element) {
+                $(element).parent().removeClass("is-invalid");
+            }
+        });
     }
 
     export function getCookie(name): string {
@@ -24,8 +42,8 @@
         loader(false);
         console.error(error);
         console.log(jxHR);
-        //$("#errorModalMain").modal("show");
-        alert("Došlo je do greške!");
+        $('.modal').modal('hide');
+        $("#errorModalMain").modal("show");
     }
 
     export function logout() {

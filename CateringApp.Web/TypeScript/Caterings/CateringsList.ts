@@ -2,15 +2,50 @@
 
     let $table: DataTables.Api;
     let $cateringData: Caterings.Models.ICateringDetailModel;
+    let $form: HTMLFormElement;
     let $cateringId = 0;
     
 
     export function initialize() {
         loader(true);
         $("#dropdown-users").select2();
-        $("#dropdown-vehicles").select2({
-            dropdownParent: $('#add-catering-modal')
+        //$("#dropdown-vehicles").select2({
+        //    dropdownParent: $('#add-catering-modal')
+        //});
+
+        $form = <HTMLFormElement>document.getElementById("form");
+        $("#form").validate({
+            errorPlacement: (label, element) => {
+                label.addClass("invalid-feedback");
+                label.insertAfter(element);
+                element.addClass("is-invalid");
+
+                if (element.hasClass('select2-hidden-accessible') && element.next('.select2-container').length) {
+                    label.insertAfter(element.next('.select2-container'));
+                }
+            },
+            wrapper: "div"
+            //highlight: function (element, errorClass, validClass) {
+            //    var elem = $(element);
+            //    if (elem.hasClass("select2-offscreen")) {
+            //        $("#s2id_" + elem.attr("id") + " ul").addClass("invalid-feedback");
+            //    } else {
+            //        elem.addClass("invalid-feedback");
+            //    }
+            //},
+
+            ////When removing make the same adjustments as when adding
+            //unhighlight: function (element, errorClass, validClass) {
+            //    var elem = $(element);
+            //    if (elem.hasClass("select2-offscreen")) {
+            //        $("#s2id_" + elem.attr("id") + " ul").removeClass("invalid-feedback");
+            //    } else {
+            //        elem.removeClass("invalid-feedback");
+            //    }
+            //}
         });
+
+        $form.addEventListener("submit", handleFormSubmit);
 
         $table = $("#caterings-list-table").DataTable({
             columns: [
@@ -65,16 +100,27 @@
         });
     }
 
+    function handleFormSubmit(event: Event) {
+        event.preventDefault();
+
+        if ($("#form").valid()) {
+            submitCatering();
+        }
+    }
+
     export function editCatering(cateringId: number) {
+        loader(true);
         $.ajax({
             url: `/api/catering/${cateringId}`,
             method: "get",
             data: null,
             success: async (data: Models.ICateringDetailModel) => {
                 console.log(data);
+                await handleModalOpen();
+
                 $cateringId = cateringId;
                 
-                await handleModalOpen();
+                
 
                 let users: string[] = [];
 
@@ -87,7 +133,10 @@
                 console.log($("#dropdown-users"));
                 console.log(users);
                 $("#dropdown-users").val(users).trigger("change");
-                $("#dropdown-vehicles").val(data.vehicles[0].vehicleId.toString()).trigger("change");
+                if (data.vehicles.length > 0) {
+                    $("#dropdown-vehicles").val(data.vehicles[0].vehicleId.toString()).trigger("change");
+                }
+                loader(false);
 
             },
             error: Global.ajaxErrorHandler
@@ -108,12 +157,15 @@
                 $(".spinner", "#add-catering-modal").hide();
                 $(".row", "#add-catering-modal").show();
                 $cateringData = data;
+                $cateringId = 0;
 
                 let userSelect: HTMLSelectElement = <HTMLSelectElement>document.getElementById("dropdown-users");
                 let vehicleSelect: HTMLSelectElement = <HTMLSelectElement>document.getElementById("dropdown-vehicles");
 
                 $("#catering-name").val("");
                 $("#client-name").val("");
+
+                vehicleSelect.innerHTML = '<option disabled selected></option>';
 
                 //Praznjenje dropdowna
                 for (let i = userSelect.options.length - 1; i >= 0; i--) {
@@ -133,6 +185,13 @@
                     userSelect.add(option);
                 });
 
+                let empty = document.createElement("option");
+                empty.value = "0";
+                empty.text = "Bez vozila";
+                empty.selected = true;
+
+                vehicleSelect.add(empty);
+
                 $cateringData.vehicles.forEach((vehicle: Vehicles.Models.IVehicle) => {
                     let option = document.createElement("option");
                     option.value = vehicle.vehicleId.toString();
@@ -146,7 +205,7 @@
         
     }
 
-    export function submitCatering() {
+    function submitCatering() {
         
         let users: Models.IUserModel[] = <Models.IUserModel[]>[];
         let vehicles: Vehicles.Models.IVehicle[] = <Vehicles.Models.IVehicle[]>[];
@@ -223,6 +282,12 @@
                 error: Global.ajaxErrorHandler
             })
         }
+    }
+
+    function clearForm() {
+        let form = <HTMLFormElement>document.getElementById("form");
+        form.reset();
+        $cateringId = 0;
     }
     
 }

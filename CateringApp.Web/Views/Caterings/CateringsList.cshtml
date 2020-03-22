@@ -27,41 +27,43 @@
 <div class="modal fade add-catering" role="dialog" id="add-catering-modal">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Unos Cateringa</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="spinner"></div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Ime Cateringa</label>
-                            <input type="text" class="form-control" id="catering-name"/>
-                        </div>
-                        <div class="form-group">
-                            <label>Ime klijenta</label>
-                            <input type="text" class="form-control" id="client-name"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="dropdown-users">Zaduženi zaposlenici</label>
-                            <select id="dropdown-users" multiple="multiple" placeholder="Odaberi..." style="width:100%">
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="dropdown-vehicles">Vozilo</label>
-                            <select class="form-control" id="dropdown-vehicles" placeholder="Odaberi..." style="width:100%">
-                            </select>
+            <form id="form">
+                <div class="modal-header">
+                    <h5 class="modal-title">Unos Cateringa</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="spinner"></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Ime Cateringa</label>
+                                <input type="text" class="form-control" name="catering-name" id="catering-name" required />
+                            </div>
+                            <div class="form-group">
+                                <label>Ime klijenta</label>
+                                <input type="text" class="form-control" name="client-name" id="client-name" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="dropdown-users">Zaduženi zaposlenici</label>
+                                <select id="dropdown-users" multiple="multiple" name="users" placeholder="Odaberi..." style="width:100%" required>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="dropdown-vehicles">Vozilo</label>
+                                <select class="form-control" id="dropdown-vehicles" name="vehicle" placeholder="Odaberi..." style="width:100%" required>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="Caterings.submitCatering()">Spremi</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Spremi</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

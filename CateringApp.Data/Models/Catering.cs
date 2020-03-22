@@ -23,7 +23,7 @@ namespace CateringApp.Data.Models
         public DateTime DateCreated { get; set; }
 
         [Column("vehicle_id"), ForeignKey("Vehicle")]
-        public int VehicleId { get; set; }
+        public int? VehicleId { get; set; }
 
         public virtual Vehicle Vehicle { get; set; }
 

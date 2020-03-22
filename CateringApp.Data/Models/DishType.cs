@@ -16,6 +16,9 @@ namespace CateringApp.Data.Models
         [Required, Column("dish_type_name")]
         public string DishTypeName { get; set; }
 
+        [Column("dish_type_description")]
+        public string DishTypeDescription { get; set; }
+
         [Required, Column("date_created"), DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime DateCreated { get; set; }
     }

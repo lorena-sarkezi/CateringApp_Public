@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Vozila";
+    ViewData["Title"] = "Kategorije hrane";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,12 +9,12 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-vehicle" onclick="Vehicles.clearForm();"><i class="fas fa-plus"></i> Dodaj vozilo</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-category" onclick="FoodCat.clearForm();"><i class="fas fa-plus"></i> Dodaj kategoriju</button>
                 </div>
             </div>
             <div class="card-body">
                 <div class="card-text">
-                    <table id="vehicles-list-table" class="table table-hover text-nowrap" style="width:100%"></table>
+                    <table id="categories-list-table" class="table table-hover text-nowrap" style="width:100%"></table>
                 </div>
             </div>
         </div>
@@ -22,12 +22,12 @@
 </div>
 
 
-<div class="modal fade add-vehicle" role="dialog" id="add-vehicle-modal">
+<div class="modal fade add-category" role="dialog" id="add-category-modal">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form id="form">
                 <div class="modal-header">
-                    <h5 class="modal-title">Unos vozila</h5>
+                    <h5 class="modal-title">Unos kategorije hrane</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -36,30 +36,22 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Naziv vozila</label>
-                                <input type="text" class="form-control" name="vehicle-name" id="vehicle-name" autocomplete="off" required maxlength="50" />
+                                <label>Naziv kategorije</label>
+                                <input type="text" class="form-control" name="category-name" id="category-name" autocomplete="off" required maxlength="50" />
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Registracija</label>
-                                <input type="text" class="form-control"  name="vehicle-registration" id="vehicle-registration" autocomplete="off" required maxlength="16"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>Broj kilometara</label>
-                                <input type="number" class="form-control" name="vehicle-kilometers" id="vehicle-kilometers" autocomplete="off" required maxlength="18"/>
+                                <label>Opis</label>
+                                <textarea class="form-control" name="category-description" id="category-description"></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" >Spremi</button>
+                    <button type="submit" class="btn btn-primary">Spremi</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
                 </div>
             </form>
@@ -67,7 +59,7 @@
     </div>
 </div>
 
-<div class="modal fade add-catering" role="dialog" id="delete-vehicle-modal">
+<div class="modal fade" role="dialog" id="delete-category-modal">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -79,12 +71,14 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        Jeste li sigurni da želite obrisati vozilo?
+                        Jeste li sigurni da želite obrisati kategoriju? 
+                        <br/>
+                        <b>Brisanje kategorije će obrisati i stavke hrane koje pripadaju toj kategoriji!</b>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="Vehicles.deleteVehicleConfirm()">Potvrdi</button>
+                <button type="button" class="btn btn-primary" onclick="FoodCat.deleteCategoryConfirm()">Potvrdi</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
             </div>
         </div>
@@ -92,6 +86,6 @@
 </div>
 
 <script>
-    Vehicles.initialize();
+    FoodCat.initialize();
 </script>
 

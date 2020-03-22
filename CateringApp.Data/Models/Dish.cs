@@ -16,6 +16,9 @@ namespace CateringApp.Data.Models
         [Required, Column("dish_name")]
         public string DishName { get; set; }
 
+        [Column("dish_description")]
+        public string DishDescription { get; set; }
+
         [Required, Column("dish_type_id"), ForeignKey("DishType")]
         public int DishTypeId { get; set; }
 

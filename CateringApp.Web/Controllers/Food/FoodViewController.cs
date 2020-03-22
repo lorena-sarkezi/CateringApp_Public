@@ -7,13 +7,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CateringApp.Web.Controllers.Food
 {
-    [Route("/food")]
+    [Route("food")]
     [Authorize(Roles = "ADMIN")]
     public class FoodViewController : Controller
     {
-        public IActionResult Index()
+        [Route("categories")]
+        public IActionResult FoodCategoriesView()
         {
-            return View();
+            return View("/Views/Food/FoodCategoriesList.cshtml");
+        }
+
+        [Route("items")]
+        public IActionResult FootItemsView()
+        {
+            return View("/Views/Food/FoodItemsList.cshtml");
         }
     }
 }
