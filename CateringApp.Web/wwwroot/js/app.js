@@ -97,6 +97,7 @@ var Auth;
     var email;
     var password;
     function initialize() {
+        document.getElementById("error").style.display = "none";
         email = document.getElementById("email");
         password = document.getElementById("password");
         var form = document.getElementById("form");
@@ -128,6 +129,7 @@ var Auth;
     }
     Auth.initialize = initialize;
     function submitCallback(event) {
+        document.getElementById("error").style.display = "none";
         event.preventDefault();
         if ($("#form").valid()) {
             loader(true);
@@ -148,7 +150,10 @@ var Auth;
                 success: function () {
                     window.location.replace("/");
                 },
-                error: function () {
+                error: function (jxHR, textStatus, error) {
+                    if (jxHR.status === 401) {
+                        document.getElementById("error").style.display = "block";
+                    }
                     loader(false);
                 }
             });

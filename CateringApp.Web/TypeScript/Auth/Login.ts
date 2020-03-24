@@ -3,7 +3,8 @@
     let password: HTMLInputElement;
 
     export function initialize() {
-        
+
+        document.getElementById("error").style.display = "none";
 
         email = <HTMLInputElement>document.getElementById("email");
         password = <HTMLInputElement>document.getElementById("password");
@@ -41,7 +42,7 @@
     }
 
     function submitCallback(event: Event) {
-       
+        document.getElementById("error").style.display = "none";
         event.preventDefault();
 
         if ($("#form").valid()) {
@@ -67,7 +68,10 @@
                 success: () => {
                     window.location.replace("/");
                 },
-                error: () => {
+                error: (jxHR: JQueryXHR, textStatus: string, error: string) => {
+                    if (jxHR.status === 401) {
+                        document.getElementById("error").style.display = "block";
+                    }
                     loader(false);
                 }
             });
