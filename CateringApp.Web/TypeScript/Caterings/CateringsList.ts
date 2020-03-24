@@ -85,28 +85,7 @@
             });
         }).draw();
 
-        $.ajax({
-            url: "/api/food/category/with_foods",
-            contentType: "application/json",
-            method: "get",
-            success: (data: Food.Models.Category[]) => {
-                $foodCategories = data;
-                console.log(data);
-            },
-            error: Global.ajaxErrorHandler
-        });
-
-        $.ajax({
-            url: "/api/food/item/all",
-            contentType: "application/json",
-            method: "get",
-            success: (data: Food.Models.FoodItem[]) => {
-                $foodItems = data;
-            },
-            error: Global.ajaxErrorHandler
-        });
-
-
+        
         loader(true);
         initStaticData();
         initData();
@@ -114,7 +93,7 @@
 
     async function initStaticData(){
         await $.ajax({
-            url: "/api/food/category/all",
+            url: "/api/food/category/with_foods",
             contentType: "application/json",
             method: "get",
             success: (data: Food.Models.Category[]) => {

@@ -244,25 +244,6 @@ var Caterings;
                 cell.innerHTML = i + 1;
             });
         }).draw();
-        $.ajax({
-            url: "/api/food/category/with_foods",
-            contentType: "application/json",
-            method: "get",
-            success: function (data) {
-                $foodCategories = data;
-                console.log(data);
-            },
-            error: Global.ajaxErrorHandler
-        });
-        $.ajax({
-            url: "/api/food/item/all",
-            contentType: "application/json",
-            method: "get",
-            success: function (data) {
-                $foodItems = data;
-            },
-            error: Global.ajaxErrorHandler
-        });
         loader(true);
         initStaticData();
         initData();
@@ -273,7 +254,7 @@ var Caterings;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, $.ajax({
-                            url: "/api/food/category/all",
+                            url: "/api/food/category/with_foods",
                             contentType: "application/json",
                             method: "get",
                             success: function (data) {
