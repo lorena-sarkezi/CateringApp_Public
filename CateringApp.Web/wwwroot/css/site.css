@@ -82,3 +82,7 @@ div.invalid-feedback{
     transition: transform ease-in-out .3s;
     transition: transform ease-in-out .3s,-webkit-transform ease-in-out .3s;
 }
+
+div.spacing-bottom{
+    margin-bottom: 15px;
+}

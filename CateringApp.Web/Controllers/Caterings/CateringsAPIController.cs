@@ -65,10 +65,13 @@ namespace CateringApp.Web.Controllers
                 VehicleId = (int)model.Vehicles[0].VehicleId
             };
 
+            if (catering.VehicleId == 0) catering.VehicleId = null;
+
             cateringDbContext.Caterings.Add(catering);
             await cateringDbContext.SaveChangesAsync();
 
             List<CateringEmployees> cateringEmployees = new List<CateringEmployees>();
+            List<CateringDishes> cateringDishes = new List<CateringDishes>();
 
             foreach (UserViewModel user in model.Users)
             {
@@ -79,7 +82,17 @@ namespace CateringApp.Web.Controllers
                 });
             }
 
+            foreach(FoodItemViewModel item in model.Dishes)
+            {
+                cateringDishes.Add(new CateringDishes
+                {
+                    CateringId = catering.CateringId,
+                    DishId = item.Id
+                });
+            }
+
             cateringDbContext.AddRange(cateringEmployees);
+            cateringDbContext.AddRange(cateringDishes);
             await cateringDbContext.SaveChangesAsync();
 
             return Ok();
@@ -96,10 +109,18 @@ namespace CateringApp.Web.Controllers
             catering.ClientName = model.ClientName;
             catering.VehicleId = (int)model.Vehicles[0].VehicleId;
 
+            if (catering.VehicleId == 0) catering.VehicleId = null;
+
             catering.CateringEmployees = model.Users.Select(x => new CateringEmployees
             {
                 CateringId = cateringId,
                 UserId = (int)x.UserId
+            }).ToList();
+
+            catering.CateringDishes = model.Dishes.Select(x => new CateringDishes
+            {
+                CateringId = cateringId,
+                DishId = x.Id
             }).ToList();
 
             cateringDbContext.Update<Catering>(catering);

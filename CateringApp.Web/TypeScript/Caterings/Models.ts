@@ -24,8 +24,10 @@
     
 
     export interface IDish {
-        dishId: number;
-        dishName: string;
-        dishType: string;
+        id: number;
+        foodCategoryId: number;
+        foodCategoryName: string;
+        name: string;
+        description: string;
     }
 }

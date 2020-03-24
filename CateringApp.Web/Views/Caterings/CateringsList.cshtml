@@ -39,7 +39,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Ime Cateringa</label>
+                                <label>Ime cateringa</label>
                                 <input type="text" class="form-control" name="catering-name" id="catering-name" required />
                             </div>
                             <div class="form-group">
@@ -56,10 +56,20 @@
                                 <select class="form-control" id="dropdown-vehicles" name="vehicle" placeholder="Odaberi..." style="width:100%" required>
                                 </select>
                             </div>
+                            <div class="form-group" id="food-form-group">
+                                <label>Hrana</label>
+
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <button type="button" class="btn btn-primary" onclick="Caterings.addFood(null)"><i class="fas fa-plus"></i> Dodaj hranu</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" id="btn-catering-close" class="btn btn-success mr-auto"><i class="fas fa-check"></i> Zatvori catering</button>
                     <button type="submit" class="btn btn-primary">Spremi</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
                 </div>

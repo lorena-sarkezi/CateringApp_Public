@@ -170,7 +170,10 @@ var Caterings;
     var $table;
     var $cateringData;
     var $form;
+    var $foodCategories;
+    var $foodItems;
     var $cateringId = 0;
+    var $formValidate;
     function initialize() {
         loader(true);
         $("#dropdown-users").select2();
@@ -178,7 +181,7 @@ var Caterings;
         //    dropdownParent: $('#add-catering-modal')
         //});
         $form = document.getElementById("form");
-        $("#form").validate({
+        $formValidate = $("#form").validate({
             errorPlacement: function (label, element) {
                 label.addClass("invalid-feedback");
                 label.insertAfter(element);
@@ -241,24 +244,81 @@ var Caterings;
                 cell.innerHTML = i + 1;
             });
         }).draw();
+        $.ajax({
+            url: "/api/food/category/with_foods",
+            contentType: "application/json",
+            method: "get",
+            success: function (data) {
+                $foodCategories = data;
+                console.log(data);
+            },
+            error: Global.ajaxErrorHandler
+        });
+        $.ajax({
+            url: "/api/food/item/all",
+            contentType: "application/json",
+            method: "get",
+            success: function (data) {
+                $foodItems = data;
+            },
+            error: Global.ajaxErrorHandler
+        });
+        loader(true);
+        initStaticData();
         initData();
     }
     Caterings.initialize = initialize;
+    function initStaticData() {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, $.ajax({
+                            url: "/api/food/category/all",
+                            contentType: "application/json",
+                            method: "get",
+                            success: function (data) {
+                                $foodCategories = data;
+                            },
+                            error: Global.ajaxErrorHandler
+                        })];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, $.ajax({
+                                url: "/api/food/item/all",
+                                contentType: "application/json",
+                                method: "get",
+                                success: function (data) {
+                                    $foodItems = data;
+                                },
+                                error: Global.ajaxErrorHandler
+                            })];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
     function initData() {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                $cateringId = 0;
-                $.ajax({
-                    url: "/api/catering/all_names_only",
-                    contentType: "application/json",
-                    method: "get",
-                    success: function (data) {
-                        console.log(data);
-                        $table.clear().rows.add(data).draw();
-                        loader(false);
-                    }
-                });
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        $cateringId = 0;
+                        return [4 /*yield*/, $.ajax({
+                                url: "/api/catering/all_names_only",
+                                contentType: "application/json",
+                                method: "get",
+                                success: function (data) {
+                                    console.log(data);
+                                    $table.clear().rows.add(data).draw();
+                                    loader(false);
+                                }
+                            })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
             });
         });
     }
@@ -277,7 +337,7 @@ var Caterings;
             method: "get",
             data: null,
             success: function (data) { return __awaiter(_this, void 0, void 0, function () {
-                var users;
+                var btn, users;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -285,6 +345,8 @@ var Caterings;
                             return [4 /*yield*/, handleModalOpen()];
                         case 1:
                             _a.sent();
+                            btn = document.getElementById("btn-catering-close");
+                            btn.style.display = "block";
                             $cateringId = cateringId;
                             users = [];
                             data.users.forEach(function (item) {
@@ -299,6 +361,11 @@ var Caterings;
                                 $("#dropdown-vehicles").val(data.vehicles[0].vehicleId.toString()).trigger("change");
                             }
                             loader(false);
+                            if (data.dishes.length > 0) {
+                                data.dishes.map(function (item) {
+                                    addFood(item);
+                                });
+                            }
                             return [2 /*return*/];
                     }
                 });
@@ -309,11 +376,14 @@ var Caterings;
     Caterings.editCatering = editCatering;
     function handleModalOpen() {
         return __awaiter(this, void 0, void 0, function () {
+            var btn;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         $(".spinner", "#add-catering-modal").show();
                         $(".row", "#add-catering-modal").hide();
+                        btn = document.getElementById("btn-catering-close");
+                        btn.style.display = "none";
                         return [4 /*yield*/, $.ajax({
                                 url: "/api/catering/details",
                                 method: "get",
@@ -328,6 +398,7 @@ var Caterings;
                                     $("#catering-name").val("");
                                     $("#client-name").val("");
                                     vehicleSelect.innerHTML = '<option disabled selected></option>';
+                                    clearForm();
                                     //Praznjenje dropdowna
                                     for (var i = userSelect.options.length - 1; i >= 0; i--) {
                                         userSelect.options[i] = null;
@@ -339,6 +410,7 @@ var Caterings;
                                     $cateringData.users.forEach(function (user) {
                                         var option = document.createElement("option");
                                         option.value = user.userId.toString();
+                                        option.text = user.userFullName;
                                         option.text = user.userFullName;
                                         userSelect.add(option);
                                     });
@@ -364,6 +436,82 @@ var Caterings;
         });
     }
     Caterings.handleModalOpen = handleModalOpen;
+    function addFood(foodId) {
+        var formGroup = document.getElementById("food-form-group");
+        var row = document.createElement("div");
+        row.classList.add("row", "spacing-bottom");
+        var column1 = document.createElement("div");
+        column1.classList.add("col-6");
+        var column2 = document.createElement("div");
+        column2.classList.add("col-5");
+        var column3 = document.createElement("div");
+        column3.classList.add("col-1");
+        var foodDropdown = document.createElement("select");
+        foodDropdown.classList.add("form-control");
+        var categoryDropdown = document.createElement("select");
+        categoryDropdown.classList.add("form-control");
+        categoryDropdown.onchange = changeFoodItems;
+        $foodCategories.forEach(function (item) {
+            var option = document.createElement("option");
+            option.value = item.id.toString();
+            option.text = item.name;
+            //option.on = changeFoodItems;
+            categoryDropdown.appendChild(option);
+        });
+        if (foodId !== null) {
+            categoryDropdown.value = foodId.foodCategoryId.toString();
+        }
+        $foodItems.forEach(function (item) {
+            console.log(categoryDropdown.value);
+            if (item.foodCategoryId === parseInt(categoryDropdown.value)) {
+                var option = document.createElement("option");
+                option.value = item.id.toString();
+                option.text = item.name;
+                foodDropdown.appendChild(option);
+            }
+        });
+        if (foodId !== null) {
+            foodDropdown.value = foodId.id.toString();
+        }
+        var deleteRowButton = document.createElement("button");
+        deleteRowButton.classList.add("btn", "btn-danger", "float-right");
+        deleteRowButton.setAttribute("type", "button");
+        deleteRowButton.onclick = removeFoodItem;
+        var icon = document.createElement("i");
+        icon.classList.add("fas", "fa-ban");
+        deleteRowButton.appendChild(icon);
+        column1.appendChild(foodDropdown);
+        column2.appendChild(categoryDropdown);
+        column3.appendChild(deleteRowButton);
+        row.appendChild(column1);
+        row.appendChild(column2);
+        row.appendChild(column3);
+        formGroup.appendChild(row);
+    }
+    Caterings.addFood = addFood;
+    function changeFoodItems(ev) {
+        console.log("change bla bla");
+        var currentElement = this;
+        console.log(currentElement.value);
+        var parentRow = currentElement.parentNode.parentNode;
+        var foodSelect = parentRow.childNodes.item(0).childNodes.item(0);
+        console.log(foodSelect);
+        foodSelect.innerHTML = "";
+        $foodItems.forEach(function (item) {
+            if (item.foodCategoryId === parseInt(currentElement.value)) {
+                var option = document.createElement("option");
+                option.value = item.id.toString();
+                option.text = item.name;
+                foodSelect.appendChild(option);
+            }
+        });
+    }
+    function removeFoodItem(mouseEvent) {
+        console.log();
+        var formGroup = document.getElementById("food-form-group");
+        var rowElement = this.parentNode.parentNode;
+        formGroup.removeChild(rowElement);
+    }
     function submitCatering() {
         var users = [];
         var vehicles = [];
@@ -381,6 +529,8 @@ var Caterings;
                 vehicleRegistration: "",
                 vehicleKilometers: 0
             };
+            if (vehicle.vehicleId === 0)
+                vehicle.vehicleId = null;
             vehicles.push(vehicle);
         });
         var catering = {
@@ -398,6 +548,22 @@ var Caterings;
             submitMethod = "put";
         }
         loader(true);
+        var foodForm = document.getElementById("food-form-group");
+        if (foodForm.childNodes.length > 1) {
+            for (var i = 1; i < foodForm.childNodes.length; i++) {
+                var nodeRow = foodForm.childNodes.item(i); //row
+                var nodeSelect = nodeRow.childNodes.item(0).childNodes.item(0);
+                //console.log(nodeSelect.value);
+                var temp = {
+                    id: parseInt(nodeSelect.value),
+                    description: "",
+                    foodCategoryId: -1,
+                    foodCategoryName: "",
+                    name: ""
+                };
+                catering.dishes.push(temp);
+            }
+        }
         $.ajax({
             url: submitUrl,
             contentType: "application/json",
@@ -432,10 +598,17 @@ var Caterings;
     }
     Caterings.deleteCateringConfirm = deleteCateringConfirm;
     function clearForm() {
+        console.log("Clear form");
         var form = document.getElementById("form");
         form.reset();
         $cateringId = 0;
+        var elem = document.getElementById("food-form-group");
+        var label = document.createElement("label");
+        label.textContent = "Hrana";
+        elem.innerHTML = "";
+        elem.appendChild(label);
     }
+    Caterings.clearForm = clearForm;
 })(Caterings || (Caterings = {}));
 var FoodCat;
 (function (FoodCat) {

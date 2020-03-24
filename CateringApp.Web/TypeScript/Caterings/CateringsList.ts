@@ -3,8 +3,10 @@
     let $table: DataTables.Api;
     let $cateringData: Caterings.Models.ICateringDetailModel;
     let $form: HTMLFormElement;
+    let $foodCategories: Food.Models.Category[];
+    let $foodItems: Food.Models.FoodItem[];
     let $cateringId = 0;
-    
+    let $formValidate: JQueryValidation.Validator;
 
     export function initialize() {
         loader(true);
@@ -14,7 +16,7 @@
         //});
 
         $form = <HTMLFormElement>document.getElementById("form");
-        $("#form").validate({
+        $formValidate = $("#form").validate({
             errorPlacement: (label, element) => {
                 label.addClass("invalid-feedback");
                 label.insertAfter(element);
@@ -83,12 +85,59 @@
             });
         }).draw();
 
+        $.ajax({
+            url: "/api/food/category/with_foods",
+            contentType: "application/json",
+            method: "get",
+            success: (data: Food.Models.Category[]) => {
+                $foodCategories = data;
+                console.log(data);
+            },
+            error: Global.ajaxErrorHandler
+        });
+
+        $.ajax({
+            url: "/api/food/item/all",
+            contentType: "application/json",
+            method: "get",
+            success: (data: Food.Models.FoodItem[]) => {
+                $foodItems = data;
+            },
+            error: Global.ajaxErrorHandler
+        });
+
+
+        loader(true);
+        initStaticData();
         initData();
     }
 
+    async function initStaticData(){
+        await $.ajax({
+            url: "/api/food/category/all",
+            contentType: "application/json",
+            method: "get",
+            success: (data: Food.Models.Category[]) => {
+                $foodCategories = data;
+            },
+            error: Global.ajaxErrorHandler
+        });
+
+        await $.ajax({
+            url: "/api/food/item/all",
+            contentType: "application/json",
+            method: "get",
+            success: (data: Food.Models.FoodItem[]) => {
+                $foodItems = data;
+            },
+            error: Global.ajaxErrorHandler
+        });
+    }
+
     export async function initData() {
+
         $cateringId = 0;
-        $.ajax({
+        await $.ajax({
             url: "/api/catering/all_names_only",
             contentType: "application/json",
             method: "get",
@@ -110,6 +159,7 @@
 
     export function editCatering(cateringId: number) {
         loader(true);
+        
         $.ajax({
             url: `/api/catering/${cateringId}`,
             method: "get",
@@ -117,6 +167,8 @@
             success: async (data: Models.ICateringDetailModel) => {
                 console.log(data);
                 await handleModalOpen();
+                let btn = document.getElementById("btn-catering-close");
+                btn.style.display = "block";
 
                 $cateringId = cateringId;
                 
@@ -138,6 +190,12 @@
                 }
                 loader(false);
 
+                if (data.dishes.length > 0) {
+                    data.dishes.map((item: Models.IDish) => {
+                        addFood(item);
+                    });
+                }
+
             },
             error: Global.ajaxErrorHandler
 
@@ -148,6 +206,9 @@
     export async function handleModalOpen() {
         $(".spinner", "#add-catering-modal").show();
         $(".row", "#add-catering-modal").hide();
+
+        let btn = <HTMLButtonElement>document.getElementById("btn-catering-close");
+        btn.style.display = "none";
 
         await $.ajax({
             url: "/api/catering/details",
@@ -166,6 +227,7 @@
                 $("#client-name").val("");
 
                 vehicleSelect.innerHTML = '<option disabled selected></option>';
+                clearForm();
 
                 //Praznjenje dropdowna
                 for (let i = userSelect.options.length - 1; i >= 0; i--) {
@@ -181,6 +243,7 @@
 
                     let option = document.createElement("option");
                     option.value = user.userId.toString();
+                    option.text = user.userFullName;
                     option.text = user.userFullName;
                     userSelect.add(option);
                 });
@@ -205,6 +268,113 @@
         
     }
 
+    export function addFood(foodId?: Models.IDish) {
+        let formGroup: HTMLElement = document.getElementById("food-form-group");
+
+        let row = document.createElement("div");
+        row.classList.add("row", "spacing-bottom");
+
+        let column1 = document.createElement("div");
+        column1.classList.add("col-6");
+
+        let column2 = document.createElement("div");
+        column2.classList.add("col-5");
+
+        let column3 = document.createElement("div");
+        column3.classList.add("col-1");
+
+        let foodDropdown = document.createElement("select");
+        foodDropdown.classList.add("form-control");
+
+
+        let categoryDropdown = document.createElement("select");
+        categoryDropdown.classList.add("form-control");
+        categoryDropdown.onchange = changeFoodItems;
+
+        $foodCategories.forEach((item: Food.Models.Category) => {
+            let option: HTMLOptionElement = <HTMLOptionElement>document.createElement("option");
+            option.value = item.id.toString();
+            option.text = item.name;
+            //option.on = changeFoodItems;
+
+            categoryDropdown.appendChild(option);
+
+            
+        });
+
+        if (foodId !== null) {
+            categoryDropdown.value = foodId.foodCategoryId.toString();
+        }
+
+        $foodItems.forEach((item: Food.Models.FoodItem) => {
+            console.log(categoryDropdown.value);
+            if (item.foodCategoryId === parseInt(categoryDropdown.value)) {
+                let option: HTMLOptionElement = <HTMLOptionElement>document.createElement("option");
+                option.value = item.id.toString();
+                option.text = item.name;
+
+                foodDropdown.appendChild(option);
+            }
+        });
+
+        if (foodId !== null) {
+            foodDropdown.value = foodId.id.toString();
+        }
+        
+
+        
+
+        let deleteRowButton = document.createElement("button");
+        deleteRowButton.classList.add("btn", "btn-danger","float-right");
+        deleteRowButton.setAttribute("type", "button");
+        deleteRowButton.onclick = removeFoodItem;
+
+        let icon = document.createElement("i");
+        icon.classList.add("fas", "fa-ban");
+
+        deleteRowButton.appendChild(icon);
+
+        column1.appendChild(foodDropdown);
+        column2.appendChild(categoryDropdown);
+        column3.appendChild(deleteRowButton);
+
+        row.appendChild(column1);
+        row.appendChild(column2);
+        row.appendChild(column3);
+
+        formGroup.appendChild(row);
+    }
+
+    function changeFoodItems(this: GlobalEventHandlers, ev: Event) {
+        console.log("change bla bla");
+        let currentElement: HTMLSelectElement = <HTMLSelectElement>this;
+        console.log(currentElement.value);
+        let parentRow = currentElement.parentNode.parentNode;
+        let foodSelect = parentRow.childNodes.item(0).childNodes.item(0);
+        console.log(foodSelect);
+        (<HTMLElement>foodSelect).innerHTML = "";
+
+        $foodItems.forEach((item: Food.Models.FoodItem) => {
+            if (item.foodCategoryId === parseInt(currentElement.value)) {
+                let option: HTMLOptionElement = <HTMLOptionElement>document.createElement("option");
+                option.value = item.id.toString();
+                option.text = item.name;
+
+                foodSelect.appendChild(option);
+            }
+        });
+
+        
+    }
+
+    function removeFoodItem(this: GlobalEventHandlers, mouseEvent: MouseEvent): any {
+        console.log();
+        let formGroup = document.getElementById("food-form-group");
+        let rowElement = (<HTMLElement>this).parentNode.parentNode;
+
+        formGroup.removeChild(rowElement);
+    }
+
     function submitCatering() {
         
         let users: Models.IUserModel[] = <Models.IUserModel[]>[];
@@ -225,6 +395,8 @@
                 vehicleRegistration: "",
                 vehicleKilometers:0
             };
+
+            if (vehicle.vehicleId === 0) vehicle.vehicleId = null;
 
             vehicles.push(vehicle);
         });
@@ -248,6 +420,25 @@
         }
 
         loader(true);
+
+        let foodForm = document.getElementById("food-form-group");
+        if (foodForm.childNodes.length > 1) {
+            for (var i = 1; i < foodForm.childNodes.length; i++) {
+                let nodeRow = foodForm.childNodes.item(i); //row
+                let nodeSelect: HTMLSelectElement = <HTMLSelectElement>nodeRow.childNodes.item(0).childNodes.item(0);
+                //console.log(nodeSelect.value);
+
+                let temp: Models.IDish = {
+                    id: parseInt(nodeSelect.value),
+                    description: "",
+                    foodCategoryId: -1,
+                    foodCategoryName: "",
+                    name: ""
+                };
+
+                catering.dishes.push(temp);
+            }
+        }
 
         $.ajax({
             url: submitUrl,
@@ -284,10 +475,19 @@
         }
     }
 
-    function clearForm() {
+    export function clearForm() {
+        console.log("Clear form");
         let form = <HTMLFormElement>document.getElementById("form");
+        
         form.reset();
         $cateringId = 0;
+
+        let elem = document.getElementById("food-form-group");
+        let label = document.createElement("label");
+        label.textContent = "Hrana";
+
+        elem.innerHTML = "";
+
+        elem.appendChild(label);
     }
-    
 }

@@ -32,6 +32,17 @@ namespace CateringApp.Web.Controllers.Food
             return dishTypes.Select(x => x.GetViewModel());
         }
 
+        [HttpGet("category/with_foods")]
+        public async Task<IEnumerable<FoodCategoryViewModel>> GetAllFoodCategoriesAssignedToFoods()
+        {
+            List<DishType> dishTypes = await cateringDbContext.DishTypes.ToListAsync();
+            List<int> dishTypeIdCollection = await cateringDbContext.Dishes.Select(x => x.DishTypeId).Distinct().ToListAsync();
+
+            List<DishType> dishTypesAssignedToFoods = dishTypes.Where(x => dishTypeIdCollection.Contains(x.DishTypeId)).ToList();
+
+            return dishTypesAssignedToFoods.Select(x => x.GetViewModel());
+        }
+
         [HttpGet("category/{categoryId}")]
         public async Task<FoodCategoryViewModel> Get([FromRoute] int categoryId)
         {
