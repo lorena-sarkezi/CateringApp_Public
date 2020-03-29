@@ -127,6 +127,7 @@
             success: () => {
                 $("#add-category-modal").modal("hide");
                 initData();
+                toastr["success"]("Uspješno spremljeno!");
             },
             error: Global.ajaxErrorHandler
         });
@@ -146,6 +147,7 @@
                 success: () => {
                     $("#delete-category-modal").modal("hide");
                     initData();
+                    toastr["info"]("Kategorija hrane uspješno obrisana.");
                 },
                 error: Global.ajaxErrorHandler
             })

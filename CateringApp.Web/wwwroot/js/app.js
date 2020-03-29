@@ -75,12 +75,13 @@ var Global;
         loader(false);
         console.error(error);
         console.log(jxHR);
-        $('.modal').modal('hide');
-        $("#errorModalMain").modal("show");
+        //$('.modal').modal('hide');
+        toastr["error"]("Došlo je do greške!");
+        //$("#errorModalMain").modal("show");
     }
     Global.ajaxErrorHandler = ajaxErrorHandler;
     function logout() {
-        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/";
         window.location.reload();
     }
     Global.logout = logout;
@@ -231,11 +232,28 @@ var Caterings;
                     data: "clientName"
                 },
                 {
+                    title: "Status",
+                    data: "isClosed",
+                    render: function (colData, data, row) {
+                        if (row.isClosed)
+                            return 'Zatvoren';
+                        return 'Aktivan';
+                    }
+                },
+                {
                     title: "Radnje",
                     data: "clientName",
                     className: "dt-center",
                     render: function (colData, data, row) {
-                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" onclick=\"Caterings.editCatering(" + row.cateringId + ")\"><i class=\"fas fa-edit\"></i></button><button class=\"btn btn-danger\" alt=\"Uredi\" onclick=\"Caterings.deleteCateringPrompt(" + row.cateringId + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
+                        var btnEdit = "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" onclick=\"Caterings.editCatering(" + row.cateringId + ")\"><i class=\"fas fa-edit\"></i></button>";
+                        var btnInfo = "<button type=\"button\" class=\"btn btn-info\" alt=\"Uredi\" onclick=\"Caterings.editCatering(" + row.cateringId + ")\"><i class=\"fas fa-info-circle\"></i></button>";
+                        var btnDelete = "<button class=\"btn btn-danger\" alt=\"Uredi\" onclick=\"Caterings.deleteCateringPrompt(" + row.cateringId + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
+                        var retButtons = "";
+                        if (row.isClosed === true)
+                            retButtons = btnInfo + btnDelete;
+                        else
+                            retButtons = btnEdit + btnDelete;
+                        return retButtons;
                     }
                 }
             ],
@@ -323,7 +341,7 @@ var Caterings;
             method: "get",
             data: null,
             success: function (data) { return __awaiter(_this, void 0, void 0, function () {
-                var btn, users;
+                var btn, users, commentRow;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -352,6 +370,23 @@ var Caterings;
                                     addFood(item);
                                 });
                             }
+                            if (data.isClosed) {
+                                //let form = <any>document.getElementById("form");
+                                //let elements: any = form.elements;
+                                //for (var i = 0; i < elements.length; i++) {
+                                //    elements[i].readOnly = true;
+                                //}
+                                $("#form").find("input, select").prop("disabled", true);
+                                document.getElementById("btn-catering-close").style.display = "none";
+                                document.getElementById("btn-catering-save").style.display = "none";
+                                document.getElementById("btn-add-food").style.display = "none";
+                                document.querySelectorAll("button[data-delete-food]").forEach(function (elem) {
+                                    elem.style.display = "none";
+                                });
+                                commentRow = document.getElementById("closing-comment");
+                                commentRow.style.display = "block";
+                                commentRow.getElementsByTagName("textarea")[0].value = data.closingComment;
+                            }
                             return [2 /*return*/];
                     }
                 });
@@ -360,6 +395,30 @@ var Caterings;
         });
     }
     Caterings.editCatering = editCatering;
+    function infoCatering(cateringId) {
+        loader(true);
+        $.ajax({
+            url: "/api/catering/" + cateringId,
+            method: "get",
+            data: null,
+            success: function (data) {
+                loader(false);
+                $("#catering-info-modal").modal("show");
+                var dl = document.getElementById("dl");
+                dl.innerHTML = "";
+                var name = document.createElement("dt");
+                name.innerText = "Naziv cateringa";
+                name.classList.add("col-4");
+                var nameDesc = document.createElement("dd");
+                nameDesc.innerText = data.cateringName;
+                nameDesc.classList.add("col-8");
+                dl.appendChild(name);
+                dl.appendChild(nameDesc);
+            },
+            error: Global.ajaxErrorHandler
+        });
+    }
+    Caterings.infoCatering = infoCatering;
     function handleModalOpen() {
         return __awaiter(this, void 0, void 0, function () {
             var btn;
@@ -462,6 +521,7 @@ var Caterings;
         var deleteRowButton = document.createElement("button");
         deleteRowButton.classList.add("btn", "btn-danger", "float-right");
         deleteRowButton.setAttribute("type", "button");
+        deleteRowButton.setAttribute("data-delete-food", "");
         deleteRowButton.onclick = removeFoodItem;
         var icon = document.createElement("i");
         icon.classList.add("fas", "fa-ban");
@@ -525,7 +585,9 @@ var Caterings;
             vehicles: vehicles,
             cateringName: $("#catering-name").val().toString(),
             clientName: $("#client-name").val().toString(),
-            cateringId: $cateringId
+            cateringId: $cateringId,
+            isClosed: false,
+            closingComment: ""
         };
         var submitUrl = "/api/catering";
         var submitMethod = "post";
@@ -558,6 +620,7 @@ var Caterings;
             success: function () {
                 $("#add-catering-modal").modal("hide");
                 initData();
+                toastr["success"]("Uspješno spremljeno!");
             },
             error: Global.ajaxErrorHandler
         });
@@ -577,12 +640,34 @@ var Caterings;
                 success: function () {
                     $("#delete-catering-prompt").modal("hide");
                     initData();
+                    toastr["info"]("Catering uspješno obrisan");
                 },
                 error: Global.ajaxErrorHandler
             });
         }
     }
     Caterings.deleteCateringConfirm = deleteCateringConfirm;
+    function closeCateringConfirm() {
+        loader(true);
+        var message = document.getElementById("closing-message").value;
+        var data = {
+            cateringId: $cateringId,
+            closingComment: message
+        };
+        $.ajax({
+            url: "/api/catering/close/" + $cateringId,
+            method: "put",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function () {
+                $(".modal").modal("hide");
+                initData();
+                toastr["success"]("Uspješno spremljeno!");
+            },
+            error: Global.ajaxErrorHandler
+        });
+    }
+    Caterings.closeCateringConfirm = closeCateringConfirm;
     function clearForm() {
         console.log("Clear form");
         var form = document.getElementById("form");
@@ -593,6 +678,16 @@ var Caterings;
         label.textContent = "Hrana";
         elem.innerHTML = "";
         elem.appendChild(label);
+        $("#form").find("input, select").prop("disabled", false);
+        document.getElementById("btn-catering-close").style.display = "block";
+        document.getElementById("btn-catering-save").style.display = "block";
+        document.getElementById("btn-add-food").style.display = "block";
+        document.querySelectorAll("button[data-delete-food]").forEach(function (elem) {
+            elem.style.display = "block";
+        });
+        var commentRow = document.getElementById("closing-comment");
+        commentRow.style.display = "none";
+        commentRow.getElementsByTagName("textarea")[0].value = "";
     }
     Caterings.clearForm = clearForm;
 })(Caterings || (Caterings = {}));
@@ -713,6 +808,7 @@ var FoodCat;
             success: function () {
                 $("#add-category-modal").modal("hide");
                 initData();
+                toastr["success"]("Uspješno spremljeno!");
             },
             error: Global.ajaxErrorHandler
         });
@@ -732,6 +828,7 @@ var FoodCat;
                 success: function () {
                     $("#delete-category-modal").modal("hide");
                     initData();
+                    toastr["info"]("Kategorija hrane uspješno obrisana.");
                 },
                 error: Global.ajaxErrorHandler
             });
@@ -894,6 +991,7 @@ var FoodItem;
             success: function () {
                 $("#add-item-modal").modal("hide");
                 initData();
+                toastr["success"]("Uspješno spremljeno!");
             },
             error: Global.ajaxErrorHandler
         });
@@ -913,6 +1011,7 @@ var FoodItem;
                 success: function () {
                     $("#delete-item-modal").modal("hide");
                     initData();
+                    toastr["info"]("Stavka hrane uspješno obrisana.");
                 },
                 error: Global.ajaxErrorHandler
             });
@@ -1088,6 +1187,7 @@ var Users;
                 success: function () {
                     $("#password-reset-modal").modal("hide");
                     loader(false);
+                    toastr["success"]("Uspješno spremljeno!");
                 },
                 error: Global.ajaxErrorHandler
             });
@@ -1123,6 +1223,7 @@ var Users;
             success: function () {
                 $("#add-user-modal").modal("hide");
                 initData();
+                toastr["success"]("Uspješno spremljeno!");
             }
         });
     }
@@ -1140,6 +1241,7 @@ var Users;
             success: function () {
                 initData();
                 $("#delete-user-modal").modal("hide");
+                toastr["info"]("Korisnik uspješno obrisan.");
             },
             error: Global.ajaxErrorHandler
         });
@@ -1287,6 +1389,7 @@ var Vehicles;
                 success: function () {
                     $("#add-vehicle-modal").modal("hide");
                     initData();
+                    toastr["success"]("Uspješno spremljeno!");
                 }
             });
         }
@@ -1306,6 +1409,7 @@ var Vehicles;
                 success: function () {
                     $("#delete-vehicle-modal").modal("hide");
                     initData();
+                    toastr["info"]("Vozilo uspješno obrisano.");
                 },
                 error: Global.ajaxErrorHandler
             });

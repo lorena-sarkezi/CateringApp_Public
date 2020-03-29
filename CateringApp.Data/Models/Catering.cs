@@ -25,6 +25,12 @@ namespace CateringApp.Data.Models
         [Column("vehicle_id"), ForeignKey("Vehicle")]
         public int? VehicleId { get; set; }
 
+        [Required, Column("is_closed")]
+        public bool IsClosed { get; set; } = false;
+
+        [Column("closing_comment")]
+        public string ClosingComment { get; set; }
+
         public virtual Vehicle Vehicle { get; set; }
 
         public IEnumerable<CateringEmployees> CateringEmployees { get; set; }

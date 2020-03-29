@@ -12,6 +12,7 @@ namespace CateringApp.Web.Models
         public int CateringId { get; set; }
         public string CateringName { get; set; }
         public string ClientName { get; set; }
+        public bool IsClosed { get; set; }
         
     }
 
@@ -24,16 +25,7 @@ namespace CateringApp.Web.Models
             viewModel.CateringId = catering.CateringId;
             viewModel.CateringName = catering.CateringName;
             viewModel.ClientName = catering.ClientName;
-
-            //if(catering.CateringEmployees != null)
-            //{
-            //    viewModel.Users = new List<UserViewModel>();
-
-            //    foreach (CateringEmployees emp in catering.CateringEmployees)
-            //    {
-            //        viewModel.Users.Add(emp.User.GetViewModel());
-            //    }
-            //}
+            viewModel.IsClosed = catering.IsClosed;
 
             return viewModel;
         }

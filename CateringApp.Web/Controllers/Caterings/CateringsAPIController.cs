@@ -97,6 +97,21 @@ namespace CateringApp.Web.Controllers
 
             return Ok();
         }
+
+        [HttpPut("close/{cateringId}")]
+        public async Task<IActionResult> CloseCatering([FromRoute] int cateringId, [FromBody] CateringClosingModel model)
+        {
+            Catering catering = await cateringDbContext.Caterings.FirstOrDefaultAsync(x => x.CateringId == cateringId);
+            catering.ClosingComment = model.ClosingComment;
+            catering.IsClosed = true;
+
+            cateringDbContext.Caterings.Update(catering);
+            await cateringDbContext.SaveChangesAsync();
+
+            return Ok();
+            
+        }
+
         [HttpPut("{cateringId}")]
         public async Task<IActionResult> UpdateCatering([FromRoute] int cateringId,  [FromBody] CateringDetailModel model)
         {

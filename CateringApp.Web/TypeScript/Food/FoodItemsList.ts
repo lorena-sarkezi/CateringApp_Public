@@ -162,6 +162,7 @@
             success: () => {
                 $("#add-item-modal").modal("hide");
                 initData();
+                toastr["success"]("Uspješno spremljeno!");
             },
             error: Global.ajaxErrorHandler
         });
@@ -181,6 +182,7 @@
                 success: () => {
                     $("#delete-item-modal").modal("hide");
                     initData();
+                    toastr["info"]("Stavka hrane uspješno obrisana.");
                 },
                 error: Global.ajaxErrorHandler
             })

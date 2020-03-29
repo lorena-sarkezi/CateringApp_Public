@@ -163,6 +163,7 @@
                 success: () => {
                     $("#password-reset-modal").modal("hide");
                     loader(false);
+                    toastr["success"]("Uspješno spremljeno!");
                 },
                 error: Global.ajaxErrorHandler
             });
@@ -203,6 +204,7 @@
             success: () => {
                 $("#add-user-modal").modal("hide");
                 initData();
+                toastr["success"]("Uspješno spremljeno!");
             }
         });
     }
@@ -221,6 +223,7 @@
             success: () => {
                 initData();
                 $("#delete-user-modal").modal("hide");
+                toastr["info"]("Korisnik uspješno obrisan.");
             },
             error: Global.ajaxErrorHandler
         });

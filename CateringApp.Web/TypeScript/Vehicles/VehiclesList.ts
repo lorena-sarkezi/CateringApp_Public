@@ -137,6 +137,7 @@
                 success: () => {
                     $("#add-vehicle-modal").modal("hide");
                     initData();
+                    toastr["success"]("Uspješno spremljeno!");
                 }
             });
         }
@@ -156,6 +157,7 @@
                 success: () => {
                     $("#delete-vehicle-modal").modal("hide");
                     initData();
+                    toastr["info"]("Vozilo uspješno obrisano.");
                 },
                 error: Global.ajaxErrorHandler
             })

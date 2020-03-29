@@ -73,10 +73,6 @@ div.invalid-feedback{
     font-size:1em;
 }
 
-.error{
-    font-weight: normal !important;
-}
-
 .nav-sidebar .nav-item > .nav-link .right {
     transition: -webkit-transform ease-in-out .3s;
     transition: transform ease-in-out .3s;
@@ -85,4 +81,8 @@ div.invalid-feedback{
 
 div.spacing-bottom{
     margin-bottom: 15px;
+}
+
+.select2-results__option[aria-selected=true]{
+    color: black;
 }

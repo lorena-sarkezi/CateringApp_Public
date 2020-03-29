@@ -15,6 +15,10 @@ namespace CateringApp.Web.Models
         public string CateringName { get; set; }
         public string ClientName { get; set; }
 
+        public bool IsClosed { get; set; }
+
+        public string ClosingComment { get; set; }
+
         public List<UserViewModel> Users { get; set; }
         public List<FoodItemViewModel> Dishes { get; set; }
         public List<VehicleViewModel> Vehicles { get; set; }
@@ -35,7 +39,9 @@ namespace CateringApp.Web.Models
             {
                 CateringId = catering.CateringId,
                 CateringName = catering.CateringName,
-                ClientName = catering.ClientName
+                ClientName = catering.ClientName,
+                IsClosed = catering.IsClosed,
+                ClosingComment = catering.ClosingComment
             };
 
             if(catering.CateringEmployees != null)
