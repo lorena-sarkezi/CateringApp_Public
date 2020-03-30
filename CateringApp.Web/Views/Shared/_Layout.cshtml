@@ -116,7 +116,7 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
-                        with font-awesome or any other icon font library -->
+    with font-awesome or any other icon font library -->
                         <li class="nav-item has-treeview">
                             <a href="/" class="nav-link">
                                 <i class="nav-icon fas fa-home"></i>
@@ -126,11 +126,25 @@
                             </a>
                         </li>
 
+                        @{
+                            if (user_role == "ADMIN")
+                            {
+                                <li class="nav-item has-treeview">
+                                    <a href="/caterings/all" class="nav-link">
+                                        <i class="nav-icon fas fa-list"></i>
+                                        <p>
+                                            Pregled svih cateringa
+                                        </p>
+                                    </a>
+                                </li>
+                            }
+                        }
+
                         <li class="nav-item has-treeview">
-                            <a href="/caterings" class="nav-link">
-                                <i class="nav-icon fas fa-list"></i>
+                            <a href="/caterings/my" class="nav-link">
+                                <i class="nav-icon far fa-address-book"></i>
                                 <p>
-                                    Pregled Cateringa
+                                    Pregled mojih cateringa
                                 </p>
                             </a>
                         </li>
@@ -145,7 +159,7 @@
                                         <i class="nav-icon fas fa-utensils"></i>
                                         <p>
                                             Hrana
-                                            <i class="right fas fa-angle-left"></i>
+                                            <i class="right fas fa-angle-down"></i>
                                         </p>
                                     </a>
                                     <ul class="nav nav-treeview" style="display: none;">
@@ -163,14 +177,14 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li class="nav-item has-treeview">
+                                @*<li class="nav-item has-treeview">
                                     <a href="#" class="nav-link">
                                         <i class="nav-icon fas fa-tools"></i>
                                         <p>
                                             Administracija
                                         </p>
                                     </a>
-                                </li>
+                                </li>*@
                                 <li class="nav-item has-treeview">
                                     <a href="/users" class="nav-link">
                                         <i class="nav-icon fas fa-user-friends"></i>

@@ -28,6 +28,7 @@ namespace CateringApp.Web.Controllers
 
 
         [HttpGet("all_names_only")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<List<CateringViewModel>> GetAllCaterings()
         {
             List<Catering> allCateringsList = await cateringDbContext.Caterings
@@ -38,8 +39,28 @@ namespace CateringApp.Web.Controllers
             return cateringViewModels;
         }
 
-       [HttpGet("{cateringId}")]
-       public async Task<CateringDetailModel> GetSingleCateringDetails([FromRoute] int cateringId)
+        [HttpGet("user")]
+        [Authorize(Roles = "ADMIN,USER")]
+        public async Task<IEnumerable<CateringViewModel>> GetAllCateringsForCurrentUser()
+        {
+            string userIdStr = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+            int userId = int.Parse(userIdStr);
+
+            IQueryable<int> cateringEmployeesQry = cateringDbContext.CateringEmployees
+                                                                        .Where(x => x.UserId == userId)
+                                                                        .Select(x => x.CateringId)
+                                                                        .Distinct();
+
+            IEnumerable<Catering> caterings = await cateringDbContext.Caterings
+                                                                     .Where(x => cateringEmployeesQry.Contains(x.CateringId))
+                                                                     .ToListAsync();
+
+            return caterings.Select(x => x.GetViewModel());
+        }
+
+        [HttpGet("{cateringId}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<CateringDetailModel> GetSingleCateringDetails([FromRoute] int cateringId)
         {
             Catering catering = await cateringDbContext.Caterings
                                                        .Include(x => x.CateringEmployees)
@@ -56,6 +77,7 @@ namespace CateringApp.Web.Controllers
         }
 
         [HttpPost("")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> SubmitCatering([FromBody] CateringDetailModel model)
         {
             Catering catering = new Catering
@@ -99,6 +121,7 @@ namespace CateringApp.Web.Controllers
         }
 
         [HttpPut("close/{cateringId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> CloseCatering([FromRoute] int cateringId, [FromBody] CateringClosingModel model)
         {
             Catering catering = await cateringDbContext.Caterings.FirstOrDefaultAsync(x => x.CateringId == cateringId);
@@ -113,6 +136,7 @@ namespace CateringApp.Web.Controllers
         }
 
         [HttpPut("{cateringId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> UpdateCatering([FromRoute] int cateringId,  [FromBody] CateringDetailModel model)
         {
             Catering catering = await cateringDbContext.Caterings
@@ -145,6 +169,7 @@ namespace CateringApp.Web.Controllers
         }
 
         [HttpDelete("{cateringId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> DeleteCatering([FromRoute] int cateringId)
         {
             Catering catering = await cateringDbContext.Caterings
@@ -161,6 +186,7 @@ namespace CateringApp.Web.Controllers
 
 
         [HttpGet("details")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<CateringDetailModel> GetCateringCreationData()
         {
             CateringDetailModel retModel = new CateringDetailModel();
@@ -187,6 +213,7 @@ namespace CateringApp.Web.Controllers
 
 
         [HttpGet("users")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IEnumerable<UserViewModel>> GetUsers()
         {
             IEnumerable<User> users = await cateringDbContext.Users

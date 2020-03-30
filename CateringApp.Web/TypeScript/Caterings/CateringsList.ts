@@ -1,4 +1,4 @@
-﻿module Caterings {
+﻿module Caterings.All {
 
     let $table: DataTables.Api;
     let $cateringData: Caterings.Models.ICateringDetailModel;
@@ -77,9 +77,9 @@
                     data: "clientName",
                     className: "dt-center",
                     render: (colData, data, row: Models.ICateringDetailModel) => {
-                        const btnEdit: string = `<button type="button" class="btn btn-primary" alt="Uredi" onclick="Caterings.editCatering(${row.cateringId})"><i class="fas fa-edit"></i></button>`;
-                        const btnInfo: string = `<button type="button" class="btn btn-info" alt="Uredi" onclick="Caterings.editCatering(${row.cateringId})"><i class="fas fa-info-circle"></i></button>`;
-                        const btnDelete: string = `<button class="btn btn-danger" alt="Uredi" onclick="Caterings.deleteCateringPrompt(${row.cateringId})"><i class="fas fa-trash-alt"></i></button>`;
+                        const btnEdit: string = `<button type="button" class="btn btn-primary" alt="Uredi" onclick="Caterings.All.editCatering(${row.cateringId})"><i class="fas fa-edit"></i></button>`;
+                        const btnInfo: string = `<button type="button" class="btn btn-info" alt="Uredi" onclick="Caterings.All.editCatering(${row.cateringId})"><i class="fas fa-info-circle"></i></button>`;
+                        const btnDelete: string = `<button class="btn btn-danger" alt="Uredi" onclick="Caterings.All.deleteCateringPrompt(${row.cateringId})"><i class="fas fa-trash-alt"></i></button>`;
 
                         let retButtons = "";
 

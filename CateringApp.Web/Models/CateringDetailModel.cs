@@ -58,6 +58,17 @@ namespace CateringApp.Web.Models
             {
                 model.Vehicles = new List<VehicleViewModel> { catering.Vehicle.GetViewModel() };
             }
+            else
+            {
+                VehicleViewModel vehicle = new VehicleViewModel
+                {
+                    VehicleId = 0,
+                    VehicleName = "Bez vozila",
+                    VehicleKilometers = 0,
+                    VehicleRegistration = ""
+                };
+                model.Vehicles = new List<VehicleViewModel> { vehicle };
+            }
 
             return model;
         }

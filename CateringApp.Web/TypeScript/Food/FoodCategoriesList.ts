@@ -37,7 +37,7 @@
                     className: "dt-center",
                     width: "20%",
                     render: (colData, data, row: Food.Models.Category) => {
-                        return `<button type="button" class="btn btn-primary" alt="Uredi" ><i class="fas fa-edit" onclick=FoodCat.editCategory(${row.id})></i></button><button class="btn btn-danger" alt="Obriši" onclick="FoodCat.deleteCategoryPrompt(${row.id})"><i class="fas fa-trash-alt"></i></button>`;
+                        return `<button type="button" class="btn btn-primary" alt="Uredi" onclick=FoodCat.editCategory(${row.id})><i class="fas fa-edit"></i></button><button class="btn btn-danger" alt="Obriši" onclick="FoodCat.deleteCategoryPrompt(${row.id})"><i class="fas fa-trash-alt"></i></button>`;
                     }
                 }
             ],

@@ -14,7 +14,7 @@ namespace CateringApp.Web.Controllers.Food
 {
     [Route("api/food")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "ADMIN")]
     public class FoodAPIController : ControllerBase
     {
         private readonly CateringDbContext cateringDbContext;

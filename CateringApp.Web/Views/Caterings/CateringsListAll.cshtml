@@ -12,7 +12,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-catering" onclick="Caterings.handleModalOpen()"><i class="fas fa-plus"></i> Novi catering</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-catering" onclick="Caterings.All.handleModalOpen()"><i class="fas fa-plus"></i> Novi catering</button>
                 </div>
             </div>
             <div class="card-body">
@@ -40,11 +40,11 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Ime cateringa</label>
-                                <input type="text" class="form-control" name="catering-name" id="catering-name" required />
+                                <input type="text" class="form-control" name="catering-name" id="catering-name" required maxlength="50" />
                             </div>
                             <div class="form-group">
                                 <label>Ime klijenta</label>
-                                <input type="text" class="form-control" name="client-name" id="client-name" required />
+                                <input type="text" class="form-control" name="client-name" id="client-name" required maxlength="50"/>
                             </div>
                             <div class="form-group">
                                 <label for="dropdown-users">Zaduženi zaposlenici</label>
@@ -62,7 +62,7 @@
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <button type="button" class="btn btn-primary" onclick="Caterings.addFood(null)" id="btn-add-food"><i class="fas fa-plus"></i> Dodaj hranu</button>
+                                    <button type="button" class="btn btn-primary" onclick="Caterings.All.addFood(null)" id="btn-add-food"><i class="fas fa-plus"></i> Dodaj hranu</button>
                                 </div>
                             </div>
                             <div class="row" id="closing-comment">
@@ -102,7 +102,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="Caterings.closeCateringConfirm()">Potvrdi</button>
+                <button type="button" class="btn btn-primary" onclick="Caterings.All.closeCateringConfirm()">Potvrdi</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
             </div>
         </div>
@@ -126,7 +126,7 @@
                 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="Caterings.deleteCateringConfirm()">Potvrdi</button>
+                <button type="button" class="btn btn-primary" onclick="Caterings.All.deleteCateringConfirm()">Potvrdi</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
             </div>
         </div>
@@ -150,7 +150,7 @@
                 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="Caterings.deleteCateringConfirm()">Potvrdi</button>
+                <button type="button" class="btn btn-primary" onclick="Caterings.All.deleteCateringConfirm()">Potvrdi</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
             </div>
         </div>
@@ -179,6 +179,6 @@
 </div>
 
 <script>
-    Caterings.initialize();
+    Caterings.All.initialize();
     Global.initialize();
 </script>
