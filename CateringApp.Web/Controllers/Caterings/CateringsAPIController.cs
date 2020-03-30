@@ -11,6 +11,7 @@ using CateringApp.Data.Models;
 
 using CateringApp.Web.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace CateringApp.Web.Controllers
 {
@@ -43,7 +44,7 @@ namespace CateringApp.Web.Controllers
         [Authorize(Roles = "ADMIN,USER")]
         public async Task<IEnumerable<CateringViewModel>> GetAllCateringsForCurrentUser()
         {
-            string userIdStr = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+            string userIdStr = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             int userId = int.Parse(userIdStr);
 
             IQueryable<int> cateringEmployeesQry = cateringDbContext.CateringEmployees

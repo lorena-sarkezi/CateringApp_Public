@@ -1,7 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Http;
+@using  System.Security.Claims;
 
-@{ 
-    string user_role = User.Claims.Where(x => x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").FirstOrDefault().Value;
+@{
+    string user_role = User.FindFirst(ClaimTypes.Role).Value;
 }
 
 <!DOCTYPE html>
@@ -116,7 +117,7 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
-    with font-awesome or any other icon font library -->
+                        with font-awesome or any other icon font library -->
                         <li class="nav-item has-treeview">
                             <a href="/" class="nav-link">
                                 <i class="nav-icon fas fa-home"></i>
@@ -178,13 +179,13 @@
                                     </ul>
                                 </li>
                                 @*<li class="nav-item has-treeview">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon fas fa-tools"></i>
-                                        <p>
-                                            Administracija
-                                        </p>
-                                    </a>
-                                </li>*@
+                                        <a href="#" class="nav-link">
+                                            <i class="nav-icon fas fa-tools"></i>
+                                            <p>
+                                                Administracija
+                                            </p>
+                                        </a>
+                                    </li>*@
                                 <li class="nav-item has-treeview">
                                     <a href="/users" class="nav-link">
                                         <i class="nav-icon fas fa-user-friends"></i>
