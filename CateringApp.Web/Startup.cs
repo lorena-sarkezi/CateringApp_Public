@@ -125,7 +125,7 @@ namespace CateringApp.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
 
             app.UseStatusCodePages(async context =>
             {

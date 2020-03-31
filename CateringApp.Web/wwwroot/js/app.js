@@ -694,6 +694,90 @@ var Caterings;
         All.clearForm = clearForm;
     })(All = Caterings.All || (Caterings.All = {}));
 })(Caterings || (Caterings = {}));
+var Caterings;
+(function (Caterings) {
+    var My;
+    (function (My) {
+        var $table;
+        function initialize() {
+            $table = $("#caterings-list-table").DataTable({
+                columns: [
+                    {
+                        title: "R. br.",
+                        width: "10%",
+                        data: "clientName"
+                    },
+                    {
+                        title: "Naziv cateringa",
+                        data: "cateringName"
+                    },
+                    {
+                        title: "Klijent",
+                        data: "clientName"
+                    },
+                    {
+                        title: "Status",
+                        data: "isClosed",
+                        render: function (colData, data, row) {
+                            if (row.isClosed)
+                                return 'Zatvoren';
+                            return 'Aktivan';
+                        }
+                    },
+                    {
+                        title: "",
+                        width: "15%",
+                        data: "clientName",
+                        className: "dt-center",
+                        orderable: false,
+                        render: function (colData, data, row) {
+                            var button = "<button type=\"button\" class=\"btn btn-primary\" onclick=\"Caterings.My.viewCatering(" + row.cateringId + ")\"><i class=\"fas fa-info-circle\"></i></button>";
+                            return button;
+                        }
+                    }
+                ],
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
+                },
+            });
+            initData();
+        }
+        My.initialize = initialize;
+        function initData() {
+            loader(true);
+            $.ajax({
+                url: "/api/catering/user",
+                contentType: "application/json",
+                method: "get",
+                success: function (data) {
+                    //$("#view-catering-modal").modal("show");
+                    $table.clear().rows.add(data).draw();
+                    loader(false);
+                },
+                error: Global.ajaxErrorHandler
+            });
+        }
+        function viewCatering(cateringId) {
+            loader(true);
+            $.ajax({
+                url: "/caterings/detail/" + cateringId,
+                method: "get",
+                contentType: "application/json",
+                success: function (data) {
+                    console.log(data);
+                    $("#view-catering-modal").modal("show");
+                    loader(false);
+                    var table = document.getElementById("table-detail");
+                    var tbody = table.getElementsByTagName("tbody")[0];
+                    tbody.innerHTML = "";
+                    tbody.innerHTML = data;
+                },
+                error: Global.ajaxErrorHandler
+            });
+        }
+        My.viewCatering = viewCatering;
+    })(My = Caterings.My || (Caterings.My = {}));
+})(Caterings || (Caterings = {}));
 var FoodCat;
 (function (FoodCat) {
     var $table;
@@ -1427,88 +1511,4 @@ var Vehicles;
     }
     Vehicles.clearForm = clearForm;
 })(Vehicles || (Vehicles = {}));
-var Caterings;
-(function (Caterings) {
-    var My;
-    (function (My) {
-        var $table;
-        function initialize() {
-            $table = $("#caterings-list-table").DataTable({
-                columns: [
-                    {
-                        title: "R. br.",
-                        width: "10%",
-                        data: "clientName"
-                    },
-                    {
-                        title: "Naziv cateringa",
-                        data: "cateringName"
-                    },
-                    {
-                        title: "Klijent",
-                        data: "clientName"
-                    },
-                    {
-                        title: "Status",
-                        data: "isClosed",
-                        render: function (colData, data, row) {
-                            if (row.isClosed)
-                                return 'Zatvoren';
-                            return 'Aktivan';
-                        }
-                    },
-                    {
-                        title: "",
-                        width: "15%",
-                        data: "clientName",
-                        className: "dt-center",
-                        orderable: false,
-                        render: function (colData, data, row) {
-                            var button = "<button type=\"button\" class=\"btn btn-primary\" onclick=\"Caterings.My.viewCatering(" + row.cateringId + ")\"><i class=\"fas fa-info-circle\"></i></button>";
-                            return button;
-                        }
-                    }
-                ],
-                "language": {
-                    "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
-                },
-            });
-            initData();
-        }
-        My.initialize = initialize;
-        function initData() {
-            loader(true);
-            $.ajax({
-                url: "/api/catering/user",
-                contentType: "application/json",
-                method: "get",
-                success: function (data) {
-                    //$("#view-catering-modal").modal("show");
-                    $table.clear().rows.add(data).draw();
-                    loader(false);
-                },
-                error: Global.ajaxErrorHandler
-            });
-        }
-        function viewCatering(cateringId) {
-            loader(true);
-            $.ajax({
-                url: "/caterings/detail/" + cateringId,
-                method: "get",
-                contentType: "application/json",
-                success: function (data) {
-                    console.log(data);
-                    $("#view-catering-modal").modal("show");
-                    loader(false);
-                    var table = document.getElementById("table-detail");
-                    var tbody = table.getElementsByTagName("tbody")[0];
-                    tbody.innerHTML = "";
-                    tbody.innerHTML = data;
-                },
-                error: Global.ajaxErrorHandler
-            });
-        }
-        My.viewCatering = viewCatering;
-    })(My = Caterings.My || (Caterings.My = {}));
-})(Caterings || (Caterings = {}));
 //# sourceMappingURL=app.js.map
