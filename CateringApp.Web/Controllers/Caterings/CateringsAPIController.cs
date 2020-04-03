@@ -11,6 +11,7 @@ using CateringApp.Data.Models;
 
 using CateringApp.Web.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace CateringApp.Web.Controllers
 {
@@ -28,6 +29,7 @@ namespace CateringApp.Web.Controllers
 
 
         [HttpGet("all_names_only")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<List<CateringViewModel>> GetAllCaterings()
         {
             List<Catering> allCateringsList = await cateringDbContext.Caterings
@@ -38,8 +40,28 @@ namespace CateringApp.Web.Controllers
             return cateringViewModels;
         }
 
-       [HttpGet("{cateringId}")]
-       public async Task<CateringDetailModel> GetSingleCateringDetails([FromRoute] int cateringId)
+        [HttpGet("user")]
+        [Authorize(Roles = "ADMIN,USER")]
+        public async Task<IEnumerable<CateringViewModel>> GetAllCateringsForCurrentUser()
+        {
+            string userIdStr = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            int userId = int.Parse(userIdStr);
+
+            IQueryable<int> cateringEmployeesQry = cateringDbContext.CateringEmployees
+                                                                        .Where(x => x.UserId == userId)
+                                                                        .Select(x => x.CateringId)
+                                                                        .Distinct();
+
+            IEnumerable<Catering> caterings = await cateringDbContext.Caterings
+                                                                     .Where(x => cateringEmployeesQry.Contains(x.CateringId))
+                                                                     .ToListAsync();
+
+            return caterings.Select(x => x.GetViewModel());
+        }
+
+        [HttpGet("{cateringId}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<CateringDetailModel> GetSingleCateringDetails([FromRoute] int cateringId)
         {
             Catering catering = await cateringDbContext.Caterings
                                                        .Include(x => x.CateringEmployees)
@@ -56,6 +78,7 @@ namespace CateringApp.Web.Controllers
         }
 
         [HttpPost("")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> SubmitCatering([FromBody] CateringDetailModel model)
         {
             Catering catering = new Catering
@@ -97,7 +120,24 @@ namespace CateringApp.Web.Controllers
 
             return Ok();
         }
+
+        [HttpPut("close/{cateringId}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> CloseCatering([FromRoute] int cateringId, [FromBody] CateringClosingModel model)
+        {
+            Catering catering = await cateringDbContext.Caterings.FirstOrDefaultAsync(x => x.CateringId == cateringId);
+            catering.ClosingComment = model.ClosingComment;
+            catering.IsClosed = true;
+
+            cateringDbContext.Caterings.Update(catering);
+            await cateringDbContext.SaveChangesAsync();
+
+            return Ok();
+            
+        }
+
         [HttpPut("{cateringId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> UpdateCatering([FromRoute] int cateringId,  [FromBody] CateringDetailModel model)
         {
             Catering catering = await cateringDbContext.Caterings
@@ -130,6 +170,7 @@ namespace CateringApp.Web.Controllers
         }
 
         [HttpDelete("{cateringId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> DeleteCatering([FromRoute] int cateringId)
         {
             Catering catering = await cateringDbContext.Caterings
@@ -146,6 +187,7 @@ namespace CateringApp.Web.Controllers
 
 
         [HttpGet("details")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<CateringDetailModel> GetCateringCreationData()
         {
             CateringDetailModel retModel = new CateringDetailModel();
@@ -172,6 +214,7 @@ namespace CateringApp.Web.Controllers
 
 
         [HttpGet("users")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IEnumerable<UserViewModel>> GetUsers()
         {
             IEnumerable<User> users = await cateringDbContext.Users

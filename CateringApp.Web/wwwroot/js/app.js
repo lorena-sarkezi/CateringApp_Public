@@ -75,12 +75,13 @@ var Global;
         loader(false);
         console.error(error);
         console.log(jxHR);
-        $('.modal').modal('hide');
-        $("#errorModalMain").modal("show");
+        //$('.modal').modal('hide');
+        toastr["error"]("Došlo je do greške!");
+        //$("#errorModalMain").modal("show");
     }
     Global.ajaxErrorHandler = ajaxErrorHandler;
     function logout() {
-        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/";
         window.location.reload();
     }
     Global.logout = logout;
@@ -172,429 +173,616 @@ var Auth;
 })(Auth || (Auth = {}));
 var Caterings;
 (function (Caterings) {
-    var $table;
-    var $cateringData;
-    var $form;
-    var $foodCategories;
-    var $foodItems;
-    var $cateringId = 0;
-    var $formValidate;
-    function initialize() {
-        loader(true);
-        $("#dropdown-users").select2();
-        //$("#dropdown-vehicles").select2({
-        //    dropdownParent: $('#add-catering-modal')
-        //});
-        $form = document.getElementById("form");
-        $formValidate = $("#form").validate({
-            errorPlacement: function (label, element) {
-                label.addClass("invalid-feedback");
-                label.insertAfter(element);
-                element.addClass("is-invalid");
-                if (element.hasClass('select2-hidden-accessible') && element.next('.select2-container').length) {
-                    label.insertAfter(element.next('.select2-container'));
-                }
-            },
-            wrapper: "div"
-            //highlight: function (element, errorClass, validClass) {
-            //    var elem = $(element);
-            //    if (elem.hasClass("select2-offscreen")) {
-            //        $("#s2id_" + elem.attr("id") + " ul").addClass("invalid-feedback");
-            //    } else {
-            //        elem.addClass("invalid-feedback");
-            //    }
-            //},
-            ////When removing make the same adjustments as when adding
-            //unhighlight: function (element, errorClass, validClass) {
-            //    var elem = $(element);
-            //    if (elem.hasClass("select2-offscreen")) {
-            //        $("#s2id_" + elem.attr("id") + " ul").removeClass("invalid-feedback");
-            //    } else {
-            //        elem.removeClass("invalid-feedback");
-            //    }
-            //}
-        });
-        $form.addEventListener("submit", handleFormSubmit);
-        $table = $("#caterings-list-table").DataTable({
-            columns: [
-                {
-                    title: "R. br.",
-                    width: "10%",
-                    data: "clientName"
-                },
-                {
-                    title: "Naziv cateringa",
-                    data: "cateringName"
-                },
-                {
-                    title: "Klijent",
-                    data: "clientName"
-                },
-                {
-                    title: "Radnje",
-                    data: "clientName",
-                    className: "dt-center",
-                    render: function (colData, data, row) {
-                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" onclick=\"Caterings.editCatering(" + row.cateringId + ")\"><i class=\"fas fa-edit\"></i></button><button class=\"btn btn-danger\" alt=\"Uredi\" onclick=\"Caterings.deleteCateringPrompt(" + row.cateringId + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
+    var All;
+    (function (All) {
+        var $table;
+        var $cateringData;
+        var $form;
+        var $foodCategories;
+        var $foodItems;
+        var $cateringId = 0;
+        var $formValidate;
+        function initialize() {
+            loader(true);
+            $("#dropdown-users").select2();
+            //$("#dropdown-vehicles").select2({
+            //    dropdownParent: $('#add-catering-modal')
+            //});
+            $form = document.getElementById("form");
+            $formValidate = $("#form").validate({
+                errorPlacement: function (label, element) {
+                    label.addClass("invalid-feedback");
+                    label.insertAfter(element);
+                    element.addClass("is-invalid");
+                    if (element.hasClass('select2-hidden-accessible') && element.next('.select2-container').length) {
+                        label.insertAfter(element.next('.select2-container'));
                     }
-                }
-            ],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
-            },
-        });
-        //Row numbers
-        $table.on('order.dt search.dt', function () {
-            $table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-                cell.innerHTML = i + 1;
+                },
+                wrapper: "div"
+                //highlight: function (element, errorClass, validClass) {
+                //    var elem = $(element);
+                //    if (elem.hasClass("select2-offscreen")) {
+                //        $("#s2id_" + elem.attr("id") + " ul").addClass("invalid-feedback");
+                //    } else {
+                //        elem.addClass("invalid-feedback");
+                //    }
+                //},
+                ////When removing make the same adjustments as when adding
+                //unhighlight: function (element, errorClass, validClass) {
+                //    var elem = $(element);
+                //    if (elem.hasClass("select2-offscreen")) {
+                //        $("#s2id_" + elem.attr("id") + " ul").removeClass("invalid-feedback");
+                //    } else {
+                //        elem.removeClass("invalid-feedback");
+                //    }
+                //}
             });
-        }).draw();
-        loader(true);
-        initStaticData();
-        initData();
-    }
-    Caterings.initialize = initialize;
-    function initStaticData() {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, $.ajax({
-                            url: "/api/food/category/with_foods",
-                            contentType: "application/json",
-                            method: "get",
-                            success: function (data) {
-                                $foodCategories = data;
-                            },
-                            error: Global.ajaxErrorHandler
-                        })];
-                    case 1:
-                        _a.sent();
-                        return [4 /*yield*/, $.ajax({
-                                url: "/api/food/item/all",
+            $form.addEventListener("submit", handleFormSubmit);
+            $table = $("#caterings-list-table").DataTable({
+                columns: [
+                    {
+                        title: "R. br.",
+                        width: "10%",
+                        data: "clientName"
+                    },
+                    {
+                        title: "Naziv cateringa",
+                        data: "cateringName"
+                    },
+                    {
+                        title: "Klijent",
+                        data: "clientName"
+                    },
+                    {
+                        title: "Status",
+                        data: "isClosed",
+                        render: function (colData, data, row) {
+                            if (row.isClosed)
+                                return 'Zatvoren';
+                            return 'Aktivan';
+                        }
+                    },
+                    {
+                        title: "Radnje",
+                        data: "clientName",
+                        className: "dt-center",
+                        render: function (colData, data, row) {
+                            var btnEdit = "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" onclick=\"Caterings.All.editCatering(" + row.cateringId + ")\"><i class=\"fas fa-edit\"></i></button>";
+                            var btnInfo = "<button type=\"button\" class=\"btn btn-info\" alt=\"Uredi\" onclick=\"Caterings.All.editCatering(" + row.cateringId + ")\"><i class=\"fas fa-info-circle\"></i></button>";
+                            var btnDelete = "<button class=\"btn btn-danger\" alt=\"Uredi\" onclick=\"Caterings.All.deleteCateringPrompt(" + row.cateringId + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
+                            var retButtons = "";
+                            if (row.isClosed === true)
+                                retButtons = btnInfo + btnDelete;
+                            else
+                                retButtons = btnEdit + btnDelete;
+                            return retButtons;
+                        }
+                    }
+                ],
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
+                },
+            });
+            //Row numbers
+            $table.on('order.dt search.dt', function () {
+                $table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+            loader(true);
+            initStaticData();
+            initData();
+        }
+        All.initialize = initialize;
+        function initStaticData() {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, $.ajax({
+                                url: "/api/food/category/with_foods",
                                 contentType: "application/json",
                                 method: "get",
                                 success: function (data) {
-                                    $foodItems = data;
+                                    $foodCategories = data;
                                 },
                                 error: Global.ajaxErrorHandler
                             })];
-                    case 2:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    }
-    function initData() {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        $cateringId = 0;
-                        return [4 /*yield*/, $.ajax({
-                                url: "/api/catering/all_names_only",
-                                contentType: "application/json",
-                                method: "get",
-                                success: function (data) {
-                                    console.log(data);
-                                    $table.clear().rows.add(data).draw();
-                                    loader(false);
-                                }
-                            })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    }
-    Caterings.initData = initData;
-    function handleFormSubmit(event) {
-        event.preventDefault();
-        if ($("#form").valid()) {
-            submitCatering();
-        }
-    }
-    function editCatering(cateringId) {
-        var _this = this;
-        loader(true);
-        $.ajax({
-            url: "/api/catering/" + cateringId,
-            method: "get",
-            data: null,
-            success: function (data) { return __awaiter(_this, void 0, void 0, function () {
-                var btn, users;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            console.log(data);
-                            return [4 /*yield*/, handleModalOpen()];
                         case 1:
                             _a.sent();
-                            btn = document.getElementById("btn-catering-close");
-                            btn.style.display = "block";
-                            $cateringId = cateringId;
-                            users = [];
-                            data.users.forEach(function (item) {
-                                users.push(item.userId.toString());
-                            });
-                            $("#catering-name").val(data.cateringName);
-                            $("#client-name").val(data.clientName);
-                            console.log($("#dropdown-users"));
-                            console.log(users);
-                            $("#dropdown-users").val(users).trigger("change");
-                            if (data.vehicles.length > 0) {
-                                $("#dropdown-vehicles").val(data.vehicles[0].vehicleId.toString()).trigger("change");
-                            }
-                            loader(false);
-                            if (data.dishes.length > 0) {
-                                data.dishes.map(function (item) {
-                                    addFood(item);
-                                });
-                            }
+                            return [4 /*yield*/, $.ajax({
+                                    url: "/api/food/item/all",
+                                    contentType: "application/json",
+                                    method: "get",
+                                    success: function (data) {
+                                        $foodItems = data;
+                                    },
+                                    error: Global.ajaxErrorHandler
+                                })];
+                        case 2:
+                            _a.sent();
                             return [2 /*return*/];
                     }
                 });
-            }); },
-            error: Global.ajaxErrorHandler
-        });
-    }
-    Caterings.editCatering = editCatering;
-    function handleModalOpen() {
-        return __awaiter(this, void 0, void 0, function () {
-            var btn;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        $(".spinner", "#add-catering-modal").show();
-                        $(".row", "#add-catering-modal").hide();
-                        btn = document.getElementById("btn-catering-close");
-                        btn.style.display = "none";
-                        return [4 /*yield*/, $.ajax({
-                                url: "/api/catering/details",
-                                method: "get",
-                                contentType: "application/json",
-                                success: function (data) {
-                                    $(".spinner", "#add-catering-modal").hide();
-                                    $(".row", "#add-catering-modal").show();
-                                    $cateringData = data;
-                                    $cateringId = 0;
-                                    var userSelect = document.getElementById("dropdown-users");
-                                    var vehicleSelect = document.getElementById("dropdown-vehicles");
-                                    $("#catering-name").val("");
-                                    $("#client-name").val("");
-                                    vehicleSelect.innerHTML = '<option disabled selected></option>';
-                                    clearForm();
-                                    //Praznjenje dropdowna
-                                    for (var i = userSelect.options.length - 1; i >= 0; i--) {
-                                        userSelect.options[i] = null;
+            });
+        }
+        function initData() {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            $cateringId = 0;
+                            return [4 /*yield*/, $.ajax({
+                                    url: "/api/catering/all_names_only",
+                                    contentType: "application/json",
+                                    method: "get",
+                                    success: function (data) {
+                                        console.log(data);
+                                        $table.clear().rows.add(data).draw();
+                                        loader(false);
                                     }
-                                    //Praznjenje dropdowna
-                                    for (var i = vehicleSelect.options.length - 1; i >= 0; i--) {
-                                        vehicleSelect.options[i] = null;
-                                    }
-                                    $cateringData.users.forEach(function (user) {
-                                        var option = document.createElement("option");
-                                        option.value = user.userId.toString();
-                                        option.text = user.userFullName;
-                                        option.text = user.userFullName;
-                                        userSelect.add(option);
-                                    });
-                                    var empty = document.createElement("option");
-                                    empty.value = "0";
-                                    empty.text = "Bez vozila";
-                                    empty.selected = true;
-                                    vehicleSelect.add(empty);
-                                    $cateringData.vehicles.forEach(function (vehicle) {
-                                        var option = document.createElement("option");
-                                        option.value = vehicle.vehicleId.toString();
-                                        option.text = vehicle.vehicleName;
-                                        vehicleSelect.add(option);
+                                })];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        }
+        All.initData = initData;
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            if ($("#form").valid()) {
+                submitCatering();
+            }
+        }
+        function editCatering(cateringId) {
+            var _this = this;
+            loader(true);
+            $.ajax({
+                url: "/api/catering/" + cateringId,
+                method: "get",
+                data: null,
+                success: function (data) { return __awaiter(_this, void 0, void 0, function () {
+                    var btn, users, commentRow;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                console.log(data);
+                                return [4 /*yield*/, handleModalOpen()];
+                            case 1:
+                                _a.sent();
+                                btn = document.getElementById("btn-catering-close");
+                                btn.style.display = "block";
+                                $cateringId = cateringId;
+                                users = [];
+                                data.users.forEach(function (item) {
+                                    users.push(item.userId.toString());
+                                });
+                                $("#catering-name").val(data.cateringName);
+                                $("#client-name").val(data.clientName);
+                                console.log($("#dropdown-users"));
+                                console.log(users);
+                                $("#dropdown-users").val(users).trigger("change");
+                                if (data.vehicles.length > 0) {
+                                    $("#dropdown-vehicles").val(data.vehicles[0].vehicleId.toString()).trigger("change");
+                                }
+                                loader(false);
+                                if (data.dishes.length > 0) {
+                                    data.dishes.map(function (item) {
+                                        addFood(item);
                                     });
                                 }
-                            })];
-                    case 1:
-                        _a.sent();
-                        $("#add-catering-modal").modal("show");
-                        return [2 /*return*/];
-                }
+                                if (data.isClosed) {
+                                    //let form = <any>document.getElementById("form");
+                                    //let elements: any = form.elements;
+                                    //for (var i = 0; i < elements.length; i++) {
+                                    //    elements[i].readOnly = true;
+                                    //}
+                                    $("#form").find("input, select").prop("disabled", true);
+                                    document.getElementById("btn-catering-close").style.display = "none";
+                                    document.getElementById("btn-catering-save").style.display = "none";
+                                    document.getElementById("btn-add-food").style.display = "none";
+                                    document.querySelectorAll("button[data-delete-food]").forEach(function (elem) {
+                                        elem.style.display = "none";
+                                    });
+                                    commentRow = document.getElementById("closing-comment");
+                                    commentRow.style.display = "block";
+                                    commentRow.getElementsByTagName("textarea")[0].value = data.closingComment;
+                                }
+                                return [2 /*return*/];
+                        }
+                    });
+                }); },
+                error: Global.ajaxErrorHandler
             });
-        });
-    }
-    Caterings.handleModalOpen = handleModalOpen;
-    function addFood(foodId) {
-        var formGroup = document.getElementById("food-form-group");
-        var row = document.createElement("div");
-        row.classList.add("row", "spacing-bottom");
-        var column1 = document.createElement("div");
-        column1.classList.add("col-6");
-        var column2 = document.createElement("div");
-        column2.classList.add("col-5");
-        var column3 = document.createElement("div");
-        column3.classList.add("col-1");
-        var foodDropdown = document.createElement("select");
-        foodDropdown.classList.add("form-control");
-        var categoryDropdown = document.createElement("select");
-        categoryDropdown.classList.add("form-control");
-        categoryDropdown.onchange = changeFoodItems;
-        $foodCategories.forEach(function (item) {
-            var option = document.createElement("option");
-            option.value = item.id.toString();
-            option.text = item.name;
-            //option.on = changeFoodItems;
-            categoryDropdown.appendChild(option);
-        });
-        if (foodId !== null) {
-            categoryDropdown.value = foodId.foodCategoryId.toString();
         }
-        $foodItems.forEach(function (item) {
-            console.log(categoryDropdown.value);
-            if (item.foodCategoryId === parseInt(categoryDropdown.value)) {
-                var option = document.createElement("option");
-                option.value = item.id.toString();
-                option.text = item.name;
-                foodDropdown.appendChild(option);
-            }
-        });
-        if (foodId !== null) {
-            foodDropdown.value = foodId.id.toString();
-        }
-        var deleteRowButton = document.createElement("button");
-        deleteRowButton.classList.add("btn", "btn-danger", "float-right");
-        deleteRowButton.setAttribute("type", "button");
-        deleteRowButton.onclick = removeFoodItem;
-        var icon = document.createElement("i");
-        icon.classList.add("fas", "fa-ban");
-        deleteRowButton.appendChild(icon);
-        column1.appendChild(foodDropdown);
-        column2.appendChild(categoryDropdown);
-        column3.appendChild(deleteRowButton);
-        row.appendChild(column1);
-        row.appendChild(column2);
-        row.appendChild(column3);
-        formGroup.appendChild(row);
-    }
-    Caterings.addFood = addFood;
-    function changeFoodItems(ev) {
-        console.log("change bla bla");
-        var currentElement = this;
-        console.log(currentElement.value);
-        var parentRow = currentElement.parentNode.parentNode;
-        var foodSelect = parentRow.childNodes.item(0).childNodes.item(0);
-        console.log(foodSelect);
-        foodSelect.innerHTML = "";
-        $foodItems.forEach(function (item) {
-            if (item.foodCategoryId === parseInt(currentElement.value)) {
-                var option = document.createElement("option");
-                option.value = item.id.toString();
-                option.text = item.name;
-                foodSelect.appendChild(option);
-            }
-        });
-    }
-    function removeFoodItem(mouseEvent) {
-        console.log();
-        var formGroup = document.getElementById("food-form-group");
-        var rowElement = this.parentNode.parentNode;
-        formGroup.removeChild(rowElement);
-    }
-    function submitCatering() {
-        var users = [];
-        var vehicles = [];
-        $("#dropdown-users").find(":selected").each(function (index, elem) {
-            var user = {
-                userId: parseInt(elem.value),
-                userFullName: elem.text
-            };
-            users.push(user);
-        });
-        $("#dropdown-vehicles").find(":selected").each(function (index, elem) {
-            var vehicle = {
-                vehicleId: parseInt(elem.value),
-                vehicleName: elem.text,
-                vehicleRegistration: "",
-                vehicleKilometers: 0
-            };
-            if (vehicle.vehicleId === 0)
-                vehicle.vehicleId = null;
-            vehicles.push(vehicle);
-        });
-        var catering = {
-            dishes: [],
-            users: users,
-            vehicles: vehicles,
-            cateringName: $("#catering-name").val().toString(),
-            clientName: $("#client-name").val().toString(),
-            cateringId: $cateringId
-        };
-        var submitUrl = "/api/catering";
-        var submitMethod = "post";
-        if (catering.cateringId !== 0) {
-            submitUrl += "/" + catering.cateringId;
-            submitMethod = "put";
-        }
-        loader(true);
-        var foodForm = document.getElementById("food-form-group");
-        if (foodForm.childNodes.length > 1) {
-            for (var i = 1; i < foodForm.childNodes.length; i++) {
-                var nodeRow = foodForm.childNodes.item(i); //row
-                var nodeSelect = nodeRow.childNodes.item(0).childNodes.item(0);
-                //console.log(nodeSelect.value);
-                var temp = {
-                    id: parseInt(nodeSelect.value),
-                    description: "",
-                    foodCategoryId: -1,
-                    foodCategoryName: "",
-                    name: ""
-                };
-                catering.dishes.push(temp);
-            }
-        }
-        $.ajax({
-            url: submitUrl,
-            contentType: "application/json",
-            method: submitMethod,
-            data: JSON.stringify(catering),
-            success: function () {
-                $("#add-catering-modal").modal("hide");
-                initData();
-            },
-            error: Global.ajaxErrorHandler
-        });
-        console.log(catering);
-    }
-    function deleteCateringPrompt(cateringId) {
-        $cateringId = cateringId;
-        $("#delete-catering-prompt").modal("show");
-    }
-    Caterings.deleteCateringPrompt = deleteCateringPrompt;
-    function deleteCateringConfirm() {
-        loader(true);
-        if ($cateringId !== 0) {
+        All.editCatering = editCatering;
+        function infoCatering(cateringId) {
+            loader(true);
             $.ajax({
-                url: "/api/catering/" + $cateringId,
-                method: "delete",
-                success: function () {
-                    $("#delete-catering-prompt").modal("hide");
-                    initData();
+                url: "/api/catering/" + cateringId,
+                method: "get",
+                data: null,
+                success: function (data) {
+                    loader(false);
+                    $("#catering-info-modal").modal("show");
+                    var dl = document.getElementById("dl");
+                    dl.innerHTML = "";
+                    var name = document.createElement("dt");
+                    name.innerText = "Naziv cateringa";
+                    name.classList.add("col-4");
+                    var nameDesc = document.createElement("dd");
+                    nameDesc.innerText = data.cateringName;
+                    nameDesc.classList.add("col-8");
+                    dl.appendChild(name);
+                    dl.appendChild(nameDesc);
                 },
                 error: Global.ajaxErrorHandler
             });
         }
-    }
-    Caterings.deleteCateringConfirm = deleteCateringConfirm;
-    function clearForm() {
-        console.log("Clear form");
-        var form = document.getElementById("form");
-        form.reset();
-        $cateringId = 0;
-        var elem = document.getElementById("food-form-group");
-        var label = document.createElement("label");
-        label.textContent = "Hrana";
-        elem.innerHTML = "";
-        elem.appendChild(label);
-    }
-    Caterings.clearForm = clearForm;
+        All.infoCatering = infoCatering;
+        function handleModalOpen() {
+            return __awaiter(this, void 0, void 0, function () {
+                var btn;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            $(".spinner", "#add-catering-modal").show();
+                            $(".row", "#add-catering-modal").hide();
+                            btn = document.getElementById("btn-catering-close");
+                            btn.style.display = "none";
+                            return [4 /*yield*/, $.ajax({
+                                    url: "/api/catering/details",
+                                    method: "get",
+                                    contentType: "application/json",
+                                    success: function (data) {
+                                        $(".spinner", "#add-catering-modal").hide();
+                                        $(".row", "#add-catering-modal").show();
+                                        $cateringData = data;
+                                        $cateringId = 0;
+                                        var userSelect = document.getElementById("dropdown-users");
+                                        var vehicleSelect = document.getElementById("dropdown-vehicles");
+                                        $("#catering-name").val("");
+                                        $("#client-name").val("");
+                                        vehicleSelect.innerHTML = '<option disabled selected></option>';
+                                        clearForm();
+                                        //Praznjenje dropdowna
+                                        for (var i = userSelect.options.length - 1; i >= 0; i--) {
+                                            userSelect.options[i] = null;
+                                        }
+                                        //Praznjenje dropdowna
+                                        for (var i = vehicleSelect.options.length - 1; i >= 0; i--) {
+                                            vehicleSelect.options[i] = null;
+                                        }
+                                        $cateringData.users.forEach(function (user) {
+                                            var option = document.createElement("option");
+                                            option.value = user.userId.toString();
+                                            option.text = user.userFullName;
+                                            option.text = user.userFullName;
+                                            userSelect.add(option);
+                                        });
+                                        var empty = document.createElement("option");
+                                        empty.value = "0";
+                                        empty.text = "Bez vozila";
+                                        empty.selected = true;
+                                        vehicleSelect.add(empty);
+                                        $cateringData.vehicles.forEach(function (vehicle) {
+                                            var option = document.createElement("option");
+                                            option.value = vehicle.vehicleId.toString();
+                                            option.text = vehicle.vehicleName;
+                                            vehicleSelect.add(option);
+                                        });
+                                    }
+                                })];
+                        case 1:
+                            _a.sent();
+                            $("#add-catering-modal").modal("show");
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        }
+        All.handleModalOpen = handleModalOpen;
+        function addFood(foodId) {
+            var formGroup = document.getElementById("food-form-group");
+            var row = document.createElement("div");
+            row.classList.add("row", "spacing-bottom");
+            var column1 = document.createElement("div");
+            column1.classList.add("col-6");
+            var column2 = document.createElement("div");
+            column2.classList.add("col-5");
+            var column3 = document.createElement("div");
+            column3.classList.add("col-1");
+            var foodDropdown = document.createElement("select");
+            foodDropdown.classList.add("form-control");
+            var categoryDropdown = document.createElement("select");
+            categoryDropdown.classList.add("form-control");
+            categoryDropdown.onchange = changeFoodItems;
+            $foodCategories.forEach(function (item) {
+                var option = document.createElement("option");
+                option.value = item.id.toString();
+                option.text = item.name;
+                //option.on = changeFoodItems;
+                categoryDropdown.appendChild(option);
+            });
+            if (foodId !== null) {
+                categoryDropdown.value = foodId.foodCategoryId.toString();
+            }
+            $foodItems.forEach(function (item) {
+                console.log(categoryDropdown.value);
+                if (item.foodCategoryId === parseInt(categoryDropdown.value)) {
+                    var option = document.createElement("option");
+                    option.value = item.id.toString();
+                    option.text = item.name;
+                    foodDropdown.appendChild(option);
+                }
+            });
+            if (foodId !== null) {
+                foodDropdown.value = foodId.id.toString();
+            }
+            var deleteRowButton = document.createElement("button");
+            deleteRowButton.classList.add("btn", "btn-danger", "float-right");
+            deleteRowButton.setAttribute("type", "button");
+            deleteRowButton.setAttribute("data-delete-food", "");
+            deleteRowButton.onclick = removeFoodItem;
+            var icon = document.createElement("i");
+            icon.classList.add("fas", "fa-ban");
+            deleteRowButton.appendChild(icon);
+            column1.appendChild(foodDropdown);
+            column2.appendChild(categoryDropdown);
+            column3.appendChild(deleteRowButton);
+            row.appendChild(column1);
+            row.appendChild(column2);
+            row.appendChild(column3);
+            formGroup.appendChild(row);
+        }
+        All.addFood = addFood;
+        function changeFoodItems(ev) {
+            console.log("change bla bla");
+            var currentElement = this;
+            console.log(currentElement.value);
+            var parentRow = currentElement.parentNode.parentNode;
+            var foodSelect = parentRow.childNodes.item(0).childNodes.item(0);
+            console.log(foodSelect);
+            foodSelect.innerHTML = "";
+            $foodItems.forEach(function (item) {
+                if (item.foodCategoryId === parseInt(currentElement.value)) {
+                    var option = document.createElement("option");
+                    option.value = item.id.toString();
+                    option.text = item.name;
+                    foodSelect.appendChild(option);
+                }
+            });
+        }
+        function removeFoodItem(mouseEvent) {
+            console.log();
+            var formGroup = document.getElementById("food-form-group");
+            var rowElement = this.parentNode.parentNode;
+            formGroup.removeChild(rowElement);
+        }
+        function submitCatering() {
+            var users = [];
+            var vehicles = [];
+            $("#dropdown-users").find(":selected").each(function (index, elem) {
+                var user = {
+                    userId: parseInt(elem.value),
+                    userFullName: elem.text
+                };
+                users.push(user);
+            });
+            $("#dropdown-vehicles").find(":selected").each(function (index, elem) {
+                var vehicle = {
+                    vehicleId: parseInt(elem.value),
+                    vehicleName: elem.text,
+                    vehicleRegistration: "",
+                    vehicleKilometers: 0
+                };
+                if (vehicle.vehicleId === 0)
+                    vehicle.vehicleId = null;
+                vehicles.push(vehicle);
+            });
+            var catering = {
+                dishes: [],
+                users: users,
+                vehicles: vehicles,
+                cateringName: $("#catering-name").val().toString(),
+                clientName: $("#client-name").val().toString(),
+                cateringId: $cateringId,
+                isClosed: false,
+                closingComment: ""
+            };
+            var submitUrl = "/api/catering";
+            var submitMethod = "post";
+            if (catering.cateringId !== 0) {
+                submitUrl += "/" + catering.cateringId;
+                submitMethod = "put";
+            }
+            loader(true);
+            var foodForm = document.getElementById("food-form-group");
+            if (foodForm.childNodes.length > 1) {
+                for (var i = 1; i < foodForm.childNodes.length; i++) {
+                    var nodeRow = foodForm.childNodes.item(i); //row
+                    var nodeSelect = nodeRow.childNodes.item(0).childNodes.item(0);
+                    //console.log(nodeSelect.value);
+                    var temp = {
+                        id: parseInt(nodeSelect.value),
+                        description: "",
+                        foodCategoryId: -1,
+                        foodCategoryName: "",
+                        name: ""
+                    };
+                    catering.dishes.push(temp);
+                }
+            }
+            $.ajax({
+                url: submitUrl,
+                contentType: "application/json",
+                method: submitMethod,
+                data: JSON.stringify(catering),
+                success: function () {
+                    $("#add-catering-modal").modal("hide");
+                    initData();
+                    toastr["success"]("Uspješno spremljeno!");
+                },
+                error: Global.ajaxErrorHandler
+            });
+            console.log(catering);
+        }
+        function deleteCateringPrompt(cateringId) {
+            $cateringId = cateringId;
+            $("#delete-catering-prompt").modal("show");
+        }
+        All.deleteCateringPrompt = deleteCateringPrompt;
+        function deleteCateringConfirm() {
+            loader(true);
+            if ($cateringId !== 0) {
+                $.ajax({
+                    url: "/api/catering/" + $cateringId,
+                    method: "delete",
+                    success: function () {
+                        $("#delete-catering-prompt").modal("hide");
+                        initData();
+                        toastr["info"]("Catering uspješno obrisan");
+                    },
+                    error: Global.ajaxErrorHandler
+                });
+            }
+        }
+        All.deleteCateringConfirm = deleteCateringConfirm;
+        function closeCateringConfirm() {
+            loader(true);
+            var message = document.getElementById("closing-message").value;
+            var data = {
+                cateringId: $cateringId,
+                closingComment: message
+            };
+            $.ajax({
+                url: "/api/catering/close/" + $cateringId,
+                method: "put",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function () {
+                    $(".modal").modal("hide");
+                    initData();
+                    toastr["success"]("Uspješno spremljeno!");
+                },
+                error: Global.ajaxErrorHandler
+            });
+        }
+        All.closeCateringConfirm = closeCateringConfirm;
+        function clearForm() {
+            console.log("Clear form");
+            var form = document.getElementById("form");
+            form.reset();
+            $cateringId = 0;
+            var elem = document.getElementById("food-form-group");
+            var label = document.createElement("label");
+            label.textContent = "Hrana";
+            elem.innerHTML = "";
+            elem.appendChild(label);
+            $("#form").find("input, select").prop("disabled", false);
+            document.getElementById("btn-catering-close").style.display = "block";
+            document.getElementById("btn-catering-save").style.display = "block";
+            document.getElementById("btn-add-food").style.display = "block";
+            document.querySelectorAll("button[data-delete-food]").forEach(function (elem) {
+                elem.style.display = "block";
+            });
+            var commentRow = document.getElementById("closing-comment");
+            commentRow.style.display = "none";
+            commentRow.getElementsByTagName("textarea")[0].value = "";
+        }
+        All.clearForm = clearForm;
+    })(All = Caterings.All || (Caterings.All = {}));
+})(Caterings || (Caterings = {}));
+var Caterings;
+(function (Caterings) {
+    var My;
+    (function (My) {
+        var $table;
+        function initialize() {
+            $table = $("#caterings-list-table").DataTable({
+                columns: [
+                    {
+                        title: "R. br.",
+                        width: "10%",
+                        data: "clientName"
+                    },
+                    {
+                        title: "Naziv cateringa",
+                        data: "cateringName"
+                    },
+                    {
+                        title: "Klijent",
+                        data: "clientName"
+                    },
+                    {
+                        title: "Status",
+                        data: "isClosed",
+                        render: function (colData, data, row) {
+                            if (row.isClosed)
+                                return 'Zatvoren';
+                            return 'Aktivan';
+                        }
+                    },
+                    {
+                        title: "",
+                        width: "15%",
+                        data: "clientName",
+                        className: "dt-center",
+                        orderable: false,
+                        render: function (colData, data, row) {
+                            var button = "<button type=\"button\" class=\"btn btn-primary\" onclick=\"Caterings.My.viewCatering(" + row.cateringId + ")\"><i class=\"fas fa-info-circle\"></i></button>";
+                            return button;
+                        }
+                    }
+                ],
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
+                },
+            });
+            //Row numbers
+            $table.on('order.dt search.dt', function () {
+                $table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+            initData();
+        }
+        My.initialize = initialize;
+        function initData() {
+            loader(true);
+            $.ajax({
+                url: "/api/catering/user",
+                contentType: "application/json",
+                method: "get",
+                success: function (data) {
+                    //$("#view-catering-modal").modal("show");
+                    $table.clear().rows.add(data).draw();
+                    loader(false);
+                },
+                error: Global.ajaxErrorHandler
+            });
+        }
+        function viewCatering(cateringId) {
+            loader(true);
+            $.ajax({
+                url: "/caterings/detail/" + cateringId,
+                method: "get",
+                contentType: "application/json",
+                success: function (data) {
+                    console.log(data);
+                    $("#view-catering-modal").modal("show");
+                    loader(false);
+                    var table = document.getElementById("table-detail");
+                    var tbody = table.getElementsByTagName("tbody")[0];
+                    tbody.innerHTML = "";
+                    tbody.innerHTML = data;
+                },
+                error: Global.ajaxErrorHandler
+            });
+        }
+        My.viewCatering = viewCatering;
+    })(My = Caterings.My || (Caterings.My = {}));
 })(Caterings || (Caterings = {}));
 var FoodCat;
 (function (FoodCat) {
@@ -631,7 +819,7 @@ var FoodCat;
                     className: "dt-center",
                     width: "20%",
                     render: function (colData, data, row) {
-                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" ><i class=\"fas fa-edit\" onclick=FoodCat.editCategory(" + row.id + ")></i></button><button class=\"btn btn-danger\" alt=\"Obri\u0161i\" onclick=\"FoodCat.deleteCategoryPrompt(" + row.id + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
+                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" onclick=FoodCat.editCategory(" + row.id + ")><i class=\"fas fa-edit\"></i></button><button class=\"btn btn-danger\" alt=\"Obri\u0161i\" onclick=\"FoodCat.deleteCategoryPrompt(" + row.id + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
                     }
                 }
             ],
@@ -713,6 +901,7 @@ var FoodCat;
             success: function () {
                 $("#add-category-modal").modal("hide");
                 initData();
+                toastr["success"]("Uspješno spremljeno!");
             },
             error: Global.ajaxErrorHandler
         });
@@ -732,6 +921,7 @@ var FoodCat;
                 success: function () {
                     $("#delete-category-modal").modal("hide");
                     initData();
+                    toastr["info"]("Kategorija hrane uspješno obrisana.");
                 },
                 error: Global.ajaxErrorHandler
             });
@@ -786,7 +976,7 @@ var FoodItem;
                     className: "dt-center",
                     width: "20%",
                     render: function (colData, data, row) {
-                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" ><i class=\"fas fa-edit\" onclick=FoodItem.editItem(" + row.id + ")></i></button><button class=\"btn btn-danger\" alt=\"Obri\u0161i\" onclick=\"FoodItem.deleteItemPrompt(" + row.id + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
+                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" onclick=FoodItem.editItem(" + row.id + ")><i class=\"fas fa-edit\"></i></button><button class=\"btn btn-danger\" alt=\"Obri\u0161i\" onclick=\"FoodItem.deleteItemPrompt(" + row.id + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
                     }
                 }
             ],
@@ -894,6 +1084,7 @@ var FoodItem;
             success: function () {
                 $("#add-item-modal").modal("hide");
                 initData();
+                toastr["success"]("Uspješno spremljeno!");
             },
             error: Global.ajaxErrorHandler
         });
@@ -913,6 +1104,7 @@ var FoodItem;
                 success: function () {
                     $("#delete-item-modal").modal("hide");
                     initData();
+                    toastr["info"]("Stavka hrane uspješno obrisana.");
                 },
                 error: Global.ajaxErrorHandler
             });
@@ -1088,6 +1280,7 @@ var Users;
                 success: function () {
                     $("#password-reset-modal").modal("hide");
                     loader(false);
+                    toastr["success"]("Uspješno spremljeno!");
                 },
                 error: Global.ajaxErrorHandler
             });
@@ -1123,6 +1316,7 @@ var Users;
             success: function () {
                 $("#add-user-modal").modal("hide");
                 initData();
+                toastr["success"]("Uspješno spremljeno!");
             }
         });
     }
@@ -1140,6 +1334,7 @@ var Users;
             success: function () {
                 initData();
                 $("#delete-user-modal").modal("hide");
+                toastr["info"]("Korisnik uspješno obrisan.");
             },
             error: Global.ajaxErrorHandler
         });
@@ -1200,7 +1395,7 @@ var Vehicles;
                     className: "dt-center",
                     width: "20%",
                     render: function (colData, data, row) {
-                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" ><i class=\"fas fa-edit\" onclick=Vehicles.editVehicle(" + row.vehicleId + ")></i></button><button class=\"btn btn-danger\" alt=\"Obri\u0161i\" onclick=\"Vehicles.deleteVehiclePrompt(" + row.vehicleId + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
+                        return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" onclick=Vehicles.editVehicle(" + row.vehicleId + ")><i class=\"fas fa-edit\" ></i></button><button class=\"btn btn-danger\" alt=\"Obri\u0161i\" onclick=\"Vehicles.deleteVehiclePrompt(" + row.vehicleId + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
                     }
                 }
             ],
@@ -1240,6 +1435,7 @@ var Vehicles;
     }
     Vehicles.initData = initData;
     function editVehicle(vehicleId) {
+        console.log("edit vehicle");
         $vehicleId = vehicleId;
         $.ajax({
             url: "/api/vehicles/" + vehicleId,
@@ -1287,6 +1483,7 @@ var Vehicles;
                 success: function () {
                     $("#add-vehicle-modal").modal("hide");
                     initData();
+                    toastr["success"]("Uspješno spremljeno!");
                 }
             });
         }
@@ -1306,6 +1503,7 @@ var Vehicles;
                 success: function () {
                     $("#delete-vehicle-modal").modal("hide");
                     initData();
+                    toastr["info"]("Vozilo uspješno obrisano.");
                 },
                 error: Global.ajaxErrorHandler
             });

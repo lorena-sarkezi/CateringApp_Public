@@ -42,7 +42,7 @@
                     className: "dt-center",
                     width:"20%",
                     render: (colData, data, row: Models.IVehicle) => {
-                        return `<button type="button" class="btn btn-primary" alt="Uredi" ><i class="fas fa-edit" onclick=Vehicles.editVehicle(${row.vehicleId})></i></button><button class="btn btn-danger" alt="Obriši" onclick="Vehicles.deleteVehiclePrompt(${row.vehicleId})"><i class="fas fa-trash-alt"></i></button>`;
+                        return `<button type="button" class="btn btn-primary" alt="Uredi" onclick=Vehicles.editVehicle(${row.vehicleId})><i class="fas fa-edit" ></i></button><button class="btn btn-danger" alt="Obriši" onclick="Vehicles.deleteVehiclePrompt(${row.vehicleId})"><i class="fas fa-trash-alt"></i></button>`;
                     }
                 }
             ],
@@ -86,6 +86,7 @@
     }
 
     export function editVehicle(vehicleId: number) {
+        console.log("edit vehicle");
         $vehicleId = vehicleId;
         $.ajax({
             url: `/api/vehicles/${vehicleId}`,
@@ -137,6 +138,7 @@
                 success: () => {
                     $("#add-vehicle-modal").modal("hide");
                     initData();
+                    toastr["success"]("Uspješno spremljeno!");
                 }
             });
         }
@@ -156,6 +158,7 @@
                 success: () => {
                     $("#delete-vehicle-modal").modal("hide");
                     initData();
+                    toastr["info"]("Vozilo uspješno obrisano.");
                 },
                 error: Global.ajaxErrorHandler
             })

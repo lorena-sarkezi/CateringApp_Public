@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace CateringApp.Web.Controllers.Vehicles
 {
     [Route("Vehicles")]
-    [Authorize]
+    [Authorize(Roles = "ADMIN")]
     public class VehiclesViewController : Controller
     {
         private readonly CateringDbContext cateringDbContext;

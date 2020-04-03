@@ -60,6 +60,7 @@
     <Folder Include="Tables" />
     <Folder Include="Schema" />
     <Folder Include="Stored Procedures" />
+    <Folder Include="Functions" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\users.sql" />
@@ -72,6 +73,7 @@
     <Build Include="Tables\catering_dishes.sql" />
     <Build Include="Tables\vehicles.sql" />
     <Build Include="Stored Procedures\delete_dish_type.sql" />
+    <Build Include="Functions\get_role_id.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="CateringApp.SQL.refactorlog" />

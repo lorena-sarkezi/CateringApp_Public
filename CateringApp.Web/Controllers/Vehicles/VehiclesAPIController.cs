@@ -15,7 +15,7 @@ namespace CateringApp.Web.Controllers.Vehicles
 {
     [Route("api/vehicles")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "ADMIN")]
     public class VehiclesAPIController : ControllerBase
     {
         private readonly CateringDbContext cateringDbContext;

@@ -1,7 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Http;
+@using  System.Security.Claims;
 
-@{ 
-    string user_role = User.Claims.Where(x => x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").FirstOrDefault().Value;
+@{
+    string user_role = User.FindFirst(ClaimTypes.Role).Value;
 }
 
 <!DOCTYPE html>
@@ -19,7 +20,7 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="~/dist/css/fontawesome-all.min.css">
     <script src="~/dist/js/fontawesome-all.min.js"></script>
-    
+
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="~/dist/css/OverlayScrollbars.min.css">
     <!-- Theme style -->
@@ -35,6 +36,10 @@
     <script src="~/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
     <!-- Bootstrap -->
     <!-- Bootstrap -->
     <!-- overlayScrollbars -->
@@ -42,9 +47,9 @@
     <!-- PAGE PLUGINS -->
     <!-- jQuery Mapael -->
     @*<script src="~/plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
-    <script src="~/plugins/raphael/raphael.min.js"></script>
-    <script src="~/plugins/jquery-mapael/jquery.mapael.min.js"></script>
-    <script src="~/plugins/jquery-mapael/maps/usa_states.min.js"></script>*@
+        <script src="~/plugins/raphael/raphael.min.js"></script>
+        <script src="~/plugins/jquery-mapael/jquery.mapael.min.js"></script>
+        <script src="~/plugins/jquery-mapael/maps/usa_states.min.js"></script>*@
 
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.css" />
@@ -112,7 +117,7 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
-                        with font-awesome or any other icon font library -->
+    with font-awesome or any other icon font library -->
                         <li class="nav-item has-treeview">
                             <a href="/" class="nav-link">
                                 <i class="nav-icon fas fa-home"></i>
@@ -122,11 +127,25 @@
                             </a>
                         </li>
 
+                        @{
+                            if (user_role == "ADMIN")
+                            {
+                                <li class="nav-item has-treeview">
+                                    <a href="/caterings/all" class="nav-link">
+                                        <i class="nav-icon fas fa-list"></i>
+                                        <p>
+                                            Pregled svih cateringa
+                                        </p>
+                                    </a>
+                                </li>
+                            }
+                        }
+
                         <li class="nav-item has-treeview">
-                            <a href="/caterings" class="nav-link">
-                                <i class="nav-icon fas fa-list"></i>
+                            <a href="/caterings/my" class="nav-link">
+                                <i class="nav-icon far fa-address-book"></i>
                                 <p>
-                                    Pregled Cateringa
+                                    Pregled mojih cateringa
                                 </p>
                             </a>
                         </li>
@@ -141,7 +160,7 @@
                                         <i class="nav-icon fas fa-utensils"></i>
                                         <p>
                                             Hrana
-                                            <i class="right fas fa-angle-left"></i>
+                                            <i class="right fas fa-angle-down"></i>
                                         </p>
                                     </a>
                                     <ul class="nav nav-treeview" style="display: none;">
@@ -160,14 +179,6 @@
                                     </ul>
                                 </li>
                                 <li class="nav-item has-treeview">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon fas fa-tools"></i>
-                                        <p>
-                                            Administracija
-                                        </p>
-                                    </a>
-                                </li>
-                                <li class="nav-item has-treeview">
                                     <a href="/users" class="nav-link">
                                         <i class="nav-icon fas fa-user-friends"></i>
                                         <p>
@@ -175,17 +186,18 @@
                                         </p>
                                     </a>
                                 </li>
+                                <li class="nav-item has-treeview">
+                                    <a href="/vehicles" class="nav-link">
+                                        <i class="nav-icon fas fa-car-side"></i>
+                                        <p>
+                                            Vozila
+                                        </p>
+                                    </a>
+                                </li>
                             }
                         }
 
-                        <li class="nav-item has-treeview">
-                            <a href="/vehicles" class="nav-link">
-                                <i class="nav-icon fas fa-car-side"></i>
-                                <p>
-                                    Vozila
-                                </p>
-                            </a>
-                        </li>
+
 
                     </ul>
                 </nav>

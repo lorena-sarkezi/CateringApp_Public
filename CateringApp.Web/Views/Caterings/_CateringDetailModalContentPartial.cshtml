@@ -1,0 +1,105 @@
+﻿@model CateringApp.Web.Models.CateringDetailModel
+
+<tr style="border-top:hidden">
+    <td style="font-weight:bold">
+        Naziv cateringa
+    </td>
+    <td>
+        @Model.CateringName
+    </td>
+</tr>
+
+<tr>
+    <td style="font-weight:bold">
+        Status
+    </td>
+    <td>
+        @if (Model.IsClosed == true)
+        {
+            <p>ZATVOREN</p>
+        }
+        else
+        {
+            <p>AKTIVAN</p>
+        }
+    </td>
+</tr>
+<tr>
+    <td style="font-weight:bold">
+        Klijent
+    </td>
+    <td>
+        @Model.ClientName
+    </td>
+</tr>
+@for (int i = 0; i < Model.Users.Count; i++)
+{
+     
+    string style = "";
+    if(i > 0)
+    {
+        style = "style=border-top:hidden;\"";
+    }
+   
+    <tr @style>
+        <td style="font-weight:bold">
+            @if (i == 0)
+            {
+                <p>
+                    Zaduženi zaposlenici
+                </p>
+            }
+        </td>
+        <td>
+            @{
+                string name = $"{Model.Users[i].FirstName} {Model.Users[i].LastName}";
+            }
+            <p class="list-item">@name</p>
+        </td>
+    </tr>
+}
+
+@for (int i = 0; i < Model.Dishes.Count; i++)
+{
+    string style = "";
+    if(i > 0)
+    {
+        style = "style=border-top:hidden !important;\"";
+    }
+
+    <tr @style>
+        <td style="font-weight:bold">
+            @if (i == 0)
+            {
+                <p>
+                    Hrana
+                </p>
+            }
+        </td>
+        <td>
+            @{
+                string foodItem = $"{Model.Dishes[i].Name} ({Model.Dishes[i].FoodCategoryName})";
+            }
+            <p class="list-item">@foodItem</p>
+        </td>
+    </tr>
+}
+
+<tr>
+    <td style="font-weight:bold">
+        Vozilo
+    </td>
+    <td>
+        @Model.Vehicles[0].VehicleName
+    </td>
+</tr>
+
+@if (Model.IsClosed)
+{
+    <tr style="font-weight:bold">
+        <td>Komentar po zatvaranju cateringa</td>
+        <td>
+            @Model.ClosingComment
+        </td>
+    </tr>
+}

@@ -4,6 +4,8 @@
         cateringId: number;
         cateringName: string;
         clientName: string;
+        isClosed: boolean;
+        closingComment: string;
         users: IUserModel[];
         vehicles: Vehicles.Models.IVehicle[];
         dishes: IDish[];
@@ -21,7 +23,10 @@
         //lastName: string;
     }
 
-    
+    export interface ICateringClosingModel {
+        cateringId: number;
+        closingComment: string;
+    }
 
     export interface IDish {
         id: number;

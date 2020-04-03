@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [cat_app].[users]
 (
 	[id] INT IDENTITY NOT NULL,
-    [role_id] INT NOT NULL DEFAULT 2,
+    [role_id] INT NOT NULL DEFAULT cat_app.get_role_id('USER'),
     [first_name] NVARCHAR(50) NULL, 
     [last_name] NVARCHAR(50) NULL, 
     [email] NVARCHAR(50) NULL, 

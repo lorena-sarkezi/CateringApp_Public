@@ -1,4 +1,4 @@
-﻿module Caterings {
+﻿module Caterings.All {
 
     let $table: DataTables.Api;
     let $cateringData: Caterings.Models.ICateringDetailModel;
@@ -65,11 +65,28 @@
                     data: "clientName"
                 },
                 {
+                    title: "Status",
+                    data: "isClosed",
+                    render: (colData, data, row: Models.ICateringDetailModel) => {
+                        if (row.isClosed) return 'Zatvoren';
+                        return 'Aktivan';
+                    }
+                },
+                {
                     title: "Radnje",
                     data: "clientName",
                     className: "dt-center",
                     render: (colData, data, row: Models.ICateringDetailModel) => {
-                        return `<button type="button" class="btn btn-primary" alt="Uredi" onclick="Caterings.editCatering(${row.cateringId})"><i class="fas fa-edit"></i></button><button class="btn btn-danger" alt="Uredi" onclick="Caterings.deleteCateringPrompt(${row.cateringId})"><i class="fas fa-trash-alt"></i></button>`;
+                        const btnEdit: string = `<button type="button" class="btn btn-primary" alt="Uredi" onclick="Caterings.All.editCatering(${row.cateringId})"><i class="fas fa-edit"></i></button>`;
+                        const btnInfo: string = `<button type="button" class="btn btn-info" alt="Uredi" onclick="Caterings.All.editCatering(${row.cateringId})"><i class="fas fa-info-circle"></i></button>`;
+                        const btnDelete: string = `<button class="btn btn-danger" alt="Uredi" onclick="Caterings.All.deleteCateringPrompt(${row.cateringId})"><i class="fas fa-trash-alt"></i></button>`;
+
+                        let retButtons = "";
+
+                        if (row.isClosed === true) retButtons = btnInfo + btnDelete;
+                        else retButtons = btnEdit + btnDelete;
+
+                        return retButtons;
                     }
                 }
             ],
@@ -175,9 +192,61 @@
                     });
                 }
 
+                if (data.isClosed) {
+                    //let form = <any>document.getElementById("form");
+                    //let elements: any = form.elements;
+                    //for (var i = 0; i < elements.length; i++) {
+                    //    elements[i].readOnly = true;
+                    //}
+
+                    $("#form").find("input, select").prop("disabled", true);
+
+                    document.getElementById("btn-catering-close").style.display = "none";
+                    document.getElementById("btn-catering-save").style.display = "none";
+                    document.getElementById("btn-add-food").style.display = "none";
+                    document.querySelectorAll("button[data-delete-food]").forEach((elem: HTMLElement) => {
+                        elem.style.display = "none";
+                    });
+
+                    let commentRow = document.getElementById("closing-comment");
+                    commentRow.style.display = "block";
+
+                    commentRow.getElementsByTagName("textarea")[0].value = data.closingComment;
+                }
             },
             error: Global.ajaxErrorHandler
 
+        });
+    }
+
+    export function infoCatering(cateringId: number) {
+        loader(true);
+        $.ajax({
+            url: `/api/catering/${cateringId}`,
+            method: "get",
+            data: null,
+            success: (data: Models.ICateringDetailModel) => {
+                loader(false);
+                $("#catering-info-modal").modal("show");
+
+                let dl: HTMLElement = document.getElementById("dl");
+                dl.innerHTML = "";
+
+                let name: HTMLElement = document.createElement("dt");
+                name.innerText = "Naziv cateringa";
+                name.classList.add("col-4");
+
+                let nameDesc: HTMLElement = document.createElement("dd");
+                nameDesc.innerText = data.cateringName;
+                nameDesc.classList.add("col-8");
+
+
+
+
+                dl.appendChild(name);
+                dl.appendChild(nameDesc);
+            },
+            error: Global.ajaxErrorHandler
         });
     }
 
@@ -306,6 +375,7 @@
         let deleteRowButton = document.createElement("button");
         deleteRowButton.classList.add("btn", "btn-danger","float-right");
         deleteRowButton.setAttribute("type", "button");
+        deleteRowButton.setAttribute("data-delete-food","");
         deleteRowButton.onclick = removeFoodItem;
 
         let icon = document.createElement("i");
@@ -387,7 +457,9 @@
             vehicles: vehicles,
             cateringName: $("#catering-name").val().toString(),
             clientName: $("#client-name").val().toString(),
-            cateringId: $cateringId
+            cateringId: $cateringId,
+            isClosed: false,
+            closingComment:""
         };
 
         let submitUrl: string = "/api/catering";
@@ -427,6 +499,7 @@
             success: () => {
                 $("#add-catering-modal").modal("hide");
                 initData();
+                toastr["success"]("Uspješno spremljeno!");
             },
             error: Global.ajaxErrorHandler
         });
@@ -448,10 +521,34 @@
                 success: () => {
                     $("#delete-catering-prompt").modal("hide");
                     initData();
+                    toastr["info"]("Catering uspješno obrisan");
                 },
                 error: Global.ajaxErrorHandler
             })
         }
+    }
+
+    export function closeCateringConfirm() {
+        loader(true);
+        const message: string = (<HTMLInputElement>document.getElementById("closing-message")).value;
+        const data: Models.ICateringClosingModel = {
+            cateringId: $cateringId,
+            closingComment: message
+        };
+       
+
+        $.ajax({
+            url: `/api/catering/close/${$cateringId}`,
+            method: "put",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: () => {
+                $(".modal").modal("hide");
+                initData();
+                toastr["success"]("Uspješno spremljeno!");
+            },
+            error: Global.ajaxErrorHandler
+        });
     }
 
     export function clearForm() {
@@ -468,5 +565,19 @@
         elem.innerHTML = "";
 
         elem.appendChild(label);
+
+        $("#form").find("input, select").prop("disabled", false);
+
+        document.getElementById("btn-catering-close").style.display = "block";
+        document.getElementById("btn-catering-save").style.display = "block";
+        document.getElementById("btn-add-food").style.display = "block";
+        document.querySelectorAll("button[data-delete-food]").forEach((elem: HTMLElement) => {
+            elem.style.display = "block";
+        });
+
+        let commentRow = document.getElementById("closing-comment");
+        commentRow.style.display = "none";
+
+        commentRow.getElementsByTagName("textarea")[0].value = "";
     }
 }

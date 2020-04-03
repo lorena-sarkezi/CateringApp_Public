@@ -42,12 +42,13 @@
         loader(false);
         console.error(error);
         console.log(jxHR);
-        $('.modal').modal('hide');
-        $("#errorModalMain").modal("show");
+        //$('.modal').modal('hide');
+        toastr["error"]("Došlo je do greške!");
+        //$("#errorModalMain").modal("show");
     }
 
     export function logout() {
-        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/";
         window.location.reload();
     }
 }

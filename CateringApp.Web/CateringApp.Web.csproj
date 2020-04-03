@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="TypeScript\Caterings\CateringsListMy.ts" />
     <None Remove="TypeScript\Food\FoodCategoriesList.ts" />
     <None Remove="TypeScript\Food\FoodItemsList.ts" />
     <None Remove="TypeScript\Food\Models.ts" />
