@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var Global;
 (function (Global) {
     function initialize() {
-        loader(false);
+        //loader(false);
         $.extend(true, $.fn.dataTable.defaults, {
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
@@ -185,9 +185,6 @@ var Caterings;
         function initialize() {
             loader(true);
             $("#dropdown-users").select2();
-            //$("#dropdown-vehicles").select2({
-            //    dropdownParent: $('#add-catering-modal')
-            //});
             $form = document.getElementById("form");
             $formValidate = $("#form").validate({
                 errorPlacement: function (label, element) {
@@ -199,23 +196,6 @@ var Caterings;
                     }
                 },
                 wrapper: "div"
-                //highlight: function (element, errorClass, validClass) {
-                //    var elem = $(element);
-                //    if (elem.hasClass("select2-offscreen")) {
-                //        $("#s2id_" + elem.attr("id") + " ul").addClass("invalid-feedback");
-                //    } else {
-                //        elem.addClass("invalid-feedback");
-                //    }
-                //},
-                ////When removing make the same adjustments as when adding
-                //unhighlight: function (element, errorClass, validClass) {
-                //    var elem = $(element);
-                //    if (elem.hasClass("select2-offscreen")) {
-                //        $("#s2id_" + elem.attr("id") + " ul").removeClass("invalid-feedback");
-                //    } else {
-                //        elem.removeClass("invalid-feedback");
-                //    }
-                //}
             });
             $form.addEventListener("submit", handleFormSubmit);
             $table = $("#caterings-list-table").DataTable({
@@ -232,6 +212,10 @@ var Caterings;
                     {
                         title: "Klijent",
                         data: "clientName"
+                    },
+                    {
+                        title: "Datum",
+                        data: "cateringDate"
                     },
                     {
                         title: "Status",
@@ -269,6 +253,10 @@ var Caterings;
                     cell.innerHTML = i + 1;
                 });
             }).draw();
+            $("#catering-date").datepicker({
+                autoclose: true,
+                format: "dd.mm.yyyy"
+            });
             loader(true);
             initStaticData();
             initData();
@@ -310,9 +298,10 @@ var Caterings;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
+                            loader(true);
                             $cateringId = 0;
                             return [4 /*yield*/, $.ajax({
-                                    url: "/api/catering/all_names_only",
+                                    url: "/api/catering/all/basic",
                                     contentType: "application/json",
                                     method: "get",
                                     success: function (data) {
@@ -360,6 +349,7 @@ var Caterings;
                                 });
                                 $("#catering-name").val(data.cateringName);
                                 $("#client-name").val(data.clientName);
+                                $("#catering-date").val(data.cateringDate);
                                 console.log($("#dropdown-users"));
                                 console.log(users);
                                 $("#dropdown-users").val(users).trigger("change");
@@ -587,6 +577,7 @@ var Caterings;
                 vehicles: vehicles,
                 cateringName: $("#catering-name").val().toString(),
                 clientName: $("#client-name").val().toString(),
+                cateringDate: $("#catering-date").val().toString(),
                 cateringId: $cateringId,
                 isClosed: false,
                 closingComment: ""

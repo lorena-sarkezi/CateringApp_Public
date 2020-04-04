@@ -4,6 +4,7 @@
         cateringId: number;
         cateringName: string;
         clientName: string;
+        cateringDate: string;
         isClosed: boolean;
         closingComment: string;
         users: IUserModel[];
@@ -15,6 +16,7 @@
         cateringId: number;
         cateringName: string;
         clientName: string;
+        cateringDate: string;
     }
 
     export interface IUserModel {

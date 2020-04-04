@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 /*!
  *   AdminLTE v3.0.3-pre
  *   Author: Colorlib
@@ -20678,9 +20678,9 @@ select.form-control-sm ~ .select2-container--default .select2-selection--multipl
 
 .select2-container--default .select2-secondary .select2-selection--multiple .select2-selection__choice,
 .select2-secondary .select2-container--default .select2-selection--multiple .select2-selection__choice {
-  background-color: #6c757d;
-  border-color: #60686f;
-  color: #ffffff;
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #ffffff;
 }
 
 .select2-container--default .select2-secondary .select2-selection--multiple .select2-selection__choice__remove,

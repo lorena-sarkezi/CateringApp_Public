@@ -3,14 +3,16 @@
   "name": "asp.net",
   "private": true,
   "devDependencies": {
-    "@types/jquery": "3.3.33",
-    "@types/bootstrap": "4.3.1",
-    "@types/select2": "4.0.48",
-    "@types/datatables.net": "1.10.18",
-    "@types/jquery.validation": "1.16.6",
     "@fortawesome/fontawesome-free": "5.12.1",
+    "@types/bootstrap": "4.3.1",
+    "@types/bootstrap-datepicker": "0.0.14",
+    "@types/datatables.net": "1.10.18",
+    "@types/jquery": "3.3.33",
+    "@types/jquery.validation": "1.16.6",
+    "@types/select2": "4.0.48",
     "@types/toastr": "2.1.37",
     "bootstrap": "4.4.1",
+    "bootstrap-datepicker": "1.9.0",
     "datatables.net-bs4": "3.2.2"
   }
 }

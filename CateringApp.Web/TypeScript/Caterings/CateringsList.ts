@@ -11,9 +11,6 @@
     export function initialize() {
         loader(true);
         $("#dropdown-users").select2();
-        //$("#dropdown-vehicles").select2({
-        //    dropdownParent: $('#add-catering-modal')
-        //});
 
         $form = <HTMLFormElement>document.getElementById("form");
         $formValidate = $("#form").validate({
@@ -27,24 +24,6 @@
                 }
             },
             wrapper: "div"
-            //highlight: function (element, errorClass, validClass) {
-            //    var elem = $(element);
-            //    if (elem.hasClass("select2-offscreen")) {
-            //        $("#s2id_" + elem.attr("id") + " ul").addClass("invalid-feedback");
-            //    } else {
-            //        elem.addClass("invalid-feedback");
-            //    }
-            //},
-
-            ////When removing make the same adjustments as when adding
-            //unhighlight: function (element, errorClass, validClass) {
-            //    var elem = $(element);
-            //    if (elem.hasClass("select2-offscreen")) {
-            //        $("#s2id_" + elem.attr("id") + " ul").removeClass("invalid-feedback");
-            //    } else {
-            //        elem.removeClass("invalid-feedback");
-            //    }
-            //}
         });
 
         $form.addEventListener("submit", handleFormSubmit);
@@ -63,6 +42,10 @@
                 {
                     title: "Klijent",
                     data: "clientName"
+                },
+                {
+                    title: "Datum",
+                    data:"cateringDate"
                 },
                 {
                     title: "Status",
@@ -102,6 +85,11 @@
             });
         }).draw();
 
+        $("#catering-date").datepicker({
+            autoclose: true,
+            format:"dd.mm.yyyy"
+        });
+
         
         loader(true);
         initStaticData();
@@ -131,10 +119,10 @@
     }
 
     export async function initData() {
-
+        loader(true);
         $cateringId = 0;
         await $.ajax({
-            url: "/api/catering/all_names_only",
+            url: "/api/catering/all/basic",
             contentType: "application/json",
             method: "get",
             success: (data: Models.ICateringViewModel[]) => {
@@ -178,6 +166,7 @@
                 
                 $("#catering-name").val(data.cateringName);
                 $("#client-name").val(data.clientName);
+                $("#catering-date").val(data.cateringDate);
                 console.log($("#dropdown-users"));
                 console.log(users);
                 $("#dropdown-users").val(users).trigger("change");
@@ -457,6 +446,7 @@
             vehicles: vehicles,
             cateringName: $("#catering-name").val().toString(),
             clientName: $("#client-name").val().toString(),
+            cateringDate: $("#catering-date").val().toString(),
             cateringId: $cateringId,
             isClosed: false,
             closingComment:""

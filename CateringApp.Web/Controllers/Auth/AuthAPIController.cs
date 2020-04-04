@@ -35,7 +35,8 @@ namespace CateringApp.Web.Controllers.Auth
 
             CookieOptions cookieOptions = new CookieOptions
             {
-                IsEssential = true
+                IsEssential = true,
+                Expires = new DateTimeOffset(DateTime.Now.AddYears(1))
             };
 
             if (model.RememberMe == true) cookieOptions.Expires = DateTime.Now.AddYears(10);

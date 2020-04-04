@@ -3,6 +3,7 @@
 	[id] INT NOT NULL IDENTITY, 
     [catering_name] NVARCHAR(50) NOT NULL, 
     [client_name] NVARCHAR(50) NULL,
+    [catering_date] DATETIME2(3) NOT NULL DEFAULT GETDATE(),
     [vehicle_id] INT NULL,
     [is_closed] BIT NOT NULL DEFAULT 0,
     [closing_comment] NVARCHAR(MAX) NULL,

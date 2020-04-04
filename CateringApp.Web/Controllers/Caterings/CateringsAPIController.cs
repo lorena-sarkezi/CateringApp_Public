@@ -12,6 +12,7 @@ using CateringApp.Data.Models;
 using CateringApp.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.Globalization;
 
 namespace CateringApp.Web.Controllers
 {
@@ -28,7 +29,7 @@ namespace CateringApp.Web.Controllers
         }
 
 
-        [HttpGet("all_names_only")]
+        [HttpGet("all/basic")]
         [Authorize(Roles = "ADMIN")]
         public async Task<List<CateringViewModel>> GetAllCaterings()
         {
@@ -85,6 +86,7 @@ namespace CateringApp.Web.Controllers
             {
                 CateringName = model.CateringName,
                 ClientName = model.ClientName,
+                CateringDate = DateTime.Parse(model.CateringDate, new CultureInfo("hr-HR")),
                 VehicleId = (int)model.Vehicles[0].VehicleId
             };
 
@@ -147,6 +149,7 @@ namespace CateringApp.Web.Controllers
 
             catering.CateringName = model.CateringName;
             catering.ClientName = model.ClientName;
+            catering.CateringDate = DateTime.Parse(model.CateringDate, new CultureInfo("hr-HR"));
             catering.VehicleId = (int)model.Vehicles[0].VehicleId;
 
             if (catering.VehicleId == 0) catering.VehicleId = null;
