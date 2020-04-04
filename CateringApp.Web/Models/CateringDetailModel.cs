@@ -14,6 +14,7 @@ namespace CateringApp.Web.Models
 
         public string CateringName { get; set; }
         public string ClientName { get; set; }
+        public string CateringDate { get; set; }
 
         public bool IsClosed { get; set; }
 
@@ -40,6 +41,7 @@ namespace CateringApp.Web.Models
                 CateringId = catering.CateringId,
                 CateringName = catering.CateringName,
                 ClientName = catering.ClientName,
+                CateringDate = catering.CateringDate.ToString("dd/MM/yyyy"),
                 IsClosed = catering.IsClosed,
                 ClosingComment = catering.ClosingComment
             };

@@ -1,6 +1,6 @@
 ﻿module Global {
     export function initialize() {
-        loader(false);
+        //loader(false);
 
         $.extend(true, $.fn.dataTable.defaults, {
             "language": {

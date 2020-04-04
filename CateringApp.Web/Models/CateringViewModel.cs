@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Globalization;
 
 using CateringApp.Data.Models;
 
@@ -12,6 +13,8 @@ namespace CateringApp.Web.Models
         public int CateringId { get; set; }
         public string CateringName { get; set; }
         public string ClientName { get; set; }
+        public string CateringDate { get; set; }
+
         public bool IsClosed { get; set; }
         
     }
@@ -20,12 +23,14 @@ namespace CateringApp.Web.Models
     {
         public static CateringViewModel GetViewModel(this Catering catering)
         {
-            CateringViewModel viewModel = new CateringViewModel();
-
-            viewModel.CateringId = catering.CateringId;
-            viewModel.CateringName = catering.CateringName;
-            viewModel.ClientName = catering.ClientName;
-            viewModel.IsClosed = catering.IsClosed;
+            CateringViewModel viewModel = new CateringViewModel
+            {
+                CateringId = catering.CateringId,
+                CateringName = catering.CateringName,
+                ClientName = catering.ClientName,
+                CateringDate = catering.CateringDate.ToString("dd/MM/yyyy"),
+                IsClosed = catering.IsClosed
+            };
 
             return viewModel;
         }

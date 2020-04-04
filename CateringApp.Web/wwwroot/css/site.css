@@ -87,8 +87,22 @@ div.spacing-bottom{
     color: black;
 }
 
-.list-item{
+
+select2-selection__choice {
+    background-color: #007bff !important;
+    border-color: #006fe6 !important;
+}
+
+span.select2-selection__choice__remove{
+    color: white !important;
+}
+
+span.select2-selection__choice__remove:hover {
+    color: #999 !important;
+}
+
+.list-item {
     display: list-item;
-    list-style-type:disc;
+    list-style-type: disc;
     list-style-position: inside;
 }

@@ -19,6 +19,9 @@ namespace CateringApp.Data.Models
         [Required, Column("client_name")]
         public string ClientName { get; set; }
 
+        [Required, Column("catering_date")]
+        public DateTime CateringDate { get; set; }
+
         [Required, Column("date_created"), DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime DateCreated { get; set; }
 

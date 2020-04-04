@@ -39,6 +39,11 @@
     <ProjectReference Include="..\CateringApp.Data\CateringApp.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\bootstrap-datepicker\" />
+    <Folder Include="wwwroot\lib\select2\" />
+  </ItemGroup>
+
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="http://json.schemastore.org/asmdef" /></VisualStudio></ProjectExtensions>
 
 </Project>
