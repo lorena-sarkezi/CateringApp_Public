@@ -24,7 +24,7 @@ namespace CateringApp.Web.Controllers.Home
             this.cateringDbContext = cateringDbContext;
         }
 
-        [HttpGet("count/open")]
+        [HttpGet("count/caterings/open")]
         public async Task<IActionResult> GetOpenCateringCount()
         {
             int cnt = await cateringDbContext.Caterings.CountAsync(x => x.IsClosed == false);
@@ -32,7 +32,7 @@ namespace CateringApp.Web.Controllers.Home
             return Ok(cnt);
         }
 
-        [HttpGet("count/closed")]
+        [HttpGet("count/caterings/closed")]
         public async Task<IActionResult> GetClosedCteringCount()
         {
             int cnt = await cateringDbContext.Caterings.CountAsync(x => x.IsClosed == true);
@@ -40,7 +40,7 @@ namespace CateringApp.Web.Controllers.Home
             return Ok(cnt);
         }
 
-        [HttpGet("count/months")]
+        [HttpGet("count/caterings/months")]
         public async Task<IActionResult> GetCateringsCountOverMonthsCurrYear()
         {
             var items = cateringDbContext.CateringCounts
@@ -52,7 +52,7 @@ namespace CateringApp.Web.Controllers.Home
             return Ok(items);
         }
 
-        [HttpGet("count/current_month")]
+        [HttpGet("count/caterings/current_month")]
         public async Task<IActionResult> GetCateringsForCurrentMonth()
         {
             DateTime monthStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
