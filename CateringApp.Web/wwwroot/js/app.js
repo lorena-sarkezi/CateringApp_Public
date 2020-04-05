@@ -1534,14 +1534,14 @@ var Home;
                 switch (_a.label) {
                     case 0:
                         $.ajax({
-                            url: "/api/home/count/open",
+                            url: "/api/home/count/caterings/open",
                             method: "get",
                             success: function (res) {
                                 document.getElementById("open-count").innerText = res.toString();
                             }
                         });
                         $.ajax({
-                            url: "/api/home/count/closed",
+                            url: "/api/home/count/caterings/closed",
                             method: "get",
                             success: function (res) {
                                 document.getElementById("closed-count").innerText = res.toString();
@@ -1558,7 +1558,7 @@ var Home;
                             return color;
                         };
                         return [4 /*yield*/, $.ajax({
-                                url: "/api/home/count/months",
+                                url: "/api/home/count/caterings/months",
                                 method: "get",
                                 success: function (res) {
                                     console.log(res);
@@ -1571,6 +1571,16 @@ var Home;
                                                     data: res,
                                                     backgroundColor: getRandomColor
                                                 }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                yAxes: [{
+                                                        ticks: {
+                                                            stepSize: 1,
+                                                            beginAtZero: true
+                                                        }
+                                                    }]
+                                            }
                                         }
                                     };
                                     var chart = new Chart(ctx, options);

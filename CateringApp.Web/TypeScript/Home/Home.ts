@@ -5,7 +5,7 @@
 
     export async function initData() {
         $.ajax({
-            url: `/api/home/count/open`,
+            url: `/api/home/count/caterings/open`,
             method: "get",
             success: (res: number) => {
                 document.getElementById("open-count").innerText = res.toString();
@@ -13,7 +13,7 @@
         });
 
         $.ajax({
-            url: `/api/home/count/closed`,
+            url: `/api/home/count/caterings/closed`,
             method: "get",
             success: (res: number) => {
                 document.getElementById("closed-count").innerText = res.toString();
@@ -33,7 +33,7 @@
         }
 
         await $.ajax({
-            url: "/api/home/count/months",
+            url: "/api/home/count/caterings/months",
             method: "get",
             success: (res: number[]) => {
 
@@ -48,7 +48,18 @@
                             data: res,
                             backgroundColor: getRandomColor
                         }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    stepSize: 1,
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
                     }
+
                 };
 
                 const chart = new Chart(ctx, options);
