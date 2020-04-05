@@ -6,30 +6,36 @@
     ViewData["Title"] = "Početna";
 }
 
-    @*<div class="row">
-        <div class="col-3">
-            <div class="small-box bg-success">
-                <div class="inner">
-                    <h3>21</h3>
-                    <p>Otvorenih cateringa</p>
-                </div>
+<div class="row">
+    <div class="col-3">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3 id="open-count">0</h3>
+                <p>Otvorenih cateringa</p>
+            </div>
                 
-            </div>
         </div>
-        <div class="col-3">
-            <div class="small-box bg-warning">
-                <div class="inner">
-                    <h3>21</h3>
-                    <p>Zaključenih cateringa</p>
-                </div>
-                <div class="icon">
-                    <i class="fa fa-check"></i>
-                </div>
+    </div>
+    <div class="col-3">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3 id="closed-count">0</h3>
+                <p>Zaključenih cateringa</p>
             </div>
+            @*<div class="icon">
+                <i class="fa fa-check"></i>
+            </div>*@
         </div>
-    </div>*@
+    </div>
+</div>
 
-<div class="card">
+<div class="row">
+    <div class="col-8">
+        <canvas id="caterings-month-chart"></canvas>
+    </div>
+</div>
+
+@*<div class="card">
     <div class="card-header">
         Pozdrav
     </div>
@@ -37,5 +43,8 @@
     <div class="card-body">
         Dobrodošli u aplikaciju <b>CateringApp</b>
     </div>
-</div>
+</div>*@
 
+<script>
+    Home.initialize();
+</script>
