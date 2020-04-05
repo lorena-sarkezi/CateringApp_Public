@@ -95,12 +95,6 @@ namespace CateringApp.Web
         [Obsolete]
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            var cultureInfo = new CultureInfo("hr-HR");
-            cultureInfo.NumberFormat.CurrencySymbol = "HRK";
-
-            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -132,7 +126,7 @@ namespace CateringApp.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseStatusCodePagesWithReExecute("/error/{0}");
+            //app.UseStatusCodePagesWithReExecute("/error/{0}");
 
             app.UseStatusCodePages(async context =>
             {

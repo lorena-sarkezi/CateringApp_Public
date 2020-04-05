@@ -85,9 +85,8 @@
             });
         }).draw();
 
-        $("#catering-date").datepicker({
-            autoclose: true,
-            format:"dd.mm.yyyy"
+        $("#catering-date").datetimepicker({
+            format: "DD-MM-YYYY"
         });
 
         
@@ -249,9 +248,6 @@
         $(".spinner", "#add-catering-modal").show();
         $(".row", "#add-catering-modal").hide();
 
-        let btn = <HTMLButtonElement>document.getElementById("btn-catering-close");
-        btn.style.display = "none";
-
         await $.ajax({
             url: "/api/catering/details",
             method: "get",
@@ -305,6 +301,9 @@
                 });
             }
         });
+
+        let btn = document.getElementById("btn-catering-close");
+        btn.style.display = "none";
 
         $("#add-catering-modal").modal("show");
         
