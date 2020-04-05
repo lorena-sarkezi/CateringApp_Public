@@ -45,6 +45,8 @@ namespace CateringApp.Data
                 .WithMany(d => d.CateringDishes)
                 .HasForeignKey(cd => cd.DishId);
 
+            modelBuilder.Entity<CateringCountItem>()
+                .HasNoKey();
             
 
         }
@@ -58,5 +60,7 @@ namespace CateringApp.Data
         public virtual DbSet<DishType> DishTypes { get; set; }
 
         public virtual DbSet<Vehicle> Vehicles { get; set; }
+
+        public virtual DbSet<CateringCountItem> CateringCounts { get; set; }
     }
 }
