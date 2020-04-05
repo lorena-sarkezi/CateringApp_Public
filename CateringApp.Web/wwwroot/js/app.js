@@ -253,9 +253,8 @@ var Caterings;
                     cell.innerHTML = i + 1;
                 });
             }).draw();
-            $("#catering-date").datepicker({
-                autoclose: true,
-                format: "dd.mm.yyyy"
+            $("#catering-date").datetimepicker({
+                format: "DD-MM-YYYY"
             });
             loader(true);
             initStaticData();
@@ -419,8 +418,6 @@ var Caterings;
                         case 0:
                             $(".spinner", "#add-catering-modal").show();
                             $(".row", "#add-catering-modal").hide();
-                            btn = document.getElementById("btn-catering-close");
-                            btn.style.display = "none";
                             return [4 /*yield*/, $.ajax({
                                     url: "/api/catering/details",
                                     method: "get",
@@ -466,6 +463,8 @@ var Caterings;
                                 })];
                         case 1:
                             _a.sent();
+                            btn = document.getElementById("btn-catering-close");
+                            btn.style.display = "none";
                             $("#add-catering-modal").modal("show");
                             return [2 /*return*/];
                     }

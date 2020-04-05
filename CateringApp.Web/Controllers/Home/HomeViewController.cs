@@ -10,11 +10,12 @@ using Microsoft.AspNetCore.Authorization;
 namespace CateringApp.Web.Controllers
 {
     [Authorize]
-    public class HomeController : Controller
+    [Route("/")]
+    public class HomeViewController : Controller
     {
         public IActionResult Index()
         {
-            return View("Index");
+            return View(@"\Views\Home\Index.cshtml");
         }
        
     }

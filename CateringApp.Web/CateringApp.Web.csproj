@@ -10,6 +10,7 @@
     <None Remove="TypeScript\Food\FoodCategoriesList.ts" />
     <None Remove="TypeScript\Food\FoodItemsList.ts" />
     <None Remove="TypeScript\Food\Models.ts" />
+    <None Remove="TypeScript\TempusDominus.d.ts" />
     <None Remove="TypeScript\Users\Models.ts" />
     <None Remove="TypeScript\Users\UsersList.ts" />
     <None Remove="TypeScript\Auth\Login.ts" />
