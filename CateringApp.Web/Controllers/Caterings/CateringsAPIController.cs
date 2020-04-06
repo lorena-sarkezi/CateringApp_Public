@@ -21,6 +21,7 @@ using MigraDoc.Rendering;
 using PdfSharp.Pdf;
 using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
+using System.Globalization;
 
 namespace CateringApp.Web.Controllers
 {
@@ -157,6 +158,18 @@ namespace CateringApp.Web.Controllers
                 dtRow = dataTable.AddRow();
                 dtRow.Borders.Bottom.Width = 0.15;
             }
+
+            spacingRow = dataTable.AddRow();
+            spacingRow.TopPadding = 0.5;
+            spacingRow.BottomPadding = 0.5;
+
+            dtRow = dataTable.AddRow();
+            dtRow.Cells[0].AddParagraph("Datum cateringa:");
+            dtRow.Cells[0].Format.Font.Bold = true;
+            dtRow.Cells[2].AddParagraph(catering.CateringDate.ToString("dd.MM.yyyy.", new CultureInfo("hr-HR")));
+
+            dtRow = dataTable.AddRow();
+            dtRow.Borders.Bottom.Width = 0.15;
 
             spacingRow = dataTable.AddRow();
             spacingRow.TopPadding = 0.5;

@@ -1122,6 +1122,81 @@ var FoodItem;
     }
     FoodItem.clearForm = clearForm;
 })(FoodItem || (FoodItem = {}));
+var Home;
+(function (Home) {
+    function initialize() {
+        initData();
+    }
+    Home.initialize = initialize;
+    function initData() {
+        return __awaiter(this, void 0, void 0, function () {
+            var canvas, ctx, getRandomColor;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        $.ajax({
+                            url: "/api/home/count/caterings/open",
+                            method: "get",
+                            success: function (res) {
+                                document.getElementById("open-count").innerText = res.toString();
+                            }
+                        });
+                        $.ajax({
+                            url: "/api/home/count/caterings/closed",
+                            method: "get",
+                            success: function (res) {
+                                document.getElementById("closed-count").innerText = res.toString();
+                            }
+                        });
+                        canvas = document.getElementById("caterings-month-chart");
+                        ctx = canvas.getContext("2d");
+                        getRandomColor = function () {
+                            var letters = '0123456789ABCDEF'.split('');
+                            var color = '#';
+                            for (var i = 0; i < 6; i++) {
+                                color += letters[Math.floor(Math.random() * 16)];
+                            }
+                            return color;
+                        };
+                        return [4 /*yield*/, $.ajax({
+                                url: "/api/home/count/caterings/months",
+                                method: "get",
+                                success: function (res) {
+                                    console.log(res);
+                                    var options = {
+                                        type: "bar",
+                                        data: {
+                                            labels: ["Sij", "Velj", "Ožu", "Tra", "Svi", "Lip", "Srp", "Kol", "Ruj", "Lis", "Stu", "Pro"],
+                                            datasets: [{
+                                                    label: "Br. cateringa u mjesecu",
+                                                    data: res,
+                                                    backgroundColor: getRandomColor
+                                                }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                yAxes: [{
+                                                        ticks: {
+                                                            stepSize: 1,
+                                                            beginAtZero: true
+                                                        }
+                                                    }]
+                                            }
+                                        }
+                                    };
+                                    var chart = new Chart(ctx, options);
+                                },
+                                error: Global.ajaxErrorHandler
+                            })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+    Home.initData = initData;
+})(Home || (Home = {}));
 var Users;
 (function (Users) {
     var $table;
@@ -1521,79 +1596,4 @@ var Vehicles;
     }
     Vehicles.clearForm = clearForm;
 })(Vehicles || (Vehicles = {}));
-var Home;
-(function (Home) {
-    function initialize() {
-        initData();
-    }
-    Home.initialize = initialize;
-    function initData() {
-        return __awaiter(this, void 0, void 0, function () {
-            var canvas, ctx, getRandomColor;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        $.ajax({
-                            url: "/api/home/count/caterings/open",
-                            method: "get",
-                            success: function (res) {
-                                document.getElementById("open-count").innerText = res.toString();
-                            }
-                        });
-                        $.ajax({
-                            url: "/api/home/count/caterings/closed",
-                            method: "get",
-                            success: function (res) {
-                                document.getElementById("closed-count").innerText = res.toString();
-                            }
-                        });
-                        canvas = document.getElementById("caterings-month-chart");
-                        ctx = canvas.getContext("2d");
-                        getRandomColor = function () {
-                            var letters = '0123456789ABCDEF'.split('');
-                            var color = '#';
-                            for (var i = 0; i < 6; i++) {
-                                color += letters[Math.floor(Math.random() * 16)];
-                            }
-                            return color;
-                        };
-                        return [4 /*yield*/, $.ajax({
-                                url: "/api/home/count/caterings/months",
-                                method: "get",
-                                success: function (res) {
-                                    console.log(res);
-                                    var options = {
-                                        type: "bar",
-                                        data: {
-                                            labels: ["Sij", "Velj", "Ožu", "Tra", "Svi", "Lip", "Srp", "Kol", "Ruj", "Lis", "Stu", "Pro"],
-                                            datasets: [{
-                                                    label: "Br. cateringa u mjesecu",
-                                                    data: res,
-                                                    backgroundColor: getRandomColor
-                                                }]
-                                        },
-                                        options: {
-                                            scales: {
-                                                yAxes: [{
-                                                        ticks: {
-                                                            stepSize: 1,
-                                                            beginAtZero: true
-                                                        }
-                                                    }]
-                                            }
-                                        }
-                                    };
-                                    var chart = new Chart(ctx, options);
-                                },
-                                error: Global.ajaxErrorHandler
-                            })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    }
-    Home.initData = initData;
-})(Home || (Home = {}));
 //# sourceMappingURL=app.js.map
