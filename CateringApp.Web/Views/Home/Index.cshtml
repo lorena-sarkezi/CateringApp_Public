@@ -1,37 +1,85 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using CateringApp.Web.Models;
+
+
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Početna";
 }
 
+@model List<CateringViewModel>
+
 <div class="row">
-    <div class="col-3">
+    <div class="col-md-3 col-xs-6">
         <div class="small-box bg-success">
             <div class="inner">
                 <h3 id="open-count">0</h3>
                 <p>Otvorenih cateringa</p>
             </div>
-                
+            <div class="icon">
+                <i class="far fa-bell"></i>
+            </div>
+               
         </div>
     </div>
-    <div class="col-3">
+    <div class="col-md-3 col-xs-6">
         <div class="small-box bg-warning">
             <div class="inner">
                 <h3 id="closed-count">0</h3>
                 <p>Zaključenih cateringa</p>
             </div>
-            @*<div class="icon">
+            <div class="icon">
                 <i class="fa fa-check"></i>
-            </div>*@
+            </div>
         </div>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-8">
-        <canvas id="caterings-month-chart"></canvas>
+    <div class="col-md-8 col-lg-8 col-xs-12">
+        <div class="card">
+            <div class="card-header" style="font-size: 1.1rem;font-weight: 400;">
+                <i class="fas fa-chart-area mr-1"></i> Broj cateringa kroz mjesece
+            </div>
+            <div class="card-body">
+                <canvas id="caterings-month-chart"></canvas>
+            </div>
+        </div>
+        
+    </div>
+    <div class="col-md-4 col-lg-4 col-xs-12">
+        <div class="card">
+            <div class="card-header">
+                Nadolazeći caterinzi za trenutni mjesec
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-valign-middle">
+                    <thead>
+                        <tr>
+                            <th width="33%">Naziv</th>
+                            <th width="33%">Klijent</th>
+                            <th width="33%">Datum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @item.CateringName
+                                </td>
+                                <td>
+                                    @item.ClientName
+                                </td>
+                                <td>
+                                    @item.CateringDate
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
     </div>
 </div>
 

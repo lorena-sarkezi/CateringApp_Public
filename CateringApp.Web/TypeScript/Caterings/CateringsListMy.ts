@@ -20,6 +20,10 @@
                     data: "clientName"
                 },
                 {
+                    title: "datum",
+                    data:"cateringDate"
+                },
+                {
                     title: "Status",
                     data: "isClosed",
                     render: (colData, data, row: Models.ICateringDetailModel) => {

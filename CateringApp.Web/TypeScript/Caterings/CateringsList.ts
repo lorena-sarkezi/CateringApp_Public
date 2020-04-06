@@ -86,7 +86,7 @@
         }).draw();
 
         $("#catering-date").datetimepicker({
-            format: "DD-MM-YYYY"
+            format: "DD.MM.YYYY."
         });
 
         

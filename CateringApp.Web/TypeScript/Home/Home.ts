@@ -46,8 +46,9 @@
                         datasets: [{
                             label: "Br. cateringa u mjesecu",
                             data: res,
-                            backgroundColor: getRandomColor
-                        }]
+                            backgroundColor: 'rgba(115, 206, 255,1)',
+                            borderColor: 'rgba(255,255,255,1)'
+                        }]                        
                     },
                     options: {
                         scales: {
@@ -57,6 +58,9 @@
                                     beginAtZero: true
                                 }
                             }]
+                        },
+                        legend: {
+                            display: false
                         }
                     }
 

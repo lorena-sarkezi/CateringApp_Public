@@ -41,7 +41,7 @@ namespace CateringApp.Web.Models
                 CateringId = catering.CateringId,
                 CateringName = catering.CateringName,
                 ClientName = catering.ClientName,
-                CateringDate = catering.CateringDate.ToString("dd/MM/yyyy"),
+                CateringDate = catering.CateringDate.ToString("dd.MM.yyyy."),
                 IsClosed = catering.IsClosed,
                 ClosingComment = catering.ClosingComment
             };

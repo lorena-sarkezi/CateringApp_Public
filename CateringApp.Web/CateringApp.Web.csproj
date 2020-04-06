@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\images\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="TypeScript\Caterings\CateringsListMy.ts" />
     <None Remove="TypeScript\Food\FoodCategoriesList.ts" />
     <None Remove="TypeScript\Food\FoodItemsList.ts" />
@@ -45,6 +49,10 @@
   <ItemGroup>
     <Folder Include="wwwroot\lib\bootstrap-datepicker\" />
     <Folder Include="wwwroot\lib\select2\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\images\logo.png" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="http://json.schemastore.org/asmdef" /></VisualStudio></ProjectExtensions>
