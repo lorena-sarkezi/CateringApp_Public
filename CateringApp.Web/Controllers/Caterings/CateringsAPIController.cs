@@ -143,18 +143,20 @@ namespace CateringApp.Web.Controllers
 
             dtRow = dataTable.AddRow();
             dtRow.Borders.Bottom.Width = 0.15;
+            if (catering.ClientName != null)
+            { 
+                spacingRow = dataTable.AddRow();
+                spacingRow.TopPadding = 0.5;
+                spacingRow.BottomPadding = 0.5;
 
-            spacingRow = dataTable.AddRow();
-            spacingRow.TopPadding = 0.5;
-            spacingRow.BottomPadding = 0.5;
+                dtRow = dataTable.AddRow();
+                dtRow.Cells[0].AddParagraph("Ime klijenta:");
+                dtRow.Cells[0].Format.Font.Bold = true;
+                dtRow.Cells[2].AddParagraph(catering.ClientName);
 
-            dtRow = dataTable.AddRow();
-            dtRow.Cells[0].AddParagraph("Ime klijenta:");
-            dtRow.Cells[0].Format.Font.Bold = true;
-            dtRow.Cells[2].AddParagraph(catering.ClientName);
-
-            dtRow = dataTable.AddRow();
-            dtRow.Borders.Bottom.Width = 0.15;
+                dtRow = dataTable.AddRow();
+                dtRow.Borders.Bottom.Width = 0.15;
+            }
 
             spacingRow = dataTable.AddRow();
             spacingRow.TopPadding = 0.5;
@@ -168,84 +170,77 @@ namespace CateringApp.Web.Controllers
             dtRow = dataTable.AddRow();
             dtRow.Borders.Bottom.Width = 0.15;
 
-            spacingRow = dataTable.AddRow();
-            spacingRow.TopPadding = 0.5;
-            spacingRow.BottomPadding = 0.5;
-
-            cnt = 0;
-            foreach (var emp in catering.CateringEmployees)
+            if (catering.CateringEmployees != null && catering.CateringEmployees.Count() > 0)
             {
-                dtRow = dataTable.AddRow();
-                if(cnt == 0)
-                {
-                    dtRow.Cells[0].AddParagraph("Zaduženi zaposlenici:");
-                }
-                else
+                spacingRow = dataTable.AddRow();
+                spacingRow.TopPadding = 0.5;
+                spacingRow.BottomPadding = 0.5;
+
+                cnt = 0;
+                foreach (var emp in catering.CateringEmployees)
                 {
                     dtRow = dataTable.AddRow();
+                    if (cnt == 0)
+                    {
+                        dtRow.Cells[0].AddParagraph("Zaduženi zaposlenici:");
+                    }
+                    else
+                    {
+                        dtRow = dataTable.AddRow();
+                    }
+                    dtRow.Cells[0].Format.Font.Bold = true;
+                    dtRow.Cells[2].AddParagraph(emp.User.FirstName + " " + emp.User.LastName);
+                    cnt++;
                 }
-                dtRow.Cells[0].Format.Font.Bold = true;
-                dtRow.Cells[2].AddParagraph(emp.User.FirstName + " " + emp.User.LastName);
-                cnt++;
+
+                dtRow = dataTable.AddRow();
+                dtRow.Borders.Bottom.Width = 0.15;
             }
 
-            dtRow = dataTable.AddRow();
-            dtRow.Borders.Bottom.Width = 0.15;
-
-            spacingRow = dataTable.AddRow();
-            spacingRow.TopPadding = 0.5;
-            spacingRow.BottomPadding = 0.5;
-
-            dtRow = dataTable.AddRow();
-            dtRow.Cells[0].AddParagraph("Vozilo:");
-            dtRow.Cells[0].Format.Font.Bold = true;
-            dtRow.Cells[2].AddParagraph(catering.Vehicle.VehicleName);
-
-            dtRow = dataTable.AddRow();
-            dtRow.Borders.Bottom.Width = 0.15;
-
-            spacingRow = dataTable.AddRow();
-            spacingRow.TopPadding = 0.5;
-            spacingRow.BottomPadding = 0.5;
-
-            cnt = 0;
-            foreach (var dish in catering.CateringDishes)
+            if (catering.Vehicle != null)
             {
+                spacingRow = dataTable.AddRow();
+                spacingRow.TopPadding = 0.5;
+                spacingRow.BottomPadding = 0.5;
+
                 dtRow = dataTable.AddRow();
-                if (cnt == 0)
-                {
-                    dtRow.Cells[0].AddParagraph("Hrana:");
-                }
-                else
+                dtRow.Cells[0].AddParagraph("Vozilo:");
+                dtRow.Cells[0].Format.Font.Bold = true;
+                dtRow.Cells[2].AddParagraph(catering.Vehicle.VehicleName);
+
+                dtRow = dataTable.AddRow();
+                dtRow.Borders.Bottom.Width = 0.15;
+            }
+
+            if (catering.CateringDishes != null && catering.CateringDishes.Count() > 0)
+            {
+                spacingRow = dataTable.AddRow();
+                spacingRow.TopPadding = 0.5;
+                spacingRow.BottomPadding = 0.5;
+
+                cnt = 0;
+                foreach (var dish in catering.CateringDishes)
                 {
                     dtRow = dataTable.AddRow();
+                    if (cnt == 0)
+                    {
+                        dtRow.Cells[0].AddParagraph("Hrana:");
+                    }
+                    else
+                    {
+                        dtRow = dataTable.AddRow();
+                    }
+                    dtRow.Cells[0].Format.Font.Bold = true;
+                    dtRow.Cells[2].AddParagraph(dish.Dish.DishName + "(" + dish.Dish.DishType.DishTypeName + ")");
+                    cnt++;
                 }
-                dtRow.Cells[0].Format.Font.Bold = true;
-                dtRow.Cells[2].AddParagraph(dish.Dish.DishName + "(" + dish.Dish.DishType.DishTypeName + ")");
-                cnt++;
+
+                dtRow = dataTable.AddRow();
+                dtRow.Borders.Bottom.Width = 0.15;
             }
 
-            dtRow = dataTable.AddRow();
-            dtRow.Borders.Bottom.Width = 0.15;
-
-            //if (catering.IsClosed)
-            //{
-            //    spacingRow = dataTable.AddRow();
-            //    spacingRow.TopPadding = 0.5;
-            //    spacingRow.BottomPadding = 0.5;
-
-            //    dtRow = dataTable.AddRow();
-            //    dtRow.Cells[0].AddParagraph("Komentar:");
-            //    dtRow.Cells[0].Format.Font.Bold = true;
-            //    dtRow.Cells[2].AddParagraph(catering.ClosingComment);
-
-            //    dtRow = dataTable.AddRow();
-            //    dtRow.Borders.Bottom.Width = 0.15;
-            //}
-            
             var foot = section.Footers.Primary.AddParagraph();
-            foot.Format.Alignment = ParagraphAlignment.Right;;
-            //paragraph.Format.SpaceBefore = "-4.20cm";
+            foot.Format.Alignment = ParagraphAlignment.Right;
 
             foot.Format.Font = new Font("Arial")
             {
