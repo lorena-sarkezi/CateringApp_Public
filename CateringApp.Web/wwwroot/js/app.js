@@ -139,7 +139,7 @@ var Auth;
             var remember = document.getElementById("remember").checked;
             var data = {
                 email: email_1,
-                password: btoa(password_1),
+                password: btoa(unescape(encodeURIComponent(password_1))),
                 rememberMe: remember
             };
             console.log(data);

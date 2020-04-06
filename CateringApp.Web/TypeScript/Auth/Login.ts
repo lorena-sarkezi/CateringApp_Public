@@ -54,7 +54,7 @@
 
             const data: Models.LoginModel = {
                 email: email,
-                password: btoa(password), //Base64 encoded, UTF-8 chars cause a shitstorm
+                password: btoa(unescape(encodeURIComponent(password))), //Base64 encoded, UTF-8 chars cause a shitstorm
                 rememberMe: remember
             };
 
