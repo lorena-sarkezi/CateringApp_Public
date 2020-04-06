@@ -8,10 +8,19 @@ using Microsoft.EntityFrameworkCore;
 
 using CateringApp.Data;
 using CateringApp.Data.Models;
+using CateringApp.Web.Helpers;
 
 using CateringApp.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.IO;
+using MigraDoc.DocumentObjectModel;
+using MigraDoc.DocumentObjectModel.Shapes;
+using MigraDoc.DocumentObjectModel.Tables;
+using MigraDoc.Rendering;
+using PdfSharp.Pdf;
+using Microsoft.Net.Http.Headers;
+using Microsoft.AspNetCore.Hosting;
 
 namespace CateringApp.Web.Controllers
 {
@@ -21,10 +30,12 @@ namespace CateringApp.Web.Controllers
     public class CateringsAPIController : ControllerBase
     {
         private readonly CateringDbContext cateringDbContext;
+        private readonly IWebHostEnvironment hostingEnvironment;
 
-        public CateringsAPIController(CateringDbContext cateringDbContext)
+        public CateringsAPIController(CateringDbContext cateringDbContext, IWebHostEnvironment environment)
         {
             this.cateringDbContext = cateringDbContext;
+            this.hostingEnvironment = environment;
         }
 
 
@@ -57,6 +68,204 @@ namespace CateringApp.Web.Controllers
                                                                      .ToListAsync();
 
             return caterings.Select(x => x.GetViewModel());
+        }
+
+        //pdf export
+        [HttpGet("pdf/{cateringId}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetSingleCateringPDFFile([FromRoute] int cateringId)
+        {
+            int cnt = 0;
+
+            Catering catering = await cateringDbContext.Caterings
+                                                       .Include(x => x.CateringEmployees)
+                                                       .ThenInclude(x => x.User)
+                                                       .Include(x => x.CateringDishes)
+                                                       .ThenInclude(x => x.Dish)
+                                                       .ThenInclude(x => x.DishType)
+                                                       .Include(x => x.Vehicle)
+                                                       .FirstOrDefaultAsync(x => x.CateringId == cateringId);
+
+            Document pdfDocument = new Document();
+
+            //-----------------------------
+            Section section = pdfDocument.AddSection();
+
+            Image image = section.AddImage(Path.Combine(this.hostingEnvironment.ContentRootPath, "Resources/logo.png"));
+            image.Height = "4cm";
+            image.LockAspectRatio = true;
+            image.RelativeVertical = RelativeVertical.Line;
+            image.RelativeHorizontal = RelativeHorizontal.Margin;
+            image.Top = ShapePosition.Top;
+            image.Left = ShapePosition.Center;
+
+            var paragraph = section.AddParagraph();
+            paragraph.Format.Alignment = ParagraphAlignment.Center;
+            //paragraph.Format.SpaceBefore = "-4.20cm";
+
+            paragraph.Format.Font = new Font("Arial")
+            {
+                Size = 14,
+            };
+            paragraph.AddFormattedText("Catering.inc");
+
+            Table table = section.AddTable();
+            table.Borders.Visible = false;
+            table.Borders.Width = 0.15;
+            var column = table.AddColumn("16cm");
+            var row = table.AddRow();
+            row.Borders.Bottom.Visible = true;
+            row.Height = "16mm";
+
+            Table dataTable = section.AddTable();
+            dataTable.KeepTogether = false;
+            dataTable.Borders.Width = 0;
+            dataTable.Rows.VerticalAlignment = VerticalAlignment.Top;
+            dataTable.Shading.Color = Color.Empty;
+
+            Column dataColumn = dataTable.AddColumn("7.75cm");
+            dataColumn.Format.Alignment = ParagraphAlignment.Left;
+
+            dataColumn = dataTable.AddColumn("0.5cm");
+            dataColumn.Format.Alignment = ParagraphAlignment.Center;
+
+            dataColumn = dataTable.AddColumn("7.75cm");
+            dataColumn.Format.Alignment = ParagraphAlignment.Left;
+
+            Row spacingRow = dataTable.AddRow();
+            spacingRow.TopPadding = 0.5;
+            spacingRow.BottomPadding = 0.5;
+
+            Row dtRow = dataTable.AddRow();
+            dtRow.Cells[0].AddParagraph("Catering:");
+            dtRow.Cells[0].Format.Font.Bold = true;
+            dtRow.Cells[2].AddParagraph(catering.CateringName);
+
+            dtRow = dataTable.AddRow();
+            dtRow.Borders.Bottom.Width = 0.15;
+
+            spacingRow = dataTable.AddRow();
+            spacingRow.TopPadding = 0.5;
+            spacingRow.BottomPadding = 0.5;
+
+            dtRow = dataTable.AddRow();
+            dtRow.Cells[0].AddParagraph("Ime klijenta:");
+            dtRow.Cells[0].Format.Font.Bold = true;
+            dtRow.Cells[2].AddParagraph(catering.ClientName);
+
+            dtRow = dataTable.AddRow();
+            dtRow.Borders.Bottom.Width = 0.15;
+
+            spacingRow = dataTable.AddRow();
+            spacingRow.TopPadding = 0.5;
+            spacingRow.BottomPadding = 0.5;
+
+            dtRow = dataTable.AddRow();
+            dtRow.Cells[0].AddParagraph("Status:");
+            dtRow.Cells[0].Format.Font.Bold = true;
+            dtRow.Cells[2].AddParagraph(catering.IsClosed == true ? "Zatvoren" : "Aktivan");
+
+            dtRow = dataTable.AddRow();
+            dtRow.Borders.Bottom.Width = 0.15;
+
+            spacingRow = dataTable.AddRow();
+            spacingRow.TopPadding = 0.5;
+            spacingRow.BottomPadding = 0.5;
+
+            cnt = 0;
+            foreach (var emp in catering.CateringEmployees)
+            {
+                dtRow = dataTable.AddRow();
+                if(cnt == 0)
+                {
+                    dtRow.Cells[0].AddParagraph("Zaduženi zaposlenici:");
+                }
+                else
+                {
+                    dtRow = dataTable.AddRow();
+                }
+                dtRow.Cells[0].Format.Font.Bold = true;
+                dtRow.Cells[2].AddParagraph(emp.User.FirstName + " " + emp.User.LastName);
+                cnt++;
+            }
+
+            dtRow = dataTable.AddRow();
+            dtRow.Borders.Bottom.Width = 0.15;
+
+            spacingRow = dataTable.AddRow();
+            spacingRow.TopPadding = 0.5;
+            spacingRow.BottomPadding = 0.5;
+
+            dtRow = dataTable.AddRow();
+            dtRow.Cells[0].AddParagraph("Vozilo:");
+            dtRow.Cells[0].Format.Font.Bold = true;
+            dtRow.Cells[2].AddParagraph(catering.Vehicle.VehicleName);
+
+            dtRow = dataTable.AddRow();
+            dtRow.Borders.Bottom.Width = 0.15;
+
+            spacingRow = dataTable.AddRow();
+            spacingRow.TopPadding = 0.5;
+            spacingRow.BottomPadding = 0.5;
+
+            cnt = 0;
+            foreach (var dish in catering.CateringDishes)
+            {
+                dtRow = dataTable.AddRow();
+                if (cnt == 0)
+                {
+                    dtRow.Cells[0].AddParagraph("Hrana:");
+                }
+                else
+                {
+                    dtRow = dataTable.AddRow();
+                }
+                dtRow.Cells[0].Format.Font.Bold = true;
+                dtRow.Cells[2].AddParagraph(dish.Dish.DishName + "(" + dish.Dish.DishType.DishTypeName + ")");
+                cnt++;
+            }
+
+            dtRow = dataTable.AddRow();
+            dtRow.Borders.Bottom.Width = 0.15;
+
+            //if (catering.IsClosed)
+            //{
+            //    spacingRow = dataTable.AddRow();
+            //    spacingRow.TopPadding = 0.5;
+            //    spacingRow.BottomPadding = 0.5;
+
+            //    dtRow = dataTable.AddRow();
+            //    dtRow.Cells[0].AddParagraph("Komentar:");
+            //    dtRow.Cells[0].Format.Font.Bold = true;
+            //    dtRow.Cells[2].AddParagraph(catering.ClosingComment);
+
+            //    dtRow = dataTable.AddRow();
+            //    dtRow.Borders.Bottom.Width = 0.15;
+            //}
+            
+            var foot = section.Footers.Primary.AddParagraph();
+            foot.Format.Alignment = ParagraphAlignment.Right;;
+            //paragraph.Format.SpaceBefore = "-4.20cm";
+
+            foot.Format.Font = new Font("Arial")
+            {
+                Size = 8,
+            };
+            foot.AddFormattedText("Datum: " + DateTime.Now.ToString("dd.MM.yyyy"));
+            //-----------------------------
+            var pdfStream = new MemoryStream();
+
+            PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(true, PdfFontEmbedding.Always);
+            pdfRenderer.Document = pdfDocument;
+            pdfRenderer.RenderDocument();
+            pdfRenderer.PdfDocument.Save(pdfStream, false);
+
+            Response.Clear();
+            var cd = new ContentDispositionHeaderValue("attachment");
+            Response.Headers.Add(HeaderNames.ContentDisposition, cd.ToString());
+            Response.Headers.Add(HeaderNames.ContentLength, pdfStream.Length.ToString());
+
+            return File(pdfStream, "application/octet-stream", catering.CateringName + "_doc.pdf");
         }
 
         [HttpGet("{cateringId}")]

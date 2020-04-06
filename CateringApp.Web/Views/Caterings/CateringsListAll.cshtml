@@ -75,7 +75,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btn-catering-close" data-toggle="modal" data-target=".close-catering" class ="btn btn-success mr-auto"><i class="fas fa-check"></i> Zatvori catering</button>
+                    <button type="button" id="btn-catering-close" data-toggle="modal" data-target=".close-catering" class="btn btn-success mr-auto"><i class="fas fa-check"></i> Zatvori catering</button>
+                    <button type="button" class="btn btn-secondary" onclick="Caterings.All.pdfFileCatering()">Generiraj PDF</button>
                     <button type="submit" id="btn-catering-save" class="btn btn-primary">Spremi</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
                 </div>
@@ -172,6 +173,7 @@
                 </dl>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="Caterings.All.pdfFileCatering()">Generiraj PDF</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
             </div>
         </div>

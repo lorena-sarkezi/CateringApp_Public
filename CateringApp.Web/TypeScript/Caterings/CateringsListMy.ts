@@ -1,6 +1,7 @@
 ﻿module Caterings.My {
 
     let $table: DataTables.Api;
+    let $cateringId: number;
 
     export function initialize() {
         $table = $("#caterings-list-table").DataTable({
@@ -71,6 +72,7 @@
 
     export function viewCatering(cateringId: number) {
         loader(true);
+        $cateringId = cateringId;
         $.ajax({
             url: `/caterings/detail/${cateringId}`,
             method: "get",
@@ -88,5 +90,11 @@
             },
             error: Global.ajaxErrorHandler
         });
+    }
+
+    export function pdfFileCatering() {
+        loader(true);
+        window.location.href = '/api/catering/pdf/' + $cateringId;
+        loader(false);
     }
 }

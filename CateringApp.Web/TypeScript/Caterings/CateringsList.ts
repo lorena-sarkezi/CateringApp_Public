@@ -250,6 +250,11 @@
         });
     }
 
+    export function pdfFileCatering() {
+        loader(true);
+        window.location.href = '/api/catering/pdf/' + $cateringId;
+        loader(false);
+    }
 
     export async function handleModalOpen() {
         $(".spinner", "#add-catering-modal").show();

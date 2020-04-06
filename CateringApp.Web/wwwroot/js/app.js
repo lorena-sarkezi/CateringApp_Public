@@ -421,6 +421,12 @@ var Caterings;
             });
         }
         All.infoCatering = infoCatering;
+        function pdfFileCatering() {
+            loader(true);
+            window.location.href = '/api/catering/pdf/' + $cateringId;
+            loader(false);
+        }
+        All.pdfFileCatering = pdfFileCatering;
         function handleModalOpen() {
             return __awaiter(this, void 0, void 0, function () {
                 var btn;
@@ -699,6 +705,7 @@ var Caterings;
     var My;
     (function (My) {
         var $table;
+        var $cateringId;
         function initialize() {
             $table = $("#caterings-list-table").DataTable({
                 columns: [
@@ -765,6 +772,7 @@ var Caterings;
         }
         function viewCatering(cateringId) {
             loader(true);
+            $cateringId = cateringId;
             $.ajax({
                 url: "/caterings/detail/" + cateringId,
                 method: "get",
@@ -782,6 +790,12 @@ var Caterings;
             });
         }
         My.viewCatering = viewCatering;
+        function pdfFileCatering() {
+            loader(true);
+            window.location.href = '/api/catering/pdf/' + $cateringId;
+            loader(false);
+        }
+        My.pdfFileCatering = pdfFileCatering;
     })(My = Caterings.My || (Caterings.My = {}));
 })(Caterings || (Caterings = {}));
 var FoodCat;
