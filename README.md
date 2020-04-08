@@ -33,7 +33,7 @@ Users can be assigned to Caterings. Every Catering has an event date, food items
 
 Every item that can be assigned to a Catering (users, food items, vehicles) can be created, edited or deleted through the application.
 
-<img src="https://i.imgur.com/NCb2uWy.png" title="source: imgur.com" width="500px" />
+<img src="https://i.imgur.com/NCb2uWy.png" title="source: imgur.com" width="600px" />
 
 ![Imgur](https://i.imgur.com/qcBYYrF.png)
 
