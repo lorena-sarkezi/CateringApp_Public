@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Vozila";
+    ViewData["Title"] = "Vrhicles";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,7 +9,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-vehicle" onclick="Vehicles.clearForm();"><i class="fas fa-plus"></i> Dodaj vozilo</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-vehicle" onclick="Vehicles.clearForm();"><i class="fas fa-plus"></i> New vehicle</button>
                 </div>
             </div>
             <div class="card-body">
@@ -27,7 +27,7 @@
         <div class="modal-content">
             <form id="form">
                 <div class="modal-header">
-                    <h5 class="modal-title">Unos vozila</h5>
+                    <h5 class="modal-title">Vehicle editing</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -36,7 +36,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Naziv vozila</label>
+                                <label>Vehicle name</label>
                                 <input type="text" class="form-control" name="vehicle-name" id="vehicle-name" autocomplete="off" required maxlength="50" />
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Registracija</label>
+                                <label>Registration</label>
                                 <input type="text" class="form-control"  name="vehicle-registration" id="vehicle-registration" autocomplete="off" required maxlength="16"/>
                             </div>
                         </div>
@@ -52,15 +52,15 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Broj kilometara</label>
+                                <label>Odometer value (KM)</label>
                                 <input type="number" class="form-control" name="vehicle-kilometers" id="vehicle-kilometers" autocomplete="off" required maxlength="18"/>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" >Spremi</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                    <button type="submit" class="btn btn-primary" >Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
             </form>
         </div>
@@ -71,7 +71,7 @@
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Upozorenje</h5>
+                <h5 class="modal-title">Warning</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -79,13 +79,13 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        Jeste li sigurni da želite obrisati vozilo?
+                        Are you certain you want to delete this vehicle?
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="Vehicles.deleteVehicleConfirm()">Potvrdi</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                <button type="button" class="btn btn-primary" onclick="Vehicles.deleteVehicleConfirm()">Confirm</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>

@@ -23,16 +23,16 @@
         $table = $("#categories-list-table").DataTable({
             columns: [
                 {
-                    title: "R. br.",
+                    title: "Row num.",
                     data: "id",
                     width: "10%"
                 },
                 {
-                    title: "Naziv kategorije",
+                    title: "Category name",
                     data: "name"
                 },
                 {
-                    title: "Radnje",
+                    title: "Actions",
                     data: "vehicleId",
                     className: "dt-center",
                     width: "20%",
@@ -40,10 +40,7 @@
                         return `<button type="button" class="btn btn-primary" alt="Uredi" onclick=FoodCat.editCategory(${row.id})><i class="fas fa-edit"></i></button><button class="btn btn-danger" alt="Obriši" onclick="FoodCat.deleteCategoryPrompt(${row.id})"><i class="fas fa-trash-alt"></i></button>`;
                     }
                 }
-            ],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
-            },
+            ]
         });
 
         //Row numbers
@@ -127,7 +124,7 @@
             success: () => {
                 $("#add-category-modal").modal("hide");
                 initData();
-                toastr["success"]("Uspješno spremljeno!");
+                toastr["success"]("Saved successfully");
             },
             error: Global.ajaxErrorHandler
         });
@@ -147,7 +144,7 @@
                 success: () => {
                     $("#delete-category-modal").modal("hide");
                     initData();
-                    toastr["info"]("Kategorija hrane uspješno obrisana.");
+                    toastr["info"]("Food category deleted.");
                 },
                 error: Global.ajaxErrorHandler
             })

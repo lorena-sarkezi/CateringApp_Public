@@ -30,7 +30,7 @@
             elements[i].oninvalid = function (e) {
                 e.target.setCustomValidity("");
                 if (!e.target.validity.valid) {
-                    e.target.setCustomValidity("Obavezno polje!");
+                    e.target.setCustomValidity("Required field!");
                 }
             };
             elements[i].oninput = function (e) {

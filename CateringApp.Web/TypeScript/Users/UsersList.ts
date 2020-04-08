@@ -35,24 +35,24 @@
         $table = $("#users-list-table").DataTable({
             columns: [
                 {
-                    title: "R. br.",
+                    title: "Row num.",
                     data: "userId",
                     width: "10%"
                 },
                 {
-                    title: "Korisnik",
+                    title: "Full Name",
                     data: "userFullName"
                 },
                 {
-                    title: "Email",
+                    title: "E-Mail",
                     data: "email"
                 },
                 {
-                    title: "Uloga",
+                    title: "Role title",
                     data: "roleTitle"
                 },
                 {
-                    title: "Radnje",
+                    title: "Actions",
                     data: "userId",
                     className: "dt-center",
                     width: "20%",
@@ -60,10 +60,7 @@
                         return `<button type="button" class="btn btn-primary" alt="Uredi" onclick="Users.editUser(${row.userId})"><i class="fas fa-edit"></i></button><button class="btn btn-danger" onclick="Users.removeUserPrompt(${row.userId})" alt="Obriši"><i class="fas fa-trash-alt"></i></button>`;
                     }
                 }
-            ],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
-            }
+            ]
         });
 
         //Row numbers
@@ -152,7 +149,7 @@
             loader(true);
             let data: Models.IUserPassword = {
                 userId: curUserId,
-                password: btoa($("#new-password").val().toString()) //Base64
+                password: btoa(unescape(encodeURIComponent($("#new-password").val().toString()))) //Base64
             };
 
             $.ajax({
@@ -163,7 +160,7 @@
                 success: () => {
                     $("#password-reset-modal").modal("hide");
                     loader(false);
-                    toastr["success"]("Uspješno spremljeno!");
+                    toastr["success"]("Saved successfully!");
                 },
                 error: Global.ajaxErrorHandler
             });
@@ -204,7 +201,7 @@
             success: () => {
                 $("#add-user-modal").modal("hide");
                 initData();
-                toastr["success"]("Uspješno spremljeno!");
+                toastr["success"]("Saved successfully!");
             }
         });
     }
@@ -223,7 +220,7 @@
             success: () => {
                 initData();
                 $("#delete-user-modal").modal("hide");
-                toastr["info"]("Korisnik uspješno obrisan.");
+                toastr["info"]("User deleted.");
             },
             error: Global.ajaxErrorHandler
         });

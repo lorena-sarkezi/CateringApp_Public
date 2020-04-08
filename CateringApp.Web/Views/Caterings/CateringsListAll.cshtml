@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Popis Cateringa";
+    ViewData["Title"] = "All Caterings list";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,7 +9,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-catering" onclick="Caterings.All.handleModalOpen()"><i class="fas fa-plus"></i> Novi catering</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-catering" onclick="Caterings.All.handleModalOpen()"><i class="fas fa-plus"></i> New catering</button>
                 </div>
             </div>
             <div class="card-body">
@@ -26,7 +26,7 @@
         <div class="modal-content">
             <form id="form">
                 <div class="modal-header">
-                    <h5 class="modal-title">Unos Cateringa</h5>
+                    <h5 class="modal-title">Catering entry</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -37,39 +37,38 @@
                         <div class="col-md-12">
 
                             <div class="form-group">
-                                <label>Ime cateringa</label>
+                                <label>Catering name</label>
                                 <input type="text" class="form-control" name="catering-name" id="catering-name" required maxlength="50" />
                             </div>
                             <div class="form-group">
-                                <label>Ime klijenta</label>
+                                <label>Client name</label>
                                 <input type="text" class="form-control" name="client-name" id="client-name" required maxlength="50" />
                             </div>
                             <div class="form-group">
-                                <label for="dropdown-users">Zaduženi zaposlenici</label>
+                                <label for="dropdown-users">Assigned employees</label>
                                 <select id="dropdown-users" multiple="multiple" name="users" placeholder="Odaberi..." style="width:100%" required>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Datum cateringa</label>
+                                <label>Catering date</label>
                                 <input type="text" class="form-control datetimepicker-input" name="catering-date"  id="catering-date" data-toggle="datetimepicker" data-target="#catering-date" required maxlength="50" />
                             </div>
                             <div class="form-group">
-                                <label for="dropdown-vehicles">Vozilo</label>
+                                <label for="dropdown-vehicles">Vehicle</label>
                                 <select class="form-control" id="dropdown-vehicles" name="vehicle" placeholder="Odaberi..." style="width:100%" required>
                                 </select>
                             </div>
                             <div class="form-group" id="food-form-group">
-                                <label>Hrana</label>
 
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <button type="button" class="btn btn-primary" onclick="Caterings.All.addFood(null)" id="btn-add-food"><i class="fas fa-plus"></i> Dodaj hranu</button>
+                                    <button type="button" class="btn btn-primary" onclick="Caterings.All.addFood(null)" id="btn-add-food"><i class="fas fa-plus"></i> Add food item</button>
                                 </div>
                             </div>
                             <div class="row" id="closing-comment">
                                 <div class="col">
-                                    <label class="control-label">Komentar</label>
+                                    <label class="control-label">Closing comment</label>
                                     <textarea class="form-control" disabled></textarea>
                                 </div>
                             </div>
@@ -77,10 +76,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btn-catering-close" data-toggle="modal" data-target=".close-catering" class="btn btn-success mr-auto"><i class="fas fa-check"></i> Zatvori catering</button>
-                    <button type="button" class="btn btn-secondary" onclick="Caterings.All.pdfFileCatering()">Generiraj PDF</button>
-                    <button type="submit" id="btn-catering-save" class="btn btn-primary">Spremi</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                    <button type="button" id="btn-catering-close" data-toggle="modal" data-target=".close-catering" class="btn btn-success mr-auto"><i class="fas fa-check"></i> Close catering</button>
+                    <button type="button" class="btn btn-secondary" onclick="Caterings.All.pdfFileCatering()">Generate PDF</button>
+                    <button type="submit" id="btn-catering-save" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
             </form>
         </div>
@@ -91,7 +90,7 @@
     <div class="modal-dialog modal-lg" role="dialog" id="close-catering-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Zatvaranje cateringa</h5>
+                <h5 class="modal-title">Close catering</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -99,14 +98,14 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label class="control-label">
-                        Komentar na catering (opcionalno):
+                        Closing comment (optional):
                     </label>
                     <textarea class="form-control" id="closing-message"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="Caterings.All.closeCateringConfirm()">Potvrdi</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                <button type="button" class="btn btn-primary" onclick="Caterings.All.closeCateringConfirm()">Confirm</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
@@ -116,7 +115,31 @@
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Upozorenje</h5>
+                <h5 class="modal-title">Warning</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="spinner" hidden></div>
+               <div>
+                   Are you sure you want to delete this Catering?
+               </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="Caterings.All.deleteCateringConfirm()">Confirm</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="modal fade add-catering" role="dialog" id="delete-catering-prompt">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Warning</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -134,37 +157,13 @@
             </div>
         </div>
     </div>
-</div>
-
-<div class="modal fade add-catering" role="dialog" id="delete-catering-prompt">
-    <div class="modal-dialog modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Upozorenje</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="spinner" hidden></div>
-               <div>
-                   Jeste li sigurni da želite obrisati catering?
-               </div>
-                
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="Caterings.All.deleteCateringConfirm()">Potvrdi</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
-            </div>
-        </div>
-    </div>
-</div>
+</div>*@
 
 <div class="modal fade" id="catering-info-modal">
     <div class="modal-dialog modal-md" role="dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5>Podaci o cateringu</h5>
+                <h5>Catering info</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

@@ -2,7 +2,7 @@
 
 <tr style="border-top:hidden">
     <td style="font-weight:bold">
-        Naziv cateringa
+        Catering name
     </td>
     <td>
         @Model.CateringName
@@ -16,17 +16,17 @@
     <td>
         @if (Model.IsClosed == true)
         {
-            <p>ZATVOREN</p>
+            <p>CLOSED</p>
         }
         else
         {
-            <p>AKTIVAN</p>
+            <p>ACTIVE</p>
         }
     </td>
 </tr>
 <tr>
     <td style="font-weight:bold">
-        Klijent
+        Client
     </td>
     <td>
         @Model.ClientName
@@ -34,7 +34,7 @@
 </tr>
 <tr>
     <td style="font-weight:bold">
-        Datum cateringa
+        Catering date
     </td>
     <td>
         @Model.CateringDate
@@ -54,7 +54,7 @@
             @if (i == 0)
             {
                 <p>
-                    Zaduženi zaposlenici
+                    Assigned employees
                 </p>
             }
         </td>
@@ -80,7 +80,7 @@
             @if (i == 0)
             {
                 <p>
-                    Hrana
+                    Food
                 </p>
             }
         </td>
@@ -95,7 +95,7 @@
 
 <tr>
     <td style="font-weight:bold">
-        Vozilo
+        Vehicle
     </td>
     <td>
         @Model.Vehicles[0].VehicleName
@@ -105,7 +105,7 @@
 @if (Model.IsClosed)
 {
     <tr style="font-weight:bold">
-        <td>Komentar po zatvaranju cateringa</td>
+        <td>Closing comment</td>
         <td>
             @Model.ClosingComment
         </td>

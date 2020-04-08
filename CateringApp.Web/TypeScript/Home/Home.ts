@@ -42,9 +42,9 @@
                 const options: Chart.ChartConfiguration = {
                     type: "bar",
                     data: {
-                        labels: ["Sij", "Velj", "Ožu", "Tra", "Svi", "Lip", "Srp", "Kol", "Ruj", "Lis", "Stu", "Pro"],
+                        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
                         datasets: [{
-                            label: "Br. cateringa u mjesecu",
+                            label: "No. of caterings in month",
                             data: res,
                             backgroundColor: 'rgba(115, 206, 255,1)',
                             borderColor: 'rgba(255,255,255,1)'

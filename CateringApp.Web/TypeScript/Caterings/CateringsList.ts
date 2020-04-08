@@ -31,32 +31,32 @@
         $table = $("#caterings-list-table").DataTable({
             columns: [
                 {
-                    title: "R. br.",
+                    title: "Row num.",
                     width: "10%",
                     data:"clientName"
                 },
                 {
-                    title: "Naziv cateringa",
+                    title: "Catering name",
                     data: "cateringName"
                 },
                 {
-                    title: "Klijent",
+                    title: "Client name",
                     data: "clientName"
                 },
                 {
-                    title: "Datum",
+                    title: "Date",
                     data:"cateringDate"
                 },
                 {
                     title: "Status",
                     data: "isClosed",
                     render: (colData, data, row: Models.ICateringDetailModel) => {
-                        if (row.isClosed) return 'Zatvoren';
-                        return 'Aktivan';
+                        if (row.isClosed) return 'Closed';
+                        return 'Active';
                     }
                 },
                 {
-                    title: "Radnje",
+                    title: "Actions",
                     data: "clientName",
                     className: "dt-center",
                     render: (colData, data, row: Models.ICateringDetailModel) => {
@@ -72,10 +72,7 @@
                         return retButtons;
                     }
                 }
-            ],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
-            },
+            ]
         });
 
         //Row numbers
@@ -515,7 +512,7 @@
                 success: () => {
                     $("#delete-catering-prompt").modal("hide");
                     initData();
-                    toastr["info"]("Catering uspješno obrisan");
+                    toastr["info"]("Catering deleted");
                 },
                 error: Global.ajaxErrorHandler
             })
@@ -539,7 +536,7 @@
             success: () => {
                 $(".modal").modal("hide");
                 initData();
-                toastr["success"]("Uspješno spremljeno!");
+                toastr["success"]("Saved successfully!");
             },
             error: Global.ajaxErrorHandler
         });
@@ -554,7 +551,7 @@
 
         let elem = document.getElementById("food-form-group");
         let label = document.createElement("label");
-        label.textContent = "Hrana";
+        label.textContent = "Food";
 
         elem.innerHTML = "";
 

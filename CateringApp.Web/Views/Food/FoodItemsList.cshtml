@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Popis stavaka hrane";
+    ViewData["Title"] = "Food items list";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,7 +9,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-item" onclick="FoodItem.clearForm();"><i class="fas fa-plus"></i> Dodaj hranu</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-item" onclick="FoodItem.clearForm();"><i class="fas fa-plus"></i> New food item</button>
                 </div>
             </div>
             <div class="card-body">
@@ -27,7 +27,7 @@
         <div class="modal-content">
             <form id="form">
                 <div class="modal-header">
-                    <h5 class="modal-title">Unos stavke hrane</h5>
+                    <h5 class="modal-title">Food item editing</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -36,7 +36,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Naziv stavke hrane</label>
+                                <label>Food item name</label>
                                 <input type="text" class="form-control" name="item-name" id="item-name" autocomplete="off" required maxlength="128" />
                             </div>
                         </div>
@@ -44,23 +44,23 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Opis</label>
+                                <label>Description</label>
                                 <textarea class="form-control" name="item-description" id="item-description"></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <label>Kategorija hrane</label>
-                            <select class="form-control" name="food-category" id="category-dropdown">
+                            <label>Food category</label>
+                            <select class="form-control" name="food-category" id="category-dropdown" required>
                                 <option selected disabled></option>
                             </select>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Spremi</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
             </form>
         </div>
@@ -71,7 +71,7 @@
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Upozorenje</h5>
+                <h5 class="modal-title">Warning</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -79,13 +79,13 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        Jeste li sigurni da želite obrisati stavku hrane?
+                        Are you certain you want to erase this food item?
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="FoodItem.deleteItemConfirm()">Potvrdi</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                <button type="button" class="btn btn-primary" onclick="FoodItem.deleteItemConfirm()">Confirm</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>

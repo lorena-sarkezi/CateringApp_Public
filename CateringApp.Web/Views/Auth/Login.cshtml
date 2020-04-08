@@ -60,9 +60,9 @@
         <div class="card">
             <form id="form">
                 <div class="card-body login-card-body">
-                    <h4 class="login-box-msg">Prijava u sustav</h4>
+                    <h4 class="login-box-msg">Login</h4>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="email" placeholder="Email ili korisničko ime" name="email" required>
+                        <input type="text" class="form-control" id="email" placeholder="E-Mail or Username" name="email" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="password" class="form-control" id="password" placeholder="Lozinka" name="password" required>
+                        <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
@@ -80,19 +80,19 @@
                     <div class="row">
                         <div class="col" style="text-align:center; margin-bottom: 10px;">
                             @*<span class="text-danger" id="error" style="display:none">Neispravni korisnički podaci!</span>*@
-                            <div class="alert alert-danger" id="error" style="display:none">Neispravni korisnički podaci!</div>
+                            <div class="alert alert-danger" id="error" style="display:none">Incorrect username or password!</div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-8">
                             <div class="custom-control custom-checkbox">
                                 <input class="custom-control-input" type="checkbox" id="remember">
-                                <label for="remember" class="custom-control-label">Zapamti me</label>
+                                <label for="remember" class="custom-control-label">Remember me</label>
                             </div>
                         </div>
                         <!-- /.col -->
                         <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">Prijava</button>
+                            <button type="submit" class="btn btn-primary btn-block">Sign in</button>
                         </div>
                         <!-- /.col -->
                     </div>

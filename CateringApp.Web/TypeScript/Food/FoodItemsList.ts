@@ -26,20 +26,20 @@
         $table = $("#items-list-table").DataTable({
             columns: [
                 {
-                    title: "R. br.",
+                    title: "Row num.",
                     data: "id",
                     width: "10%"
                 },
                 {
-                    title: "Naziv stavke hrane",
+                    title: "Food item name",
                     data: "name"
                 },
                 {
-                    title: "Kategorija",
+                    title: "Food category",
                     data:"foodCategoryName",
                 },
                 {
-                    title: "Radnje",
+                    title: "Actions",
                     data: "foodCategoryName",
                     className: "dt-center",
                     width: "20%",
@@ -47,10 +47,7 @@
                         return `<button type="button" class="btn btn-primary" alt="Uredi" onclick=FoodItem.editItem(${row.id})><i class="fas fa-edit"></i></button><button class="btn btn-danger" alt="Obriši" onclick="FoodItem.deleteItemPrompt(${row.id})"><i class="fas fa-trash-alt"></i></button>`;
                     }
                 }
-            ],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
-            },
+            ]
         });
 
         //Row numbers
@@ -162,7 +159,7 @@
             success: () => {
                 $("#add-item-modal").modal("hide");
                 initData();
-                toastr["success"]("Uspješno spremljeno!");
+                toastr["success"]("Saved successfully!");
             },
             error: Global.ajaxErrorHandler
         });
@@ -182,7 +179,7 @@
                 success: () => {
                     $("#delete-item-modal").modal("hide");
                     initData();
-                    toastr["info"]("Stavka hrane uspješno obrisana.");
+                    toastr["info"]("Food item deleted.");
                 },
                 error: Global.ajaxErrorHandler
             })

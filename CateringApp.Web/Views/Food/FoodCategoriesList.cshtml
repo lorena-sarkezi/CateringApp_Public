@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Kategorije hrane";
+    ViewData["Title"] = "Food categories";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,7 +9,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-category" onclick="FoodCat.clearForm();"><i class="fas fa-plus"></i> Dodaj kategoriju</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-category" onclick="FoodCat.clearForm();"><i class="fas fa-plus"></i> New category</button>
                 </div>
             </div>
             <div class="card-body">
@@ -27,7 +27,7 @@
         <div class="modal-content">
             <form id="form">
                 <div class="modal-header">
-                    <h5 class="modal-title">Unos kategorije hrane</h5>
+                    <h5 class="modal-title">Food category editing</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -36,7 +36,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Naziv kategorije</label>
+                                <label>Category name</label>
                                 <input type="text" class="form-control" name="category-name" id="category-name" autocomplete="off" required maxlength="50" />
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Opis</label>
+                                <label>Description</label>
                                 <textarea class="form-control" name="category-description" id="category-description"></textarea>
                             </div>
                         </div>
@@ -63,7 +63,7 @@
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Upozorenje</h5>
+                <h5 class="modal-title">Warning</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -71,15 +71,15 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        Jeste li sigurni da želite obrisati kategoriju? 
+                        Are you certain you want to delete this category? 
                         <br/>
-                        <b>Brisanje kategorije će obrisati i stavke hrane koje pripadaju toj kategoriji!</b>
+                        <b>Erasing the category will also erase all food items assigned to this category!</b>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="FoodCat.deleteCategoryConfirm()">Potvrdi</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                <button type="button" class="btn btn-primary" onclick="FoodCat.deleteCategoryConfirm()">Confirm</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>

@@ -3,19 +3,16 @@
         //loader(false);
 
         $.extend(true, $.fn.dataTable.defaults, {
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
-            },
             responsive: true
         });
 
         $.extend($.validator.messages, {
-            required: "Obavezno polje",
-            number: "Unesite ispravan broj",
-            digits: "Molimo unesite samo znamenke",
-            maxLength: $.validator.format("Molimo unesite maksimalno {0} znakova"),
-            minLength: $.validator.format("Molimo unesite minimalno {0} znakova"),
-            equalTo: $.validator.format("Lozinke se moraju podudarati")
+            required: "Required field",
+            number: "Please input a valid number",
+            digits: "Please enter only digits",
+            maxLength: $.validator.format("Max {0} characters allowsed "),
+            minLength: $.validator.format("Please enter at least {0} characters"),
+            equalTo: $.validator.format("Password must match!")
         });  
 
         jQuery.validator.setDefaults({
@@ -43,8 +40,7 @@
         console.error(error);
         console.log(jxHR);
         //$('.modal').modal('hide');
-        toastr["error"]("Došlo je do greške!");
-        //$("#errorModalMain").modal("show");
+        toastr["error"]("An error has occured!");
     }
 
     export function logout() {

@@ -39,18 +39,15 @@ var Global;
     function initialize() {
         //loader(false);
         $.extend(true, $.fn.dataTable.defaults, {
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
-            },
             responsive: true
         });
         $.extend($.validator.messages, {
-            required: "Obavezno polje",
-            number: "Unesite ispravan broj",
-            digits: "Molimo unesite samo znamenke",
-            maxLength: $.validator.format("Molimo unesite maksimalno {0} znakova"),
-            minLength: $.validator.format("Molimo unesite minimalno {0} znakova"),
-            equalTo: $.validator.format("Lozinke se moraju podudarati")
+            required: "Required field",
+            number: "Please input a valid number",
+            digits: "Please enter only digits",
+            maxLength: $.validator.format("Max {0} characters allowsed "),
+            minLength: $.validator.format("Please enter at least {0} characters"),
+            equalTo: $.validator.format("Password must match!")
         });
         jQuery.validator.setDefaults({
             errorElement: "div",
@@ -76,8 +73,7 @@ var Global;
         console.error(error);
         console.log(jxHR);
         //$('.modal').modal('hide');
-        toastr["error"]("Došlo je do greške!");
-        //$("#errorModalMain").modal("show");
+        toastr["error"]("An error has occured!");
     }
     Global.ajaxErrorHandler = ajaxErrorHandler;
     function logout() {
@@ -119,7 +115,7 @@ var Auth;
             elements[i].oninvalid = function (e) {
                 e.target.setCustomValidity("");
                 if (!e.target.validity.valid) {
-                    e.target.setCustomValidity("Obavezno polje!");
+                    e.target.setCustomValidity("Required field!");
                 }
             };
             elements[i].oninput = function (e) {
@@ -201,20 +197,20 @@ var Caterings;
             $table = $("#caterings-list-table").DataTable({
                 columns: [
                     {
-                        title: "R. br.",
+                        title: "Row num.",
                         width: "10%",
                         data: "clientName"
                     },
                     {
-                        title: "Naziv cateringa",
+                        title: "Catering name",
                         data: "cateringName"
                     },
                     {
-                        title: "Klijent",
+                        title: "Client name",
                         data: "clientName"
                     },
                     {
-                        title: "Datum",
+                        title: "Date",
                         data: "cateringDate"
                     },
                     {
@@ -222,12 +218,12 @@ var Caterings;
                         data: "isClosed",
                         render: function (colData, data, row) {
                             if (row.isClosed)
-                                return 'Zatvoren';
-                            return 'Aktivan';
+                                return 'Closed';
+                            return 'Active';
                         }
                     },
                     {
-                        title: "Radnje",
+                        title: "Actions",
                         data: "clientName",
                         className: "dt-center",
                         render: function (colData, data, row) {
@@ -242,10 +238,7 @@ var Caterings;
                             return retButtons;
                         }
                     }
-                ],
-                "language": {
-                    "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
-                },
+                ]
             });
             //Row numbers
             $table.on('order.dt search.dt', function () {
@@ -638,7 +631,7 @@ var Caterings;
                     success: function () {
                         $("#delete-catering-prompt").modal("hide");
                         initData();
-                        toastr["info"]("Catering uspješno obrisan");
+                        toastr["info"]("Catering deleted");
                     },
                     error: Global.ajaxErrorHandler
                 });
@@ -660,7 +653,7 @@ var Caterings;
                 success: function () {
                     $(".modal").modal("hide");
                     initData();
-                    toastr["success"]("Uspješno spremljeno!");
+                    toastr["success"]("Saved successfully!");
                 },
                 error: Global.ajaxErrorHandler
             });
@@ -673,7 +666,7 @@ var Caterings;
             $cateringId = 0;
             var elem = document.getElementById("food-form-group");
             var label = document.createElement("label");
-            label.textContent = "Hrana";
+            label.textContent = "Food";
             elem.innerHTML = "";
             elem.appendChild(label);
             $("#form").find("input, select").prop("disabled", false);
@@ -700,20 +693,20 @@ var Caterings;
             $table = $("#caterings-list-table").DataTable({
                 columns: [
                     {
-                        title: "R. br.",
+                        title: "Row num.",
                         width: "10%",
                         data: "clientName"
                     },
                     {
-                        title: "Naziv cateringa",
+                        title: "Catering name",
                         data: "cateringName"
                     },
                     {
-                        title: "Klijent",
+                        title: "Client",
                         data: "clientName"
                     },
                     {
-                        title: "datum",
+                        title: "Date",
                         data: "cateringDate"
                     },
                     {
@@ -721,8 +714,8 @@ var Caterings;
                         data: "isClosed",
                         render: function (colData, data, row) {
                             if (row.isClosed)
-                                return 'Zatvoren';
-                            return 'Aktivan';
+                                return 'Closed';
+                            return 'Active';
                         }
                     },
                     {
@@ -736,10 +729,7 @@ var Caterings;
                             return button;
                         }
                     }
-                ],
-                "language": {
-                    "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
-                },
+                ]
             });
             //Row numbers
             $table.on('order.dt search.dt', function () {
@@ -813,16 +803,16 @@ var FoodCat;
         $table = $("#categories-list-table").DataTable({
             columns: [
                 {
-                    title: "R. br.",
+                    title: "Row num.",
                     data: "id",
                     width: "10%"
                 },
                 {
-                    title: "Naziv kategorije",
+                    title: "Category name",
                     data: "name"
                 },
                 {
-                    title: "Radnje",
+                    title: "Actions",
                     data: "vehicleId",
                     className: "dt-center",
                     width: "20%",
@@ -830,10 +820,7 @@ var FoodCat;
                         return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" onclick=FoodCat.editCategory(" + row.id + ")><i class=\"fas fa-edit\"></i></button><button class=\"btn btn-danger\" alt=\"Obri\u0161i\" onclick=\"FoodCat.deleteCategoryPrompt(" + row.id + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
                     }
                 }
-            ],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
-            },
+            ]
         });
         //Row numbers
         $table.on('order.dt search.dt', function () {
@@ -909,7 +896,7 @@ var FoodCat;
             success: function () {
                 $("#add-category-modal").modal("hide");
                 initData();
-                toastr["success"]("Uspješno spremljeno!");
+                toastr["success"]("Saved successfully");
             },
             error: Global.ajaxErrorHandler
         });
@@ -929,7 +916,7 @@ var FoodCat;
                 success: function () {
                     $("#delete-category-modal").modal("hide");
                     initData();
-                    toastr["info"]("Kategorija hrane uspješno obrisana.");
+                    toastr["info"]("Food category deleted.");
                 },
                 error: Global.ajaxErrorHandler
             });
@@ -966,20 +953,20 @@ var FoodItem;
         $table = $("#items-list-table").DataTable({
             columns: [
                 {
-                    title: "R. br.",
+                    title: "Row num.",
                     data: "id",
                     width: "10%"
                 },
                 {
-                    title: "Naziv stavke hrane",
+                    title: "Food item name",
                     data: "name"
                 },
                 {
-                    title: "Kategorija",
+                    title: "Food category",
                     data: "foodCategoryName",
                 },
                 {
-                    title: "Radnje",
+                    title: "Actions",
                     data: "foodCategoryName",
                     className: "dt-center",
                     width: "20%",
@@ -987,10 +974,7 @@ var FoodItem;
                         return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" onclick=FoodItem.editItem(" + row.id + ")><i class=\"fas fa-edit\"></i></button><button class=\"btn btn-danger\" alt=\"Obri\u0161i\" onclick=\"FoodItem.deleteItemPrompt(" + row.id + ")\"><i class=\"fas fa-trash-alt\"></i></button>";
                     }
                 }
-            ],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
-            },
+            ]
         });
         //Row numbers
         $table.on('order.dt search.dt', function () {
@@ -1092,7 +1076,7 @@ var FoodItem;
             success: function () {
                 $("#add-item-modal").modal("hide");
                 initData();
-                toastr["success"]("Uspješno spremljeno!");
+                toastr["success"]("Saved successfully!");
             },
             error: Global.ajaxErrorHandler
         });
@@ -1112,7 +1096,7 @@ var FoodItem;
                 success: function () {
                     $("#delete-item-modal").modal("hide");
                     initData();
-                    toastr["info"]("Stavka hrane uspješno obrisana.");
+                    toastr["info"]("Food item deleted.");
                 },
                 error: Global.ajaxErrorHandler
             });
@@ -1170,9 +1154,9 @@ var Home;
                                     var options = {
                                         type: "bar",
                                         data: {
-                                            labels: ["Sij", "Velj", "Ožu", "Tra", "Svi", "Lip", "Srp", "Kol", "Ruj", "Lis", "Stu", "Pro"],
+                                            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
                                             datasets: [{
-                                                    label: "Br. cateringa u mjesecu",
+                                                    label: "No. of caterings in month",
                                                     data: res,
                                                     backgroundColor: 'rgba(115, 206, 255,1)',
                                                     borderColor: 'rgba(255,255,255,1)'
@@ -1238,24 +1222,24 @@ var Users;
         $table = $("#users-list-table").DataTable({
             columns: [
                 {
-                    title: "R. br.",
+                    title: "Row num.",
                     data: "userId",
                     width: "10%"
                 },
                 {
-                    title: "Korisnik",
+                    title: "Full Name",
                     data: "userFullName"
                 },
                 {
-                    title: "Email",
+                    title: "E-Mail",
                     data: "email"
                 },
                 {
-                    title: "Uloga",
+                    title: "Role title",
                     data: "roleTitle"
                 },
                 {
-                    title: "Radnje",
+                    title: "Actions",
                     data: "userId",
                     className: "dt-center",
                     width: "20%",
@@ -1263,10 +1247,7 @@ var Users;
                         return "<button type=\"button\" class=\"btn btn-primary\" alt=\"Uredi\" onclick=\"Users.editUser(" + row.userId + ")\"><i class=\"fas fa-edit\"></i></button><button class=\"btn btn-danger\" onclick=\"Users.removeUserPrompt(" + row.userId + ")\" alt=\"Obri\u0161i\"><i class=\"fas fa-trash-alt\"></i></button>";
                     }
                 }
-            ],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
-            }
+            ]
         });
         //Row numbers
         $table.on('order.dt search.dt', function () {
@@ -1357,7 +1338,7 @@ var Users;
             loader(true);
             var data = {
                 userId: curUserId,
-                password: btoa($("#new-password").val().toString()) //Base64
+                password: btoa(unescape(encodeURIComponent($("#new-password").val().toString()))) //Base64
             };
             $.ajax({
                 url: "/api/users/password/" + curUserId,
@@ -1367,7 +1348,7 @@ var Users;
                 success: function () {
                     $("#password-reset-modal").modal("hide");
                     loader(false);
-                    toastr["success"]("Uspješno spremljeno!");
+                    toastr["success"]("Saved successfully!");
                 },
                 error: Global.ajaxErrorHandler
             });
@@ -1403,7 +1384,7 @@ var Users;
             success: function () {
                 $("#add-user-modal").modal("hide");
                 initData();
-                toastr["success"]("Uspješno spremljeno!");
+                toastr["success"]("Saved successfully!");
             }
         });
     }
@@ -1421,7 +1402,7 @@ var Users;
             success: function () {
                 initData();
                 $("#delete-user-modal").modal("hide");
-                toastr["info"]("Korisnik uspješno obrisan.");
+                toastr["info"]("User deleted.");
             },
             error: Global.ajaxErrorHandler
         });
@@ -1460,24 +1441,24 @@ var Vehicles;
         $table = $("#vehicles-list-table").DataTable({
             columns: [
                 {
-                    title: "R. br.",
+                    title: "Row num.",
                     data: "vehicleId",
                     width: "10%"
                 },
                 {
-                    title: "Naziv vozila",
+                    title: "Vehicle name",
                     data: "vehicleName"
                 },
                 {
-                    title: "Registracija",
+                    title: "Registration",
                     data: "vehicleRegistration"
                 },
                 {
-                    title: "Broj kilometara",
+                    title: "Odometer value (KM)",
                     data: "vehicleKilometers"
                 },
                 {
-                    title: "Radnje",
+                    title: "Actions",
                     data: "vehicleId",
                     className: "dt-center",
                     width: "20%",
@@ -1570,7 +1551,7 @@ var Vehicles;
                 success: function () {
                     $("#add-vehicle-modal").modal("hide");
                     initData();
-                    toastr["success"]("Uspješno spremljeno!");
+                    toastr["success"]("Saved successfully!");
                 }
             });
         }
@@ -1590,7 +1571,7 @@ var Vehicles;
                 success: function () {
                     $("#delete-vehicle-modal").modal("hide");
                     initData();
-                    toastr["info"]("Vozilo uspješno obrisano.");
+                    toastr["info"]("Vehicle deleted.");
                 },
                 error: Global.ajaxErrorHandler
             });

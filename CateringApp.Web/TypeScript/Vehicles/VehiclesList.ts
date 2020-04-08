@@ -20,24 +20,24 @@
         $table = $("#vehicles-list-table").DataTable({
             columns: [
                 {
-                    title: "R. br.",
+                    title: "Row num.",
                     data: "vehicleId",
                     width: "10%"
                 },
                 {
-                    title: "Naziv vozila",
+                    title: "Vehicle name",
                     data: "vehicleName"
                 },
                 {
-                    title: "Registracija",
+                    title: "Registration",
                     data: "vehicleRegistration"
                 },
                 {
-                    title: "Broj kilometara",
+                    title: "Odometer value (KM)",
                     data:"vehicleKilometers"
                 },
                 {
-                    title: "Radnje",
+                    title: "Actions",
                     data: "vehicleId",
                     className: "dt-center",
                     width:"20%",
@@ -138,7 +138,7 @@
                 success: () => {
                     $("#add-vehicle-modal").modal("hide");
                     initData();
-                    toastr["success"]("Uspješno spremljeno!");
+                    toastr["success"]("Saved successfully!");
                 }
             });
         }
@@ -158,7 +158,7 @@
                 success: () => {
                     $("#delete-vehicle-modal").modal("hide");
                     initData();
-                    toastr["info"]("Vozilo uspješno obrisano.");
+                    toastr["info"]("Vehicle deleted.");
                 },
                 error: Global.ajaxErrorHandler
             })

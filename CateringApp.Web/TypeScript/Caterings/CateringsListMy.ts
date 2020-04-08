@@ -7,28 +7,28 @@
         $table = $("#caterings-list-table").DataTable({
             columns: [
                 {
-                    title: "R. br.",
+                    title: "Row num.",
                     width: "10%",
                     data: "clientName"
                 },
                 {
-                    title: "Naziv cateringa",
+                    title: "Catering name",
                     data: "cateringName"
                 },
                 {
-                    title: "Klijent",
+                    title: "Client",
                     data: "clientName"
                 },
                 {
-                    title: "datum",
+                    title: "Date",
                     data:"cateringDate"
                 },
                 {
                     title: "Status",
                     data: "isClosed",
                     render: (colData, data, row: Models.ICateringDetailModel) => {
-                        if (row.isClosed) return 'Zatvoren';
-                        return 'Aktivan';
+                        if (row.isClosed) return 'Closed';
+                        return 'Active';
                     }
                 },
                 {
@@ -43,10 +43,7 @@
                         return button;
                     }
                 }
-            ],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Croatian.json"
-            },
+            ]
         });
 
         //Row numbers

@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Popis Korisnika";
+    ViewData["Title"] = "User/employees list";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -12,7 +12,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-user" onclick="Users.clearForm()"><i class="fas fa-plus"></i> Novi zaposlenik</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-user" onclick="Users.clearForm()"><i class="fas fa-plus"></i> New user</button>
                 </div>
             </div>
             <div class="card-body">
@@ -38,27 +38,27 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Ime</label>
+                                <label>First name</label>
                                 <input type="text" name="user-name" class="form-control" id="user-name" required maxlength="50"/>
                             </div> 
                             <div class="form-group">
-                                <label>Prezime</label>
+                                <label>Last name</label>
                                 <input type="text" name="user-surname" class="form-control" id="user-surname" required maxlength="50"/>
                             </div>
                             <div class="form-group">
-                                <label>Email</label>
+                                <label>E-Mail</label>
                                 <input type="text" name="user-email" class="form-control" id="user-email" required maxlength="50"/>
                             </div>
                             <div class="form-group">
-                                <label>Korisničko ime</label>
+                                <label>Username</label>
                                 <input type="text" name="user-username" class="form-control" id="user-username" required maxlength="50"/>
                             </div>
                             <div class="form-group" id="form-group-password">
-                                <label>Lozinka</label>
+                                <label>Password</label>
                                 <input type="password" name="user-password" class="form-control" id="user-password"/>
                             </div>
                             <div class="form-group" >
-                                <label for="dropdown-roles">Uloga Korisnika</label>
+                                <label for="dropdown-roles">User role</label>
                                 <select id="dropdown-roles" name="user-role" class="form-control" placeholder="Odaberi..." style="width:100%" required>
                                     <option selected disabled></option>
                                 </select>
@@ -67,9 +67,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btn-pass-reset" class="btn btn-primary mr-auto" onclick="Users.passwordChangePrompt()">Promijeni lozinku</button>
-                    <button type="submit" class="btn btn-primary">Spremi</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                    <button type="button" id="btn-pass-reset" class="btn btn-primary mr-auto" onclick="Users.passwordChangePrompt()">Change password</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
             </form>
         </div>
@@ -81,7 +81,7 @@
         <div class="modal-content">
             <form id="pass-reset-form">
                 <div class="modal-header">
-                    <h5 class="modal-title">Promjena lozinke</h5>
+                    <h5 class="modal-title">Password change</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -90,7 +90,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="control-label">Nova lozinka</label>
+                                <label class="control-label">New password</label>
                                 <input type="password" class="form-control" name="new-password" id="new-password" required />
                             </div>
                         </div>
@@ -98,15 +98,15 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="control-label">Ponovljena nova lozinka</label>
+                                <label class="control-label">Repeated new password</label>
                                 <input type="password" class="form-control" id="new-password-repeat" name="new-password-repeat" required data-rule-equalTo="#new-password" />
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Potvrdi</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                    <button type="submit" class="btn btn-primary">Confirm</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
             </form>
         </div>

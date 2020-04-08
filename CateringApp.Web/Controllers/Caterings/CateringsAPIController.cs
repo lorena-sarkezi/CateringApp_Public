@@ -151,7 +151,7 @@ namespace CateringApp.Web.Controllers
                 spacingRow.BottomPadding = 0.5;
 
                 dtRow = dataTable.AddRow();
-                dtRow.Cells[0].AddParagraph("Ime klijenta:");
+                dtRow.Cells[0].AddParagraph("Client:");
                 dtRow.Cells[0].Format.Font.Bold = true;
                 dtRow.Cells[2].AddParagraph(catering.ClientName);
 
@@ -164,7 +164,7 @@ namespace CateringApp.Web.Controllers
             spacingRow.BottomPadding = 0.5;
 
             dtRow = dataTable.AddRow();
-            dtRow.Cells[0].AddParagraph("Datum cateringa:");
+            dtRow.Cells[0].AddParagraph("Catering date:");
             dtRow.Cells[0].Format.Font.Bold = true;
             dtRow.Cells[2].AddParagraph(catering.CateringDate.ToString("dd.MM.yyyy.", new CultureInfo("hr-HR")));
 
@@ -178,7 +178,7 @@ namespace CateringApp.Web.Controllers
             dtRow = dataTable.AddRow();
             dtRow.Cells[0].AddParagraph("Status:");
             dtRow.Cells[0].Format.Font.Bold = true;
-            dtRow.Cells[2].AddParagraph(catering.IsClosed == true ? "Zatvoren" : "Aktivan");
+            dtRow.Cells[2].AddParagraph(catering.IsClosed == true ? "Closed" : "Active");
 
             dtRow = dataTable.AddRow();
             dtRow.Borders.Bottom.Width = 0.15;
@@ -195,7 +195,7 @@ namespace CateringApp.Web.Controllers
                     dtRow = dataTable.AddRow();
                     if (cnt == 0)
                     {
-                        dtRow.Cells[0].AddParagraph("Zaduženi zaposlenici:");
+                        dtRow.Cells[0].AddParagraph("Assigned employees:");
                     }
                     else
                     {
@@ -217,7 +217,7 @@ namespace CateringApp.Web.Controllers
                 spacingRow.BottomPadding = 0.5;
 
                 dtRow = dataTable.AddRow();
-                dtRow.Cells[0].AddParagraph("Vozilo:");
+                dtRow.Cells[0].AddParagraph("Vehicles:");
                 dtRow.Cells[0].Format.Font.Bold = true;
                 dtRow.Cells[2].AddParagraph(catering.Vehicle.VehicleName);
 
@@ -237,7 +237,7 @@ namespace CateringApp.Web.Controllers
                     dtRow = dataTable.AddRow();
                     if (cnt == 0)
                     {
-                        dtRow.Cells[0].AddParagraph("Hrana:");
+                        dtRow.Cells[0].AddParagraph("Food:");
                     }
                     else
                     {
@@ -259,7 +259,7 @@ namespace CateringApp.Web.Controllers
             {
                 Size = 8,
             };
-            foot.AddFormattedText("Datum: " + DateTime.Now.ToString("dd.MM.yyyy"));
+            foot.AddFormattedText("Date: " + DateTime.Now.ToString("dd.MM.yyyy"));
             //-----------------------------
             var pdfStream = new MemoryStream();
 
