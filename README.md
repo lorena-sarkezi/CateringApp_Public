@@ -21,7 +21,7 @@ Bootstrap theme used:
 
 The idea for this app is that it's supposed to be used as an internal application in a Catering company.
 
-![Imgur](https://i.imgur.com/fnWLv48.png =250x)
+![Imgur](https://i.imgur.com/fnWLv48.png)
 
 Caterings can be created by users with ADMIN privileges. Only ADMIN users/employees can view caterings in detail, and edit them.
 
