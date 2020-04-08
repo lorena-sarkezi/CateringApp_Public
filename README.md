@@ -33,13 +33,13 @@ Users can be assigned to Caterings. Every Catering has an event date, food items
 
 Every item that can be assigned to a Catering (users, food items, vehicles) can be created, edited or deleted through the application.
 
-<img src="https://i.imgur.com/NCb2uWy.png" title="source: imgur.com" width="600px" />
+<img src="https://imgur.com/Xted6lg.png" title="source: imgur.com" width="600px" />
 
-![Imgur](https://i.imgur.com/qcBYYrF.png)
+<img src="https://i.imgur.com/qcBYYrF.png" title="source: imgur.com" width="600px" />
+
 
 
 Every Catering can be marked as closed. Before closing, an optional comment can be entered. When a Catering is marked as closed, it can never again be edited, and its information is read-only.
 
-![Imgur](https://i.imgur.com/NCb2uWy.png)
-
+<img src="https://i.imgur.com/NCb2uWy.png" title="source: imgur.com" width="600px" />
 
