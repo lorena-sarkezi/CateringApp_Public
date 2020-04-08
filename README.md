@@ -40,6 +40,6 @@ Every item that can be assigned to a Catering (users, food items, vehicles) can 
 
 Every Catering can be marked as closed. Before closing, an optional comment can be entered. When a Catering is marked as closed, it can never again be edited, and its information is read-only.
 
-![Imgur](https://i.imgur.com/NCb2uWy.png =250x)
+![Imgur](https://i.imgur.com/NCb2uWy.png)
 
 
