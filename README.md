@@ -28,7 +28,7 @@ Caterings can be created by users with ADMIN privileges. Only ADMIN users/employ
 ![Imgur](https://i.imgur.com/t05rNGb.png)
 
 Users can be assigned to Caterings. Every Catering has an event date, food items to be served, a delivery vehicle to be used. Every Catering can also be printed as a PDF.
-<img src="https://imgur.com/nbwEfvx.png" title="source: imgur.com" width="600px" />
+<img src="https://imgur.com/nbwEfvx.png" title="source: imgur.com" width="600px" style="float:left;"/>
 
 Every item that can be assigned to a Catering (users, food items, vehicles) can be created, edited or deleted through the application.
 
