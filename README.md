@@ -2,7 +2,7 @@
 
 Simple web application made as part of a University class
 
-## Tehnical info
+## Technical info
 
 Technologies:
 * .NET Core MVC + WebAPI
