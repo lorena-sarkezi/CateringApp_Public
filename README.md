@@ -1,30 +1,45 @@
 # CateringApp
 
-Kloniraj repo u direktorij (možeš i kroz Visual Studio kroz GUI).
+Simple web application made as part of a University class
 
-Nakon kloniranja desni klik na **Solution**, odaberi **Restore Nuget Packages**
+## Technical info
 
-Pokreni (Ctrl+F5)
+Technologies:
+* .NET Core MVC + WebAPI
+* Entity Framework Core
+* Microsoft SQL (Azure SQL)
+* Bootstrap
+* TypeScript
 
-Prvo pokretanje traje oko 2 minute, dok ne povuče sve s NPM-a.
-
-## Podjela na projekte/module (buduće)
-
-* **CateringApp.Web** -> view-ovi, controlleri, jezgra aplikacije
-* **CateringApp.Data** -> DbContext definicija, bazni modeli, model extenzije/dodatne definicije pravila
-* **CateringApp.SQL** -> SQL datoteke s DDL-ovima (tablice, procedure, whatever)
- 
-Koji god DDL se piše, obavezno staviti u file u **CateringApp.SQL** i napraviti schema compare, bolje ne okidati DDL direktno da se ne desi razlika u između baze i projekta. Ako ima vise schema na bazi, tako organizirajte i foldere.
-
-I pogotovo ne okidati merge/join u prazno.
-
-
-## Stuff
-
-
-Korištena tema:
+Bootstrap theme used:
 
 * https://adminlte.io/  
 
+**Security implemented using JWT tokens and .NET Core's auth services (Identity, Claims)**
 
+## App Details
+
+The idea for this app is that it's supposed to be used as an internal application in a Catering company.
+
+![Imgur](https://i.imgur.com/fnWLv48.png)
+
+Caterings can be created by users with ADMIN privileges. Only ADMIN users/employees can view caterings in detail, and edit them.
+
+![Imgur](https://i.imgur.com/t05rNGb.png)
+
+Users can be assigned to Caterings. Every Catering has an event date, food items to be served, a delivery vehicle to be used. Every Catering can also be printed as a PDF.
+
+<img src="https://imgur.com/nbwEfvx.png" title="source: imgur.com" width="600px"/>
+
+Every item that can be assigned to a Catering (users, food items, vehicles) can be created, edited or deleted through the application.
+
+<img src="https://imgur.com/Xted6lg.png" title="source: imgur.com"/>
+
+<img src="https://i.imgur.com/qcBYYrF.png" title="source: imgur.com" width="600px" />
+
+
+
+Every Catering can be marked as closed. Before closing, an optional comment can be entered. When a Catering is marked as closed, it can never again be edited, and its information is read-only.
+
+<img src="https://i.imgur.com/NCb2uWy.png" title="source: imgur.com" width="600px" />
 
